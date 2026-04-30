@@ -59,7 +59,17 @@ const translations = {
     sugarLimitDesc: 'Calculated as <10% of total energy intake, following World Health Organization (WHO) guidelines to reduce the risk of non-communicable diseases.',
     sodiumLimitTitle: 'Sodium Guidelines',
     sodiumLimitDesc: 'Set at a maximum of 2,000 mg per day for adults, as recommended by the WHO to help reduce blood pressure and risk of cardiovascular disease.',
-    updateSuccess: 'Profile updated successfully!'
+    updateSuccess: 'Profile updated successfully!',
+    planner: 'Weight Planner',
+    targetWeightLoss: 'Target Weight Loss (kg)',
+    durationWeeks: 'Duration (Weeks)',
+    calculatePlan: 'Calculate Plan',
+    dailyTarget: 'Daily Calorie Target',
+    dailyDeficit: 'Daily Deficit',
+    tooAggressive: 'Too Aggressive',
+    unsafe: 'Unsafe',
+    safe: 'Safe Plan',
+    plannerDesc: 'Create a sustainable weight loss timeline based on your unique metabolism.'
   },
   id: {
     appName: 'NutriJoy',
@@ -119,7 +129,17 @@ const translations = {
     sugarLimitDesc: 'Dihitung sebagai <10% dari total asupan energi, mengikuti panduan Organisasi Kesehatan Dunia (WHO) untuk mengurangi risiko penyakit tidak menular.',
     sodiumLimitTitle: 'Panduan Natrium',
     sodiumLimitDesc: 'Ditetapkan maksimal 2.000 mg per hari untuk orang dewasa, sesuai rekomendasi WHO untuk membantu mengurangi tekanan darah dan risiko penyakit kardiovaskular.',
-    updateSuccess: 'Profil berhasil diperbarui!'
+    updateSuccess: 'Profil berhasil diperbarui!',
+    planner: 'Perencana Berat',
+    targetWeightLoss: 'Target Penurunan (kg)',
+    durationWeeks: 'Durasi (Minggu)',
+    calculatePlan: 'Hitung Rencana',
+    dailyTarget: 'Target Kalori Harian',
+    dailyDeficit: 'Defisit Harian',
+    tooAggressive: 'Terlalu Agresif',
+    unsafe: 'Tidak Aman',
+    safe: 'Rencana Aman',
+    plannerDesc: 'Buat lini masa penurunan berat badan yang berkelanjutan berdasarkan metabolisme unik Anda.'
   }
 };
 

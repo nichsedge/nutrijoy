@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Utensils, Activity, Settings } from 'lucide-react';
+import { Home, Utensils, Activity, Settings, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useApp } from '../AppContext';
 import { getTranslation } from '@/lib/translations';
@@ -16,7 +16,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: '/', icon: Home, label: t.dashboard },
     { href: '/food', icon: Utensils, label: t.logs },
-    { href: '/activity', icon: Activity, label: t.activity },
+    { href: '/planner', icon: Calendar, label: t.planner },
     { href: '/settings', icon: Settings, label: t.settings },
   ];
 

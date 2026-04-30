@@ -1,33 +1,33 @@
-import { UserProfile, TDEEResult } from './types';
+import { UserProfile, TDEEResult, WeightLossPlanInput, WeightLossPlanResult } from './types';
+
+export const ACTIVITY_MULTIPLIERS = {
+  sedentary: 1.2,
+  light: 1.375,
+  moderate: 1.55,
+  active: 1.725,
+  very_active: 1.9,
+};
+
+export function calculateBMR(weight: number, height: number, age: number, sex: 'male' | 'female'): number {
+  if (sex === 'male') {
+    return 10 * weight + 6.25 * height - 5 * age + 5;
+  } else {
+    return 10 * weight + 6.25 * height - 5 * age - 161;
+  }
+}
 
 export function calculateTDEE(profile: UserProfile): TDEEResult {
-  // Mifflin-St Jeor Equation
-  let bmr: number;
-  if (profile.sex === 'male') {
-    bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age + 5;
-  } else {
-    bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age - 161;
-  }
-
-  const multipliers = {
-    sedentary: 1.2,
-    light: 1.375,
-    moderate: 1.55,
-    active: 1.725,
-    very_active: 1.9,
-  };
-
-  const tdee = bmr * multipliers[profile.activityLevel];
+  const bmr = calculateBMR(profile.weight, profile.height, profile.age, profile.sex);
+  const tdee = bmr * ACTIVITY_MULTIPLIERS[profile.activityLevel];
 
   let recommendedCalories = tdee;
   if (profile.goal === 'lose') {
-    recommendedCalories = tdee - 500; // Standard 500 kcal deficit
+    recommendedCalories = tdee - 500; 
   } else if (profile.goal === 'gain') {
     recommendedCalories = tdee + 300;
   }
 
-  // WHO Guidelines: Sugar < 10% of total energy, Sodium < 2000mg
-  const sugarLimit = (recommendedCalories * 0.1) / 4; // 1g sugar = 4 kcal
+  const sugarLimit = (recommendedCalories * 0.1) / 4; 
   const sodiumLimit = 2000;
 
   return {
@@ -36,5 +36,39 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
     recommendedCalories: Math.round(recommendedCalories),
     sugarLimit: Math.round(sugarLimit),
     sodiumLimit: Math.round(sodiumLimit),
+  };
+}
+
+export function calculateWeightLossPlan(input: WeightLossPlanInput): WeightLossPlanResult {
+  const { currentWeight, targetLossKg, durationWeeks, age, height, sex, activityLevel } = input;
+  
+  const bmr = calculateBMR(currentWeight, height, age, sex);
+  const tdee = bmr * ACTIVITY_MULTIPLIERS[activityLevel];
+  
+  const totalDeficitNeeded = targetLossKg * 7700;
+  const days = durationWeeks * 7;
+  const dailyDeficit = totalDeficitNeeded / days;
+  const dailyTarget = tdee - dailyDeficit;
+
+  let status: WeightLossPlanResult['status'] = 'safe';
+  let warningMessage = '';
+
+  const minCalories = sex === 'female' ? 1200 : 1500;
+
+  if (dailyTarget < minCalories) {
+    status = 'unsafe';
+    warningMessage = `This plan results in ${Math.round(dailyTarget)} kcal/day, which is below the minimum safe limit of ${minCalories} kcal/day for your gender.`;
+  } else if (dailyDeficit > 1000) {
+    status = 'too_aggressive';
+    warningMessage = `A daily deficit of ${Math.round(dailyDeficit)} kcal is considered too aggressive. Aim for a deficit under 1000 kcal for sustainable weight loss.`;
+  }
+
+  return {
+    bmr: Math.round(bmr),
+    tdee: Math.round(tdee),
+    dailyTarget: Math.round(dailyTarget),
+    dailyDeficit: Math.round(dailyDeficit),
+    status,
+    warningMessage: warningMessage || undefined
   };
 }

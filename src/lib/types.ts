@@ -43,3 +43,22 @@ export interface TDEEResult {
   sugarLimit: number;
   sodiumLimit: number;
 }
+
+export interface WeightLossPlanInput {
+  currentWeight: number;
+  targetLossKg: number;
+  durationWeeks: number;
+  age: number;
+  height: number;
+  sex: 'male' | 'female';
+  activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+}
+
+export interface WeightLossPlanResult {
+  bmr: number;
+  tdee: number;
+  dailyTarget: number;
+  dailyDeficit: number;
+  status: 'safe' | 'too_aggressive' | 'unsafe';
+  warningMessage?: string;
+}
