@@ -50,7 +50,16 @@ const translations = {
     activityPlaceholder: 'What did you do today?',
     estimatedBurn: 'Estimated Burn',
     saveProfile: 'Save Profile',
-    switchLang: 'Switch to Bahasa Indonesia'
+    switchLang: 'Switch to Bahasa Indonesia',
+    profileInfo: 'Profile Information',
+    methodology: 'Methodology & Sources',
+    energyNeedsTitle: 'Energy Needs (TDEE)',
+    energyNeedsDesc: 'We use the Mifflin-St Jeor Equation, widely considered the most accurate for estimating Basal Metabolic Rate (BMR). Your Total Daily Energy Expenditure (TDEE) is then calculated by applying a multiplier based on your activity level.',
+    sugarLimitTitle: 'Sugar Guidelines',
+    sugarLimitDesc: 'Calculated as <10% of total energy intake, following World Health Organization (WHO) guidelines to reduce the risk of non-communicable diseases.',
+    sodiumLimitTitle: 'Sodium Guidelines',
+    sodiumLimitDesc: 'Set at a maximum of 2,000 mg per day for adults, as recommended by the WHO to help reduce blood pressure and risk of cardiovascular disease.',
+    updateSuccess: 'Profile updated successfully!'
   },
   id: {
     appName: 'NutriJoy',
@@ -101,7 +110,16 @@ const translations = {
     activityPlaceholder: 'Apa yang kamu lakukan hari ini?',
     estimatedBurn: 'Estimasi Kalori',
     saveProfile: 'Simpan Profil',
-    switchLang: 'Ganti ke English'
+    switchLang: 'Ganti ke English',
+    profileInfo: 'Informasi Profil',
+    methodology: 'Metodologi & Sumber',
+    energyNeedsTitle: 'Kebutuhan Energi (TDEE)',
+    energyNeedsDesc: 'Kami menggunakan Persamaan Mifflin-St Jeor, yang dianggap paling akurat untuk memperkirakan Laju Metabolisme Basal (BMR). Total Pengeluaran Energi Harian (TDEE) Anda kemudian dihitung dengan menerapkan pengali berdasarkan tingkat aktivitas Anda.',
+    sugarLimitTitle: 'Panduan Gula',
+    sugarLimitDesc: 'Dihitung sebagai <10% dari total asupan energi, mengikuti panduan Organisasi Kesehatan Dunia (WHO) untuk mengurangi risiko penyakit tidak menular.',
+    sodiumLimitTitle: 'Panduan Natrium',
+    sodiumLimitDesc: 'Ditetapkan maksimal 2.000 mg per hari untuk orang dewasa, sesuai rekomendasi WHO untuk membantu mengurangi tekanan darah dan risiko penyakit kardiovaskular.',
+    updateSuccess: 'Profil berhasil diperbarui!'
   }
 };
 
