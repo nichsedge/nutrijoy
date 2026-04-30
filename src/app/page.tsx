@@ -3,7 +3,6 @@
 import { useApp } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { DailyProgress } from '@/components/dashboard/DailyProgress';
-import { AICoach } from '@/components/dashboard/AICoach';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -33,8 +32,6 @@ export default function Home() {
         </div>
 
         <DailyProgress />
-        
-        <AICoach />
 
         <div className="grid grid-cols-2 gap-4">
           <Button asChild className="h-16 rounded-2xl flex flex-col items-center justify-center bg-primary hover:bg-primary/90">

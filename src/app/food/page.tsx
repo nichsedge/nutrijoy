@@ -4,50 +4,57 @@ import React, { useState } from 'react';
 import { useApp } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
-import { naturalLanguageFoodLogging } from '@/ai/flows/natural-language-food-logging';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Send, Utensils, Loader2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Utensils, Plus, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function FoodLoggingPage() {
   const { state, addFoodLog } = useApp();
   const t = getTranslation(state.profile?.language || 'en');
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleLog = async () => {
-    if (!input.trim()) return;
-    setLoading(true);
-    try {
-      const results = await naturalLanguageFoodLogging(input);
-      results.forEach(item => {
-        addFoodLog({
-          id: Math.random().toString(36).substr(2, 9),
-          timestamp: Date.now(),
-          name: item.name,
-          quantity: item.quantity,
-          calories: item.estimatedCalories,
-          sugar: item.estimatedSugar,
-          sodium: item.estimatedSodium,
-        });
-      });
-      setInput('');
-      toast({
-        title: t.done,
-        description: `Logged ${results.length} items successfully!`,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to parse food description. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const [formData, setFormData] = useState({
+    name: '',
+    quantity: '',
+    calories: '',
+    sugar: '',
+    sodium: ''
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleLog = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name.trim()) return;
+
+    addFoodLog({
+      id: Math.random().toString(36).substr(2, 9),
+      timestamp: Date.now(),
+      name: formData.name,
+      quantity: formData.quantity || '1 serving',
+      calories: parseInt(formData.calories) || 0,
+      sugar: parseInt(formData.sugar) || 0,
+      sodium: parseInt(formData.sodium) || 0,
+    });
+
+    setFormData({
+      name: '',
+      quantity: '',
+      calories: '',
+      sugar: '',
+      sodium: ''
+    });
+
+    toast({
+      title: t.done,
+      description: `Logged ${formData.name} successfully!`,
+    });
   };
 
   return (
@@ -55,24 +62,84 @@ export default function FoodLoggingPage() {
       <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-bold">{t.logFood}</h2>
-          <p className="text-sm text-muted-foreground">Type what you ate in plain English or Indonesian.</p>
+          <p className="text-sm text-muted-foreground">Manually enter your meal details below.</p>
         </div>
 
-        <div className="relative group">
-          <Textarea 
-            placeholder={t.foodInputPlaceholder}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="min-h-[160px] rounded-3xl border-2 border-primary/10 focus-visible:ring-primary p-6 text-lg transition-all bg-white"
-          />
-          <Button 
-            onClick={handleLog} 
-            disabled={loading || !input.trim()}
-            className="absolute bottom-4 right-4 rounded-full w-12 h-12 p-0 shadow-lg shadow-primary/20"
-          >
-            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Send className="w-6 h-6" />}
-          </Button>
-        </div>
+        <Card className="border-2 border-primary/10 rounded-3xl overflow-hidden shadow-sm">
+          <CardContent className="p-6">
+            <form onSubmit={handleLog} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Food Name</Label>
+                <Input 
+                  id="name"
+                  name="name"
+                  placeholder="e.g. Nasi Goreng" 
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="rounded-xl border-primary/20"
+                  required
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="quantity">Quantity</Label>
+                  <Input 
+                    id="quantity"
+                    name="quantity"
+                    placeholder="e.g. 1 plate" 
+                    value={formData.quantity}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="calories">Calories (kcal)</Label>
+                  <Input 
+                    id="calories"
+                    name="calories"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.calories}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="sugar">Sugar (g)</Label>
+                  <Input 
+                    id="sugar"
+                    name="sugar"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.sugar}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sodium">Sodium (mg)</Label>
+                  <Input 
+                    id="sodium"
+                    name="sodium"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.sodium}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+              </div>
+
+              <Button type="submit" className="w-full rounded-xl py-6 text-lg font-bold shadow-lg shadow-primary/20">
+                <Plus className="w-5 h-5 mr-2" /> LOG MEAL
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
 
         <section>
           <h3 className="font-bold mb-4">Today's Meal History</h3>
