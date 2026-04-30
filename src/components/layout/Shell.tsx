@@ -33,7 +33,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </main>
       <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-border px-6 py-3 flex justify-between items-center z-50 rounded-t-3xl shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href || (item.href === '/food' && pathname === '/activity');
           const Icon = item.icon;
           return (
             <Link

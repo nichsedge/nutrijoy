@@ -8,11 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Utensils, Plus, Check } from 'lucide-react';
+import { Utensils, Plus, Check, Trash2, Activity } from 'lucide-react';
+import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 
 export default function FoodLoggingPage() {
-  const { state, addFoodLog } = useApp();
+  const { state, addFoodLog, removeFoodLog } = useApp();
   const t = getTranslation(state.profile?.language || 'en');
   const { toast } = useToast();
 
@@ -63,6 +64,21 @@ export default function FoodLoggingPage() {
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-bold">{t.logFood}</h2>
           <p className="text-sm text-muted-foreground">Manually enter your meal details below.</p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Button asChild className="h-14 rounded-2xl flex items-center justify-center bg-primary hover:bg-primary/90 text-white shadow-md">
+            <Link href="/food">
+              <Utensils className="w-4 h-4 mr-2" />
+              <span className="text-xs font-bold">LOG FOOD</span>
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="h-14 rounded-2xl flex items-center justify-center border-2 border-primary/20 hover:border-primary text-primary bg-white hover:bg-primary/5 transition-all">
+            <Link href="/activity">
+              <Activity className="w-4 h-4 mr-2" />
+              <span className="text-xs font-bold">LOG MOVE</span>
+            </Link>
+          </Button>
         </div>
 
         <Card className="border-2 border-primary/10 rounded-3xl overflow-hidden shadow-sm">
@@ -156,9 +172,19 @@ export default function FoodLoggingPage() {
                       <p className="text-xs text-muted-foreground">{log.quantity} • {log.calories} kcal</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[10px] uppercase font-bold text-muted-foreground">Sugar</p>
-                    <p className="text-xs font-bold text-secondary">{log.sugar}g</p>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground">Sugar</p>
+                      <p className="text-xs font-bold text-secondary">{log.sugar}g</p>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => removeFoodLog(log.id)}
+                      className="w-8 h-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                       <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

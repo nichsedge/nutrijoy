@@ -38,17 +38,18 @@ export interface TDEEResult {
   sodiumLimit: number;
 }
 
-export interface WeightLossPlanInput {
+export interface WeightPlanInput {
   currentWeight: number;
-  targetLossKg: number;
+  targetChangeKg: number;
   durationWeeks: number;
   age: number;
   height: number;
   sex: 'male' | 'female';
   activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+  goal: 'lose' | 'maintain' | 'gain';
 }
 
-export interface WeightLossPlanResult {
+export interface WeightPlanResult {
   bmr: number;
   tdee: number;
   dailyTarget: number;
@@ -58,12 +59,13 @@ export interface WeightLossPlanResult {
   // Metadata for active plans
   id?: string;
   startDate?: number;
-  targetLossKg?: number;
+  targetChangeKg?: number;
   durationWeeks?: number;
   startWeight?: number;
+  goal?: 'lose' | 'maintain' | 'gain';
 }
 
-export interface AchievedPlan extends WeightLossPlanResult {
+export interface AchievedPlan extends WeightPlanResult {
   achievedDate: number;
   endWeight: number;
 }
@@ -72,6 +74,6 @@ export interface AppState {
   profile: UserProfile | null;
   foodLogs: FoodLogEntry[];
   activities: ActivityEntry[];
-  activePlan: WeightLossPlanResult | null;
+  activePlan: WeightPlanResult | null;
   planHistory: AchievedPlan[];
 }

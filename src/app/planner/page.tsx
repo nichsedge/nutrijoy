@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { useApp } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
-import { calculateWeightLossPlan } from '@/lib/nutrition';
-import { WeightLossPlanResult } from '@/lib/types';
+import { calculateWeightPlan } from '@/lib/nutrition';
+import { WeightPlanResult } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,7 +23,7 @@ export default function PlannerPage() {
   
   const [targetLoss, setTargetLoss] = useState('5');
   const [duration, setDuration] = useState('8');
-  const [calcResult, setCalcResult] = useState<WeightLossPlanResult | null>(null);
+  const [calcResult, setCalcResult] = useState<WeightPlanResult | null>(null);
   
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
   const [endWeight, setEndWeight] = useState(state.profile?.weight.toString() || '');
@@ -31,14 +31,15 @@ export default function PlannerPage() {
   const handleCalculate = () => {
     if (!state.profile) return;
     
-    const res = calculateWeightLossPlan({
+    const res = calculateWeightPlan({
       currentWeight: state.profile.weight,
-      targetLossKg: parseFloat(targetLoss),
+      targetChangeKg: parseFloat(targetLoss),
       durationWeeks: parseInt(duration),
       age: state.profile.age,
       height: state.profile.height,
       sex: state.profile.sex,
       activityLevel: state.profile.activityLevel,
+      goal: state.profile.goal,
     });
     
     setCalcResult(res);
@@ -51,14 +52,16 @@ export default function PlannerPage() {
       ...calcResult,
       id: Math.random().toString(36).substr(2, 9),
       startDate: Date.now(),
-      targetLossKg: parseFloat(targetLoss),
+      targetChangeKg: parseFloat(targetLoss),
       durationWeeks: parseInt(duration),
       startWeight: state.profile.weight,
+      goal: state.profile.goal,
     });
 
+    const isGain = state.profile.goal === 'gain';
     toast({
       title: (t as any).planStarted,
-      description: `Target: -${targetLoss}kg in ${duration} weeks`,
+      description: `Target: ${isGain ? '+' : '-'}${targetLoss}kg in ${duration} weeks`,
     });
     setCalcResult(null);
   };
@@ -77,6 +80,9 @@ export default function PlannerPage() {
   };
 
   if (!state.profile) return null;
+
+  const isGain = state.profile.goal === 'gain';
+  const isMaintain = state.profile.goal === 'maintain';
 
   return (
     <Shell>
@@ -105,8 +111,8 @@ export default function PlannerPage() {
                    <p className="text-[10px] font-bold text-muted-foreground">kcal/day</p>
                 </div>
                 <div className="text-center p-3 bg-white rounded-2xl shadow-sm">
-                   <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Target Loss</p>
-                   <p className="text-2xl font-bold text-secondary">-{state.activePlan.targetLossKg} kg</p>
+                   <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Target {state.activePlan.goal === 'gain' ? 'Gain' : 'Loss'}</p>
+                   <p className="text-2xl font-bold text-secondary">{state.activePlan.goal === 'gain' ? '+' : '-'}{state.activePlan.targetChangeKg ?? (state.activePlan as any).targetLossKg} kg</p>
                    <p className="text-[10px] font-bold text-muted-foreground">in {state.activePlan.durationWeeks} weeks</p>
                 </div>
               </div>
@@ -118,13 +124,26 @@ export default function PlannerPage() {
           </Card>
         )}
 
+        {/* Maintain Message */}
+        {isMaintain && !state.activePlan && (
+          <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-primary/5">
+            <CardContent className="p-8 text-center space-y-4">
+              <CheckCircle2 className="w-12 h-12 text-primary mx-auto" />
+              <h3 className="text-xl font-bold">You are Maintaining!</h3>
+              <p className="text-sm text-muted-foreground">
+                Your current goal is to maintain your weight. You don't need to set a weight change target. Your daily calories are already optimized for maintenance.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Planner Input Card */}
-        {!state.activePlan && (
+        {!state.activePlan && !isMaintain && (
           <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
             <CardContent className="p-6 space-y-4">
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-primary" /> {t.targetWeightLoss}
+                  <Target className="w-4 h-4 text-primary" /> {isGain ? (t as any).targetWeightGain : t.targetWeightLoss}
                 </Label>
                 <Input 
                   type="number" 
@@ -154,7 +173,7 @@ export default function PlannerPage() {
         )}
 
         {/* Calculation Result */}
-        {calcResult && !state.activePlan && (
+        {calcResult && !state.activePlan && !isMaintain && (
           <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
             {calcResult.status !== 'safe' && (
               <Alert variant="destructive" className="rounded-2xl border-2">
@@ -189,7 +208,7 @@ export default function PlannerPage() {
 
               <Card className="border-none bg-secondary/5 rounded-3xl">
                 <CardContent className="p-6 text-center">
-                  <p className="text-[10px] uppercase font-bold text-secondary opacity-70 mb-1">{t.dailyDeficit}</p>
+                  <p className="text-[10px] uppercase font-bold text-secondary opacity-70 mb-1">{isGain ? (t as any).dailySurplus : t.dailyDeficit}</p>
                   <p className="text-3xl font-bold text-secondary">{calcResult.dailyDeficit}</p>
                   <p className="text-xs font-bold text-muted-foreground mt-1">kcal/day</p>
                 </CardContent>
@@ -235,7 +254,7 @@ export default function PlannerPage() {
                 <Card key={i} className="border-none shadow-sm rounded-2xl overflow-hidden">
                   <CardContent className="p-4 flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-bold">-{h.targetLossKg} kg Goal</p>
+                      <p className="text-sm font-bold">{h.goal === 'gain' ? '+' : '-'}{h.targetChangeKg ?? (h as any).targetLossKg} kg Goal</p>
                       <p className="text-[10px] text-muted-foreground">
                         {(t as any).achievedOn} {new Date(h.achievedDate).toLocaleDateString()}
                       </p>

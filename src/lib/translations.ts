@@ -61,10 +61,12 @@ const translations = {
     updateSuccess: 'Profile updated successfully!',
     planner: 'Weight Planner',
     targetWeightLoss: 'Target Weight Loss (kg)',
+    targetWeightGain: 'Target Weight Gain (kg)',
     durationWeeks: 'Duration (Weeks)',
     calculatePlan: 'Calculate Plan',
     dailyTarget: 'Daily Calorie Target',
     dailyDeficit: 'Daily Deficit',
+    dailySurplus: 'Daily Surplus',
     tooAggressive: 'Too Aggressive',
     unsafe: 'Unsafe',
     safe: 'Safe Plan',
@@ -80,7 +82,14 @@ const translations = {
     enterEndWeight: 'Enter your final weight to complete this plan:',
     cancel: 'Cancel',
     planStarted: 'Plan Started!',
-    planCompleted: 'Plan Completed!'
+    planCompleted: 'Plan Completed!',
+    history: 'History',
+    allHistory: 'Everything you\'ve logged',
+    duration: 'Duration',
+    minutes: 'Minutes',
+    commonActivities: 'Common Activities',
+    noHistory: 'No history yet',
+    startLogging: 'Start logging your meals and moves!'
   },
   id: {
     appName: 'NutriJoy',
@@ -142,10 +151,12 @@ const translations = {
     updateSuccess: 'Profil berhasil diperbarui!',
     planner: 'Perencana Berat',
     targetWeightLoss: 'Target Penurunan (kg)',
+    targetWeightGain: 'Target Kenaikan (kg)',
     durationWeeks: 'Durasi (Minggu)',
     calculatePlan: 'Hitung Rencana',
     dailyTarget: 'Target Kalori Harian',
     dailyDeficit: 'Defisit Harian',
+    dailySurplus: 'Surplus Harian',
     tooAggressive: 'Terlalu Agresif',
     unsafe: 'Tidak Aman',
     safe: 'Rencana Aman',
@@ -161,7 +172,14 @@ const translations = {
     enterEndWeight: 'Masukkan berat badan akhirmu untuk menyelesaikan rencana ini:',
     cancel: 'Batal',
     planStarted: 'Rencana Dimulai!',
-    planCompleted: 'Rencana Selesai!'
+    planCompleted: 'Rencana Selesai!',
+    history: 'Riwayat',
+    allHistory: 'Semua yang kamu catat',
+    duration: 'Durasi',
+    minutes: 'Menit',
+    commonActivities: 'Aktivitas Umum',
+    noHistory: 'Belum ada riwayat',
+    startLogging: 'Mulai catat makanan dan aktivitasmu!'
   }
 };
 

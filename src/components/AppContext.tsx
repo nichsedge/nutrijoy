@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AppState, UserProfile, FoodLogEntry, ActivityEntry, Language, WeightLossPlanResult, AchievedPlan } from '@/lib/types';
+import { AppState, UserProfile, FoodLogEntry, ActivityEntry, Language, WeightPlanResult, AchievedPlan } from '@/lib/types';
 import { loadState, saveState } from '@/lib/storage';
 
 interface AppContextType {
@@ -11,8 +11,10 @@ interface AppContextType {
   addActivity: (entry: ActivityEntry) => void;
   setLanguage: (lang: Language) => void;
   resetState: (newState: AppState) => void;
-  setActivePlan: (plan: WeightLossPlanResult | null) => void;
+  setActivePlan: (plan: WeightPlanResult | null) => void;
   completePlan: (endWeight: number) => void;
+  removeFoodLog: (id: string) => void;
+  removeActivity: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -50,6 +52,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const addActivity = (entry: ActivityEntry) => {
     setState(prev => ({ ...prev, activities: [entry, ...prev.activities] }));
   };
+  
+  const removeFoodLog = (id: string) => {
+    setState(prev => ({ ...prev, foodLogs: prev.foodLogs.filter(log => log.id !== id) }));
+  };
+
+  const removeActivity = (id: string) => {
+    setState(prev => ({ ...prev, activities: prev.activities.filter(act => act.id !== id) }));
+  };
 
   const setLanguage = (lang: Language) => {
     if (state.profile) {
@@ -61,7 +71,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setState(newState);
   };
 
-  const setActivePlan = (plan: WeightLossPlanResult | null) => {
+  const setActivePlan = (plan: WeightPlanResult | null) => {
     setState(prev => ({ ...prev, activePlan: plan }));
   };
 
@@ -93,7 +103,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setLanguage, 
       resetState,
       setActivePlan,
-      completePlan
+      completePlan,
+      removeFoodLog,
+      removeActivity
     }}>
       {children}
     </AppContext.Provider>

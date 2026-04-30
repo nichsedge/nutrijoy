@@ -1,4 +1,4 @@
-import { UserProfile, TDEEResult, WeightLossPlanInput, WeightLossPlanResult } from './types';
+import { UserProfile, TDEEResult, WeightPlanInput, WeightPlanResult } from './types';
 
 export const ACTIVITY_MULTIPLIERS = {
   sedentary: 1.2,
@@ -45,33 +45,50 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
   };
 }
 
-export function calculateWeightLossPlan(input: WeightLossPlanInput): WeightLossPlanResult {
-  const { currentWeight, targetLossKg, durationWeeks, age, height, sex, activityLevel } = input;
+export function calculateWeightPlan(input: WeightPlanInput): WeightPlanResult {
+  const { currentWeight, targetChangeKg, durationWeeks, age, height, sex, activityLevel, goal } = input;
   
   const bmr = calculateBMR(currentWeight, height, age, sex);
   const tdee = bmr * ACTIVITY_MULTIPLIERS[activityLevel];
   
-  const totalDeficitNeeded = targetLossKg * 7700;
+  const totalChangeNeeded = targetChangeKg * 7700;
   const days = durationWeeks * 7;
-  const dailyDeficit = totalDeficitNeeded / days;
-  let dailyTarget = tdee - dailyDeficit;
+  const dailyChange = totalChangeNeeded / days;
+  
+  let dailyTarget = tdee;
+  let dailyDeficit = 0; // Note: For weight gain, dailyDeficit will represent the daily surplus
 
-  let status: WeightLossPlanResult['status'] = 'safe';
+  if (goal === 'lose') {
+    dailyTarget -= dailyChange;
+    dailyDeficit = dailyChange;
+  } else if (goal === 'gain') {
+    dailyTarget += dailyChange;
+    dailyDeficit = dailyChange; // Represents surplus
+  } else {
+    dailyTarget = tdee;
+    dailyDeficit = 0;
+  }
+
+  let status: WeightPlanResult['status'] = 'safe';
   let warningMessage = '';
 
   const minCalories = sex === 'female' ? 1200 : 1500;
 
-  if (dailyTarget < minCalories) {
-    status = 'unsafe';
-    if (dailyTarget < 0) {
-      warningMessage = `This plan is physically impossible. It requires a deficit larger than your total energy expenditure. Please set a more realistic goal.`;
-      dailyTarget = 0;
-    } else {
-      warningMessage = `This plan results in ${Math.round(dailyTarget)} kcal/day, which is below the minimum safe limit of ${minCalories} kcal/day for your gender.`;
+  if (goal === 'lose') {
+    if (dailyTarget < minCalories) {
+      status = 'unsafe';
+      warningMessage = `This plan requires ${Math.round(dailyTarget)} kcal/day. To be safe, your target has been floored at the minimum safe limit of ${minCalories} kcal/day.`;
+      dailyTarget = minCalories;
+      dailyDeficit = tdee - minCalories; // re-adjust to match the safe limit
+    } else if (dailyDeficit > 1000) {
+      status = 'too_aggressive';
+      warningMessage = `A daily deficit of ${Math.round(dailyDeficit)} kcal is considered too aggressive. Aim for a deficit under 1000 kcal for sustainable weight loss.`;
     }
-  } else if (dailyDeficit > 1000) {
-    status = 'too_aggressive';
-    warningMessage = `A daily deficit of ${Math.round(dailyDeficit)} kcal is considered too aggressive. Aim for a deficit under 1000 kcal for sustainable weight loss.`;
+  } else if (goal === 'gain') {
+    if (dailyDeficit > 1000) {
+      status = 'too_aggressive';
+      warningMessage = `A daily surplus of ${Math.round(dailyDeficit)} kcal is considered too aggressive. Aim for a surplus under 1000 kcal for sustainable weight gain.`;
+    }
   }
 
   return {
@@ -80,6 +97,7 @@ export function calculateWeightLossPlan(input: WeightLossPlanInput): WeightLossP
     dailyTarget: Math.round(dailyTarget),
     dailyDeficit: Math.round(dailyDeficit),
     status,
-    warningMessage: warningMessage || undefined
+    warningMessage: warningMessage || undefined,
+    goal
   };
 }
