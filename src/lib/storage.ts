@@ -6,6 +6,8 @@ const defaultState: AppState = {
   profile: null,
   foodLogs: [],
   activities: [],
+  activePlan: null,
+  planHistory: [],
 };
 
 export function loadState(): AppState {
@@ -13,7 +15,16 @@ export function loadState(): AppState {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (!stored) return defaultState;
   try {
-    return JSON.parse(stored);
+    const state = JSON.parse(stored);
+    return {
+      ...defaultState,
+      ...state,
+      // Ensure arrays and objects exist even if missing in old state
+      foodLogs: state.foodLogs || [],
+      activities: state.activities || [],
+      planHistory: state.planHistory || [],
+      activePlan: state.activePlan || null,
+    };
   } catch (e) {
     return defaultState;
   }

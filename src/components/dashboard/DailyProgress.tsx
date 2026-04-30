@@ -14,7 +14,10 @@ export function DailyProgress() {
 
   if (!state.profile) return null;
 
-  const goals = calculateTDEE(state.profile);
+  const baseGoals = calculateTDEE(state.profile);
+  const recommendedCalories = state.activePlan ? state.activePlan.dailyTarget : baseGoals.recommendedCalories;
+  const sugarLimit = state.activePlan ? (recommendedCalories * 0.1) / 4 : baseGoals.sugarLimit;
+  const goals = { ...baseGoals, recommendedCalories, sugarLimit: Math.round(sugarLimit) };
   
   const today = new Date().setHours(0, 0, 0, 0);
   const todaysFood = state.foodLogs.filter(log => new Date(log.timestamp).setHours(0,0,0,0) === today);

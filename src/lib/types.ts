@@ -30,12 +30,6 @@ export interface ActivityEntry {
   caloriesBurned: number;
 }
 
-export interface AppState {
-  profile: UserProfile | null;
-  foodLogs: FoodLogEntry[];
-  activities: ActivityEntry[];
-}
-
 export interface TDEEResult {
   bmr: number;
   tdee: number;
@@ -61,4 +55,23 @@ export interface WeightLossPlanResult {
   dailyDeficit: number;
   status: 'safe' | 'too_aggressive' | 'unsafe';
   warningMessage?: string;
+  // Metadata for active plans
+  id?: string;
+  startDate?: number;
+  targetLossKg?: number;
+  durationWeeks?: number;
+  startWeight?: number;
+}
+
+export interface AchievedPlan extends WeightLossPlanResult {
+  achievedDate: number;
+  endWeight: number;
+}
+
+export interface AppState {
+  profile: UserProfile | null;
+  foodLogs: FoodLogEntry[];
+  activities: ActivityEntry[];
+  activePlan: WeightLossPlanResult | null;
+  planHistory: AchievedPlan[];
 }

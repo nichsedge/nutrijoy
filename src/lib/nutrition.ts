@@ -27,6 +27,12 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
     recommendedCalories = tdee + 300;
   }
 
+  // Enforce minimum safe calories
+  const minCalories = profile.sex === 'female' ? 1200 : 1500;
+  if (recommendedCalories < minCalories) {
+    recommendedCalories = minCalories;
+  }
+
   const sugarLimit = (recommendedCalories * 0.1) / 4; 
   const sodiumLimit = 2000;
 
@@ -48,7 +54,7 @@ export function calculateWeightLossPlan(input: WeightLossPlanInput): WeightLossP
   const totalDeficitNeeded = targetLossKg * 7700;
   const days = durationWeeks * 7;
   const dailyDeficit = totalDeficitNeeded / days;
-  const dailyTarget = tdee - dailyDeficit;
+  let dailyTarget = tdee - dailyDeficit;
 
   let status: WeightLossPlanResult['status'] = 'safe';
   let warningMessage = '';
@@ -57,7 +63,12 @@ export function calculateWeightLossPlan(input: WeightLossPlanInput): WeightLossP
 
   if (dailyTarget < minCalories) {
     status = 'unsafe';
-    warningMessage = `This plan results in ${Math.round(dailyTarget)} kcal/day, which is below the minimum safe limit of ${minCalories} kcal/day for your gender.`;
+    if (dailyTarget < 0) {
+      warningMessage = `This plan is physically impossible. It requires a deficit larger than your total energy expenditure. Please set a more realistic goal.`;
+      dailyTarget = 0;
+    } else {
+      warningMessage = `This plan results in ${Math.round(dailyTarget)} kcal/day, which is below the minimum safe limit of ${minCalories} kcal/day for your gender.`;
+    }
   } else if (dailyDeficit > 1000) {
     status = 'too_aggressive';
     warningMessage = `A daily deficit of ${Math.round(dailyDeficit)} kcal is considered too aggressive. Aim for a deficit under 1000 kcal for sustainable weight loss.`;

@@ -68,7 +68,19 @@ const translations = {
     tooAggressive: 'Too Aggressive',
     unsafe: 'Unsafe',
     safe: 'Safe Plan',
-    plannerDesc: 'Create a sustainable weight loss timeline based on your unique metabolism.'
+    plannerDesc: 'Create a sustainable weight loss timeline based on your unique metabolism.',
+    activePlan: 'Active Plan',
+    startPlan: 'Start This Plan',
+    completePlan: 'Complete Plan',
+    planHistory: 'Plan History',
+    achievedOn: 'Achieved on',
+    startWeight: 'Start Weight',
+    endWeight: 'End Weight',
+    confirmComplete: 'Confirm Plan Completion',
+    enterEndWeight: 'Enter your final weight to complete this plan:',
+    cancel: 'Cancel',
+    planStarted: 'Plan Started!',
+    planCompleted: 'Plan Completed!'
   },
   id: {
     appName: 'NutriJoy',
@@ -137,7 +149,19 @@ const translations = {
     tooAggressive: 'Terlalu Agresif',
     unsafe: 'Tidak Aman',
     safe: 'Rencana Aman',
-    plannerDesc: 'Buat lini masa penurunan berat badan yang berkelanjutan berdasarkan metabolisme unik Anda.'
+    plannerDesc: 'Buat lini masa penurunan berat badan yang berkelanjutan berdasarkan metabolisme unik Anda.',
+    activePlan: 'Rencana Aktif',
+    startPlan: 'Mulai Rencana Ini',
+    completePlan: 'Selesaikan Rencana',
+    planHistory: 'Riwayat Rencana',
+    achievedOn: 'Dicapai pada',
+    startWeight: 'Berat Awal',
+    endWeight: 'Berat Akhir',
+    confirmComplete: 'Konfirmasi Penyelesaian Rencana',
+    enterEndWeight: 'Masukkan berat badan akhirmu untuk menyelesaikan rencana ini:',
+    cancel: 'Batal',
+    planStarted: 'Rencana Dimulai!',
+    planCompleted: 'Rencana Selesai!'
   }
 };
 

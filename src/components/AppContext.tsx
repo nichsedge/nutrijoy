@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AppState, UserProfile, FoodLogEntry, ActivityEntry, Language } from '@/lib/types';
+import { AppState, UserProfile, FoodLogEntry, ActivityEntry, Language, WeightLossPlanResult, AchievedPlan } from '@/lib/types';
 import { loadState, saveState } from '@/lib/storage';
 
 interface AppContextType {
@@ -11,6 +11,8 @@ interface AppContextType {
   addActivity: (entry: ActivityEntry) => void;
   setLanguage: (lang: Language) => void;
   resetState: (newState: AppState) => void;
+  setActivePlan: (plan: WeightLossPlanResult | null) => void;
+  completePlan: (endWeight: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -20,6 +22,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     profile: null,
     foodLogs: [],
     activities: [],
+    activePlan: null,
+    planHistory: [],
   });
 
   const [hydrated, setHydrated] = useState(false);
@@ -57,10 +61,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setState(newState);
   };
 
+  const setActivePlan = (plan: WeightLossPlanResult | null) => {
+    setState(prev => ({ ...prev, activePlan: plan }));
+  };
+
+  const completePlan = (endWeight: number) => {
+    if (!state.activePlan || !state.profile) return;
+
+    const achieved: AchievedPlan = {
+      ...state.activePlan,
+      achievedDate: Date.now(),
+      endWeight,
+    };
+
+    setState(prev => ({
+      ...prev,
+      activePlan: null,
+      planHistory: [achieved, ...prev.planHistory],
+      profile: prev.profile ? { ...prev.profile, weight: endWeight } : null
+    }));
+  };
+
   if (!hydrated) return null;
 
   return (
-    <AppContext.Provider value={{ state, setProfile, addFoodLog, addActivity, setLanguage, resetState }}>
+    <AppContext.Provider value={{ 
+      state, 
+      setProfile, 
+      addFoodLog, 
+      addActivity, 
+      setLanguage, 
+      resetState,
+      setActivePlan,
+      completePlan
+    }}>
       {children}
     </AppContext.Provider>
   );
