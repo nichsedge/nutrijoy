@@ -149,9 +149,24 @@ export default function OnboardingPage() {
               <SelectItem value="lose">{t.lose}</SelectItem>
               <SelectItem value="maintain">{t.maintain}</SelectItem>
               <SelectItem value="gain">{t.gain}</SelectItem>
+              <SelectItem value="recompose">{t.recompose || 'Tone & Shape'}</SelectItem>
             </SelectContent>
           </Select>
         </div>
+
+        {formData.weight && formData.height && formData.goal === 'lose' && (
+          (() => {
+            const bmi = formData.weight / Math.pow(formData.height / 100, 2);
+            if (bmi >= 18.5 && bmi <= 24.9) {
+              return (
+                <div className="p-4 bg-accent/20 rounded-2xl border border-accent text-sm text-primary">
+                  <strong>Tip:</strong> Your BMI is in the healthy range! If your goal is to look more toned and fit, we recommend switching your goal to <strong>{t.recompose || 'Tone & Shape'}</strong> to focus on building muscle while losing fat.
+                </div>
+              );
+            }
+            return null;
+          })()
+        )}
 
         <Button type="submit" className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 mt-8">
           {t.saveProfile}

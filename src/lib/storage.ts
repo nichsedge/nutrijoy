@@ -1,4 +1,4 @@
-import { AppState, UserProfile, FoodLogEntry, ActivityEntry } from './types';
+import { AppState, UserProfile, FoodLogEntry, ActivityEntry, MeasurementEntry } from './types';
 
 const STORAGE_KEY = 'nutrijoy_app_state';
 
@@ -6,9 +6,23 @@ const defaultState: AppState = {
   profile: null,
   foodLogs: [],
   activities: [],
+  measurements: [],
   activePlan: null,
   planHistory: [],
 };
+
+export function sanitizeState(state: any): AppState {
+  return {
+    ...defaultState,
+    ...state,
+    // Ensure arrays and objects exist even if missing in old state
+    foodLogs: state.foodLogs || [],
+    activities: state.activities || [],
+    measurements: state.measurements || [],
+    planHistory: state.planHistory || [],
+    activePlan: state.activePlan || null,
+  };
+}
 
 export function loadState(): AppState {
   if (typeof window === 'undefined') return defaultState;
@@ -16,15 +30,7 @@ export function loadState(): AppState {
   if (!stored) return defaultState;
   try {
     const state = JSON.parse(stored);
-    return {
-      ...defaultState,
-      ...state,
-      // Ensure arrays and objects exist even if missing in old state
-      foodLogs: state.foodLogs || [],
-      activities: state.activities || [],
-      planHistory: state.planHistory || [],
-      activePlan: state.activePlan || null,
-    };
+    return sanitizeState(state);
   } catch (e) {
     return defaultState;
   }
@@ -57,7 +63,7 @@ export function importData(file: File): Promise<AppState> {
     reader.onload = (event) => {
       try {
         const state = JSON.parse(event.target?.result as string);
-        resolve(state);
+        resolve(sanitizeState(state));
       } catch (e) {
         reject(e);
       }

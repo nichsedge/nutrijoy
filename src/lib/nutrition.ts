@@ -25,6 +25,8 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
     recommendedCalories = tdee - 500; 
   } else if (profile.goal === 'gain') {
     recommendedCalories = tdee + 300;
+  } else if (profile.goal === 'recompose') {
+    recommendedCalories = tdee - 200; // Slight deficit for body recomposition
   }
 
   // Enforce minimum safe calories
@@ -35,11 +37,21 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
 
   const sugarLimit = (recommendedCalories * 0.1) / 4; 
   const sodiumLimit = 2000;
+  
+  // Protein: ~2.0g/kg for recomposition, ~1.6g/kg otherwise (min 50g)
+  let proteinLimit = profile.goal === 'recompose' ? profile.weight * 2.0 : profile.weight * 1.6;
+  proteinLimit = Math.max(50, proteinLimit);
+
+  const fiberLimit = profile.goal === 'recompose' ? 30 : 25; // g
+  const vitaminCLimit = 90; // mg
 
   return {
     bmr,
     tdee,
     recommendedCalories: Math.round(recommendedCalories),
+    proteinLimit: Math.round(proteinLimit),
+    fiberLimit,
+    vitaminCLimit,
     sugarLimit: Math.round(sugarLimit),
     sodiumLimit: Math.round(sodiumLimit),
   };
@@ -64,6 +76,9 @@ export function calculateWeightPlan(input: WeightPlanInput): WeightPlanResult {
   } else if (goal === 'gain') {
     dailyTarget += dailyChange;
     dailyDeficit = dailyChange; // Represents surplus
+  } else if (goal === 'recompose') {
+    dailyTarget -= 200;
+    dailyDeficit = 200;
   } else {
     dailyTarget = tdee;
     dailyDeficit = 0;

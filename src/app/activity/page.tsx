@@ -12,6 +12,9 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 
 const MOCK_ACTIVITIES = [
+  { name: 'Pilates (Core & Posture)', met: 3.0, icon: Wind, color: 'bg-teal-500' },
+  { name: 'Glute Basics', met: 4.5, icon: Footprints, color: 'bg-pink-500' },
+  { name: 'Dumbbell Basics', met: 5.0, icon: Dumbbell, color: 'bg-indigo-400' },
   { name: 'Walking (Casual)', met: 3.0, icon: Footprints, color: 'bg-blue-500' },
   { name: 'Running (Moderate)', met: 8.0, icon: Wind, color: 'bg-orange-500' },
   { name: 'Cycling (Fast)', met: 10.0, icon: Bike, color: 'bg-green-500' },

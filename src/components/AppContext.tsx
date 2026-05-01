@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AppState, UserProfile, FoodLogEntry, ActivityEntry, Language, WeightPlanResult, AchievedPlan } from '@/lib/types';
+import { AppState, UserProfile, FoodLogEntry, ActivityEntry, MeasurementEntry, WaterLogEntry, Language, WeightPlanResult, AchievedPlan } from '@/lib/types';
 import { loadState, saveState } from '@/lib/storage';
 
 interface AppContextType {
@@ -15,6 +15,10 @@ interface AppContextType {
   completePlan: (endWeight: number) => void;
   removeFoodLog: (id: string) => void;
   removeActivity: (id: string) => void;
+  addMeasurement: (entry: MeasurementEntry) => void;
+  removeMeasurement: (id: string) => void;
+  addWaterLog: (entry: WaterLogEntry) => void;
+  removeWaterLog: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -24,6 +28,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     profile: null,
     foodLogs: [],
     activities: [],
+    measurements: [],
+    waterLogs: [],
     activePlan: null,
     planHistory: [],
   });
@@ -46,19 +52,35 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addFoodLog = (entry: FoodLogEntry) => {
-    setState(prev => ({ ...prev, foodLogs: [entry, ...prev.foodLogs] }));
+    setState(prev => ({ ...prev, foodLogs: [entry, ...(prev.foodLogs || [])] }));
   };
 
   const addActivity = (entry: ActivityEntry) => {
-    setState(prev => ({ ...prev, activities: [entry, ...prev.activities] }));
+    setState(prev => ({ ...prev, activities: [entry, ...(prev.activities || [])] }));
   };
   
   const removeFoodLog = (id: string) => {
-    setState(prev => ({ ...prev, foodLogs: prev.foodLogs.filter(log => log.id !== id) }));
+    setState(prev => ({ ...prev, foodLogs: (prev.foodLogs || []).filter(log => log.id !== id) }));
   };
 
   const removeActivity = (id: string) => {
-    setState(prev => ({ ...prev, activities: prev.activities.filter(act => act.id !== id) }));
+    setState(prev => ({ ...prev, activities: (prev.activities || []).filter(act => act.id !== id) }));
+  };
+
+  const addMeasurement = (entry: MeasurementEntry) => {
+    setState(prev => ({ ...prev, measurements: [entry, ...(prev.measurements || [])] }));
+  };
+
+  const removeMeasurement = (id: string) => {
+    setState(prev => ({ ...prev, measurements: (prev.measurements || []).filter(m => m.id !== id) }));
+  };
+
+  const addWaterLog = (entry: WaterLogEntry) => {
+    setState(prev => ({ ...prev, waterLogs: [entry, ...(prev.waterLogs || [])] }));
+  };
+
+  const removeWaterLog = (id: string) => {
+    setState(prev => ({ ...prev, waterLogs: (prev.waterLogs || []).filter(w => w.id !== id) }));
   };
 
   const setLanguage = (lang: Language) => {
@@ -87,7 +109,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setState(prev => ({
       ...prev,
       activePlan: null,
-      planHistory: [achieved, ...prev.planHistory],
+      planHistory: [achieved, ...(prev.planHistory || [])],
       profile: prev.profile ? { ...prev.profile, weight: endWeight } : null
     }));
   };
@@ -105,7 +127,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setActivePlan,
       completePlan,
       removeFoodLog,
-      removeActivity
+      removeActivity,
+      addMeasurement,
+      removeMeasurement,
+      addWaterLog,
+      removeWaterLog
     }}>
       {children}
     </AppContext.Provider>

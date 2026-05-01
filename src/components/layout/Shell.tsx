@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Utensils, Activity, Settings, Calendar } from 'lucide-react';
+import { Home, Utensils, Activity, Settings, Calendar, Ruler } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useApp } from '../AppContext';
 import { getTranslation } from '@/lib/translations';
@@ -16,6 +16,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: '/', icon: Home, label: t.dashboard },
     { href: '/food', icon: Utensils, label: t.logs },
+    { href: '/measurements', icon: Ruler, label: t.measurements || 'Metrics' },
     { href: '/planner', icon: Calendar, label: t.planner },
     { href: '/settings', icon: Settings, label: t.settings },
   ];
@@ -31,7 +32,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <main className="flex-1 overflow-y-auto px-6 py-4">
         {children}
       </main>
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-border px-6 py-3 flex justify-between items-center z-50 rounded-t-3xl shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass border-t border-white/50 px-6 py-3 flex justify-between items-center z-50 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.04)]">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href === '/food' && pathname === '/activity');
           const Icon = item.icon;

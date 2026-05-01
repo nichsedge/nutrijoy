@@ -21,6 +21,9 @@ export default function FoodLoggingPage() {
     name: '',
     quantity: '',
     calories: '',
+    protein: '',
+    fiber: '',
+    vitaminC: '',
     sugar: '',
     sodium: ''
   });
@@ -40,6 +43,9 @@ export default function FoodLoggingPage() {
       name: formData.name,
       quantity: formData.quantity || '1 serving',
       calories: parseInt(formData.calories) || 0,
+      protein: parseInt(formData.protein) || 0,
+      fiber: parseInt(formData.fiber) || 0,
+      vitaminC: parseInt(formData.vitaminC) || 0,
       sugar: parseInt(formData.sugar) || 0,
       sodium: parseInt(formData.sodium) || 0,
     });
@@ -48,6 +54,9 @@ export default function FoodLoggingPage() {
       name: '',
       quantity: '',
       calories: '',
+      protein: '',
+      fiber: '',
+      vitaminC: '',
       sugar: '',
       sodium: ''
     });
@@ -125,7 +134,49 @@ export default function FoodLoggingPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="sugar">Sugar (g)</Label>
+                  <Label htmlFor="protein">{t.protein || 'Protein'} (g)</Label>
+                  <Input 
+                    id="protein"
+                    name="protein"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.protein}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fiber">{t.fiber || 'Fiber'} (g)</Label>
+                  <Input 
+                    id="fiber"
+                    name="fiber"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.fiber}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="vitaminC">{t.vitaminC || 'Vitamin C'} (mg)</Label>
+                  <Input 
+                    id="vitaminC"
+                    name="vitaminC"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.vitaminC}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="sugar">{t.sugar || 'Sugar'} (g)</Label>
                   <Input 
                     id="sugar"
                     name="sugar"
@@ -137,7 +188,7 @@ export default function FoodLoggingPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="sodium">Sodium (mg)</Label>
+                  <Label htmlFor="sodium">{t.sodium || 'Sodium'} (mg)</Label>
                   <Input 
                     id="sodium"
                     name="sodium"
@@ -174,7 +225,11 @@ export default function FoodLoggingPage() {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="text-[10px] uppercase font-bold text-muted-foreground">Sugar</p>
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.protein || 'Protein'}</p>
+                      <p className="text-xs font-bold text-primary">{log.protein || 0}g</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.sugar || 'Sugar'}</p>
                       <p className="text-xs font-bold text-secondary">{log.sugar}g</p>
                     </div>
                     <Button 

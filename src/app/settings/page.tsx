@@ -178,6 +178,7 @@ export default function SettingsPage() {
                       <SelectItem value="lose">{t.lose}</SelectItem>
                       <SelectItem value="maintain">{t.maintain}</SelectItem>
                       <SelectItem value="gain">{t.gain}</SelectItem>
+                      <SelectItem value="recompose">{t.recompose || 'Tone & Shape'}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

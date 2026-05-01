@@ -7,7 +7,7 @@ export interface UserProfile {
   height: number; // cm
   weight: number; // kg
   activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
-  goal: 'lose' | 'maintain' | 'gain';
+  goal: 'lose' | 'maintain' | 'gain' | 'recompose';
   targetWeightLossPerWeek?: number; // kg
   language: Language;
 }
@@ -18,8 +18,21 @@ export interface FoodLogEntry {
   name: string;
   quantity: string;
   calories: number;
+  protein: number; // g
+  fiber?: number; // g
+  vitaminC?: number; // mg
   sugar: number; // g
   sodium: number; // mg
+}
+
+export interface MeasurementEntry {
+  id: string;
+  timestamp: number;
+  weight: number;
+  waist: number;
+  hips: number;
+  neck: number;
+  bodyFatPercentage?: number;
 }
 
 export interface ActivityEntry {
@@ -30,10 +43,19 @@ export interface ActivityEntry {
   caloriesBurned: number;
 }
 
+export interface WaterLogEntry {
+  id: string;
+  timestamp: number;
+  amountMl: number;
+}
+
 export interface TDEEResult {
   bmr: number;
   tdee: number;
   recommendedCalories: number;
+  proteinLimit: number;
+  fiberLimit: number;
+  vitaminCLimit: number;
   sugarLimit: number;
   sodiumLimit: number;
 }
@@ -46,7 +68,7 @@ export interface WeightPlanInput {
   height: number;
   sex: 'male' | 'female';
   activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
-  goal: 'lose' | 'maintain' | 'gain';
+  goal: 'lose' | 'maintain' | 'gain' | 'recompose';
 }
 
 export interface WeightPlanResult {
@@ -62,7 +84,7 @@ export interface WeightPlanResult {
   targetChangeKg?: number;
   durationWeeks?: number;
   startWeight?: number;
-  goal?: 'lose' | 'maintain' | 'gain';
+  goal?: 'lose' | 'maintain' | 'gain' | 'recompose';
 }
 
 export interface AchievedPlan extends WeightPlanResult {
@@ -74,6 +96,8 @@ export interface AppState {
   profile: UserProfile | null;
   foodLogs: FoodLogEntry[];
   activities: ActivityEntry[];
+  measurements: MeasurementEntry[];
+  waterLogs: WaterLogEntry[];
   activePlan: WeightPlanResult | null;
   planHistory: AchievedPlan[];
 }
