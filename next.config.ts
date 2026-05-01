@@ -1,8 +1,12 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from "next";
+import withSerwistInit from "@serwist/next";
+
+const withSerwist = withSerwistInit({
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+});
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  outputFileTracingRoot: __dirname,
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -14,23 +18,17 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
-        port: '',
-        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
       },
     ],
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);

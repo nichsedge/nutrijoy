@@ -46,8 +46,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setState(loadState());
-    setHydrated(true);
+    loadState().then(data => {
+      setState(data);
+      setHydrated(true);
+    });
   }, []);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { AppState, UserProfile, FoodLogEntry, ActivityEntry, MeasurementEntry } from './types';
+import { get, set, del } from 'idb-keyval';
 
 const STORAGE_KEY = 'nutrijoy_app_state';
 
@@ -32,26 +33,62 @@ export function sanitizeState(state: any): AppState {
   };
 }
 
-export function loadState(): AppState {
+/**
+ * Loads state from IndexedDB with a fallback migration from localStorage.
+ */
+export async function loadState(): Promise<AppState> {
   if (typeof window === 'undefined') return defaultState;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) return defaultState;
+
   try {
-    const state = JSON.parse(stored);
-    return sanitizeState(state);
+    // Try to get from IndexedDB
+    let stored = await get(STORAGE_KEY);
+
+    if (!stored) {
+      // Fallback/Migration from legacy localStorage
+      const legacyStored = localStorage.getItem(STORAGE_KEY);
+      if (legacyStored) {
+        try {
+          stored = JSON.parse(legacyStored);
+          // Port to IndexedDB
+          await set(STORAGE_KEY, stored);
+          // Optional: Clear legacy storage to prevent future confusion
+          // localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {
+          console.error("Failed to parse legacy storage", e);
+        }
+      }
+    }
+
+    if (!stored) return defaultState;
+    return sanitizeState(stored);
   } catch (e) {
+    console.error("Error loading state from IndexedDB", e);
     return defaultState;
   }
 }
 
-export function saveState(state: AppState) {
+/**
+ * Saves state to IndexedDB.
+ */
+export async function saveState(state: AppState) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  try {
+    await set(STORAGE_KEY, state);
+  } catch (e) {
+    console.error("Error saving state to IndexedDB", e);
+  }
 }
 
-export function clearState() {
+/**
+ * Clears state from IndexedDB.
+ */
+export async function clearState() {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem(STORAGE_KEY);
+  try {
+    await del(STORAGE_KEY);
+  } catch (e) {
+    console.error("Error clearing IndexedDB", e);
+  }
 }
 
 export function exportData(state: AppState) {

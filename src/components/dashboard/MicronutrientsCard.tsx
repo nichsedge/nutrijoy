@@ -42,7 +42,7 @@ export function MicronutrientsCard({ t, nutrients }: { t: any, nutrients: Nutrie
             {primaryNutrients.map((n, i) => (
               <div key={i} className="space-y-1">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-primary/80">
-                  {React.cloneElement(n.icon as React.ReactElement, { className: "w-3 h-3" })}
+                  <span className="[&>svg]:w-3 [&>svg]:h-3">{n.icon}</span>
                   {n.label}
                 </div>
                 <div className="flex justify-between text-[10px] font-bold">
@@ -60,7 +60,7 @@ export function MicronutrientsCard({ t, nutrients }: { t: any, nutrients: Nutrie
                 {secondaryNutrients.map((n, i) => (
                   <div key={i} className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-primary/80">
-                      {React.cloneElement(n.icon as React.ReactElement, { className: "w-3 h-3" })}
+                      <span className="[&>svg]:w-3 [&>svg]:h-3">{n.icon}</span>
                       {n.label}
                     </div>
                     <div className="flex justify-between text-[10px] font-bold">
