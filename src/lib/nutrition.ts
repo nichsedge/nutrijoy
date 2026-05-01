@@ -44,6 +44,10 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
 
   const fiberLimit = profile.goal === 'recompose' ? 30 : 25; // g
   const vitaminCLimit = 90; // mg
+  const biotinLimit = 30; // mcg
+  const zincLimit = profile.sex === 'female' ? 8 : 11; // mg
+  const omega3Limit = profile.sex === 'female' ? 1100 : 1600; // mg
+  const vitaminELimit = 15; // mg
 
   return {
     bmr,
@@ -52,6 +56,10 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
     proteinLimit: Math.round(proteinLimit),
     fiberLimit,
     vitaminCLimit,
+    biotinLimit,
+    zincLimit,
+    omega3Limit,
+    vitaminELimit,
     sugarLimit: Math.round(sugarLimit),
     sodiumLimit: Math.round(sodiumLimit),
   };

@@ -3,6 +3,9 @@
 import { useApp } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { DailyProgress } from '@/components/dashboard/DailyProgress';
+import { SleepTracker } from '@/components/wellness/SleepTracker';
+import { SelfCareChecklist } from '@/components/wellness/SelfCareChecklist';
+import { CycleTracker } from '@/components/wellness/CycleTracker';
 import { getTranslation } from '@/lib/translations';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -43,6 +46,22 @@ export default function Home() {
 
         <DailyProgress />
 
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-sm uppercase tracking-widest opacity-60">Daily Check-ins</h3>
+          </div>
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-4 px-4 no-scrollbar">
+            <div className="min-w-[85vw] sm:min-w-[350px] snap-center">
+              <SleepTracker />
+            </div>
+            <div className="min-w-[85vw] sm:min-w-[350px] snap-center">
+              <CycleTracker />
+            </div>
+            <div className="min-w-[85vw] sm:min-w-[350px] snap-center">
+              <SelfCareChecklist />
+            </div>
+          </div>
+        </section>
 
         <section>
           <div className="flex items-center justify-between mb-4">

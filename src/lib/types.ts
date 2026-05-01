@@ -21,8 +21,32 @@ export interface FoodLogEntry {
   protein: number; // g
   fiber?: number; // g
   vitaminC?: number; // mg
+  biotin?: number; // mcg
+  zinc?: number; // mg
+  omega3?: number; // mg
+  vitaminE?: number; // mg
   sugar: number; // g
   sodium: number; // mg
+}
+
+export interface SleepLogEntry {
+  id: string;
+  timestamp: number;
+  durationHours: number;
+  restednessScore: number; // 1-5
+}
+
+export interface CycleLogEntry {
+  id: string;
+  timestamp: number;
+  cycleDay: number;
+  symptoms: string[];
+}
+
+export interface SelfCareLogEntry {
+  id: string;
+  timestamp: number;
+  checkedItems: string[]; // List of IDs or names of completed tasks
 }
 
 export interface MeasurementEntry {
@@ -56,6 +80,10 @@ export interface TDEEResult {
   proteinLimit: number;
   fiberLimit: number;
   vitaminCLimit: number;
+  biotinLimit: number;
+  zincLimit: number;
+  omega3Limit: number;
+  vitaminELimit: number;
   sugarLimit: number;
   sodiumLimit: number;
 }
@@ -98,6 +126,9 @@ export interface AppState {
   activities: ActivityEntry[];
   measurements: MeasurementEntry[];
   waterLogs: WaterLogEntry[];
+  sleepLogs: SleepLogEntry[];
+  cycleLogs: CycleLogEntry[];
+  selfCareLogs: SelfCareLogEntry[];
   activePlan: WeightPlanResult | null;
   planHistory: AchievedPlan[];
 }

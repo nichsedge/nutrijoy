@@ -7,6 +7,10 @@ const defaultState: AppState = {
   foodLogs: [],
   activities: [],
   measurements: [],
+  waterLogs: [],
+  sleepLogs: [],
+  cycleLogs: [],
+  selfCareLogs: [],
   activePlan: null,
   planHistory: [],
 };
@@ -19,6 +23,10 @@ export function sanitizeState(state: any): AppState {
     foodLogs: state.foodLogs || [],
     activities: state.activities || [],
     measurements: state.measurements || [],
+    waterLogs: state.waterLogs || [],
+    sleepLogs: state.sleepLogs || [],
+    cycleLogs: state.cycleLogs || [],
+    selfCareLogs: state.selfCareLogs || [],
     planHistory: state.planHistory || [],
     activePlan: state.activePlan || null,
   };

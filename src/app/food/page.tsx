@@ -24,6 +24,10 @@ export default function FoodLoggingPage() {
     protein: '',
     fiber: '',
     vitaminC: '',
+    biotin: '',
+    zinc: '',
+    omega3: '',
+    vitaminE: '',
     sugar: '',
     sodium: ''
   });
@@ -46,6 +50,10 @@ export default function FoodLoggingPage() {
       protein: parseInt(formData.protein) || 0,
       fiber: parseInt(formData.fiber) || 0,
       vitaminC: parseInt(formData.vitaminC) || 0,
+      biotin: parseInt(formData.biotin) || 0,
+      zinc: parseInt(formData.zinc) || 0,
+      omega3: parseInt(formData.omega3) || 0,
+      vitaminE: parseInt(formData.vitaminE) || 0,
       sugar: parseInt(formData.sugar) || 0,
       sodium: parseInt(formData.sodium) || 0,
     });
@@ -57,6 +65,10 @@ export default function FoodLoggingPage() {
       protein: '',
       fiber: '',
       vitaminC: '',
+      biotin: '',
+      zinc: '',
+      omega3: '',
+      vitaminE: '',
       sugar: '',
       sodium: ''
     });
@@ -168,6 +180,60 @@ export default function FoodLoggingPage() {
                     type="number"
                     placeholder="0" 
                     value={formData.vitaminC}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="biotin">{t.biotin || 'Biotin'} (mcg)</Label>
+                  <Input 
+                    id="biotin"
+                    name="biotin"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.biotin}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="zinc">{t.zinc || 'Zinc'} (mg)</Label>
+                  <Input 
+                    id="zinc"
+                    name="zinc"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.zinc}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="omega3">{t.omega3 || 'Omega-3'} (mg)</Label>
+                  <Input 
+                    id="omega3"
+                    name="omega3"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.omega3}
+                    onChange={handleInputChange}
+                    className="rounded-xl border-primary/20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="vitaminE">{t.vitaminE || 'Vitamin E'} (mg)</Label>
+                  <Input 
+                    id="vitaminE"
+                    name="vitaminE"
+                    type="number"
+                    placeholder="0" 
+                    value={formData.vitaminE}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
                   />

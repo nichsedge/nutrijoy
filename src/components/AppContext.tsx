@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AppState, UserProfile, FoodLogEntry, ActivityEntry, MeasurementEntry, WaterLogEntry, Language, WeightPlanResult, AchievedPlan } from '@/lib/types';
+import { AppState, UserProfile, FoodLogEntry, ActivityEntry, MeasurementEntry, WaterLogEntry, Language, WeightPlanResult, AchievedPlan, SleepLogEntry, CycleLogEntry, SelfCareLogEntry } from '@/lib/types';
 import { loadState, saveState } from '@/lib/storage';
 
 interface AppContextType {
@@ -19,6 +19,12 @@ interface AppContextType {
   removeMeasurement: (id: string) => void;
   addWaterLog: (entry: WaterLogEntry) => void;
   removeWaterLog: (id: string) => void;
+  addSleepLog: (entry: SleepLogEntry) => void;
+  removeSleepLog: (id: string) => void;
+  addCycleLog: (entry: CycleLogEntry) => void;
+  removeCycleLog: (id: string) => void;
+  addSelfCareLog: (entry: SelfCareLogEntry) => void;
+  removeSelfCareLog: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -30,6 +36,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     activities: [],
     measurements: [],
     waterLogs: [],
+    sleepLogs: [],
+    cycleLogs: [],
+    selfCareLogs: [],
     activePlan: null,
     planHistory: [],
   });
@@ -83,6 +92,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setState(prev => ({ ...prev, waterLogs: (prev.waterLogs || []).filter(w => w.id !== id) }));
   };
 
+  const addSleepLog = (entry: SleepLogEntry) => {
+    setState(prev => ({ ...prev, sleepLogs: [entry, ...(prev.sleepLogs || [])] }));
+  };
+
+  const removeSleepLog = (id: string) => {
+    setState(prev => ({ ...prev, sleepLogs: (prev.sleepLogs || []).filter(s => s.id !== id) }));
+  };
+
+  const addCycleLog = (entry: CycleLogEntry) => {
+    setState(prev => ({ ...prev, cycleLogs: [entry, ...(prev.cycleLogs || [])] }));
+  };
+
+  const removeCycleLog = (id: string) => {
+    setState(prev => ({ ...prev, cycleLogs: (prev.cycleLogs || []).filter(c => c.id !== id) }));
+  };
+
+  const addSelfCareLog = (entry: SelfCareLogEntry) => {
+    setState(prev => ({ ...prev, selfCareLogs: [entry, ...(prev.selfCareLogs || [])] }));
+  };
+
+  const removeSelfCareLog = (id: string) => {
+    setState(prev => ({ ...prev, selfCareLogs: (prev.selfCareLogs || []).filter(s => s.id !== id) }));
+  };
+
   const setLanguage = (lang: Language) => {
     if (state.profile) {
       setProfile({ ...state.profile, language: lang });
@@ -131,7 +164,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       addMeasurement,
       removeMeasurement,
       addWaterLog,
-      removeWaterLog
+      removeWaterLog,
+      addSleepLog,
+      removeSleepLog,
+      addCycleLog,
+      removeCycleLog,
+      addSelfCareLog,
+      removeSelfCareLog
     }}>
       {children}
     </AppContext.Provider>

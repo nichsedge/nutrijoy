@@ -6,7 +6,8 @@ import { calculateTDEE } from '@/lib/nutrition';
 import { getTranslation } from '@/lib/translations';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
-import { Flame, Zap, Droplets, Beef, Leaf, Pill, GlassWater } from 'lucide-react';
+import { Flame, Zap, Droplets, Beef, Leaf, Pill, GlassWater, Sparkles, Sun } from 'lucide-react';
+import { MicronutrientsCard } from './MicronutrientsCard';
 
 export function DailyProgress() {
   const { state, addWaterLog } = useApp();
@@ -29,6 +30,10 @@ export function DailyProgress() {
   const proteinConsumed = todaysFood.reduce((acc, curr) => acc + (curr.protein || 0), 0);
   const fiberConsumed = todaysFood.reduce((acc, curr) => acc + (curr.fiber || 0), 0);
   const vitaminCConsumed = todaysFood.reduce((acc, curr) => acc + (curr.vitaminC || 0), 0);
+  const biotinConsumed = todaysFood.reduce((acc, curr) => acc + (curr.biotin || 0), 0);
+  const zincConsumed = todaysFood.reduce((acc, curr) => acc + (curr.zinc || 0), 0);
+  const omega3Consumed = todaysFood.reduce((acc, curr) => acc + (curr.omega3 || 0), 0);
+  const vitaminEConsumed = todaysFood.reduce((acc, curr) => acc + (curr.vitaminE || 0), 0);
   const caloriesBurned = todaysActivities.reduce((acc, curr) => acc + curr.caloriesBurned, 0);
 
   const todaysWater = state.waterLogs?.filter(log => new Date(log.timestamp).setHours(0,0,0,0) === today) || [];
@@ -42,6 +47,10 @@ export function DailyProgress() {
   const proteinPercent = Math.min((proteinConsumed / goals.proteinLimit) * 100, 100);
   const fiberPercent = Math.min((fiberConsumed / goals.fiberLimit) * 100, 100);
   const vitaminCPercent = Math.min((vitaminCConsumed / goals.vitaminCLimit) * 100, 100);
+  const biotinPercent = Math.min((biotinConsumed / goals.biotinLimit) * 100, 100);
+  const zincPercent = Math.min((zincConsumed / goals.zincLimit) * 100, 100);
+  const omega3Percent = Math.min((omega3Consumed / goals.omega3Limit) * 100, 100);
+  const vitaminEPercent = Math.min((vitaminEConsumed / goals.vitaminELimit) * 100, 100);
   const waterPercent = Math.min((waterConsumed / waterGoal) * 100, 100);
 
   const handleAddWater = (amount: number) => {
@@ -144,21 +153,16 @@ export function DailyProgress() {
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-sm bg-accent/30">
-          <CardContent className="p-5 space-y-3">
-            <div className="flex items-center gap-2 text-primary font-bold">
-              <Pill className="w-5 h-5" />
-              <span className="text-sm uppercase tracking-tighter">{t.vitaminC || 'Vitamin C'}</span>
-            </div>
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs font-bold">
-                <span>{vitaminCConsumed}mg</span>
-                <span className="opacity-50">/ {goals.vitaminCLimit}mg</span>
-              </div>
-              <Progress value={vitaminCPercent} className="h-2" />
-            </div>
-          </CardContent>
-        </Card>
+        <MicronutrientsCard 
+          t={t} 
+          nutrients={[
+            { label: t.vitaminC, consumed: vitaminCConsumed, limit: goals.vitaminCLimit, unit: 'mg', icon: <Pill />, percent: vitaminCPercent },
+            { label: t.biotin, consumed: biotinConsumed, limit: goals.biotinLimit, unit: 'mcg', icon: <Sparkles />, percent: biotinPercent },
+            { label: t.zinc, consumed: zincConsumed, limit: goals.zincLimit, unit: 'mg', icon: <Zap />, percent: zincPercent },
+            { label: t.omega3, consumed: omega3Consumed, limit: goals.omega3Limit, unit: 'mg', icon: <Droplets />, percent: omega3Percent },
+            { label: t.vitaminE, consumed: vitaminEConsumed, limit: goals.vitaminELimit, unit: 'mg', icon: <Sun />, percent: vitaminEPercent },
+          ]} 
+        />
 
         <Card className="border-none shadow-sm bg-muted/50">
           <CardContent className="p-5 space-y-3 opacity-80">
