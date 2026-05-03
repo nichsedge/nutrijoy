@@ -12,7 +12,8 @@ export function SelfCareChecklist() {
   const t = getTranslation(state.profile?.language || 'en');
 
   const today = new Date().setHours(0, 0, 0, 0);
-  const todaysLog = state.selfCareLogs?.find(s => new Date(s.timestamp).setHours(0,0,0,0) === today);
+  const tomorrow = new Date(today).setHours(24, 0, 0, 0);
+  const todaysLog = state.selfCareLogs?.find(s => s.timestamp >= today && s.timestamp < tomorrow);
 
   const items = [
     { id: 'sunscreen', label: t.sunscreen },
