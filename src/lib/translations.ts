@@ -148,7 +148,17 @@ const translations = {
     cleansing: 'Evening Cleanse',
     faceMassage: 'Face Massage',
     noScreen: 'No Screen (30m before bed)',
-    silkPillow: 'Silk Pillowcase Used'
+    silkPillow: 'Silk Pillowcase Used',
+    weeklyProgress: 'Weekly Progress',
+    week: 'Week',
+    currentWeek: 'Current Week',
+    weeklyGoal: 'Weekly Goal',
+    reached: 'Reached',
+    remainingWeight: 'Remaining',
+    weightLeft: 'Weight Left',
+    progress: 'Progress',
+    noMeasurementsYet: 'No measurements for this week yet.',
+    logWeightToTrack: 'Log your weight in Measurements to track progress.'
   },
   id: {
     appName: 'NutriJoy',
@@ -297,7 +307,17 @@ const translations = {
     cleansing: 'Cuci Muka Malam',
     faceMassage: 'Pijat Wajah',
     noScreen: 'Tanpa Layar (30m sebelum tidur)',
-    silkPillow: 'Pakai Sarung Bantal Sutra'
+    silkPillow: 'Pakai Sarung Bantal Sutra',
+    weeklyProgress: 'Kemajuan Mingguan',
+    week: 'Minggu',
+    currentWeek: 'Minggu Ini',
+    weeklyGoal: 'Target Mingguan',
+    reached: 'Dicapai',
+    remainingWeight: 'Sisa',
+    weightLeft: 'Sisa Berat',
+    progress: 'Kemajuan',
+    noMeasurementsYet: 'Belum ada ukuran untuk minggu ini.',
+    logWeightToTrack: 'Catat berat badanmu di Ukuran Tubuh untuk melacak kemajuan.'
   }
 };
 

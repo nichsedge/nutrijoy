@@ -84,6 +84,53 @@ export default function PlannerPage() {
   const isGain = state.profile.goal === 'gain';
   const isMaintain = state.profile.goal === 'maintain';
 
+  // Weekly Progress Calculations
+  const activePlan = state.activePlan;
+  let currentWeek = 0;
+  let currentWeekTarget = 0;
+  let latestWeight = state.profile.weight;
+  let weekProgress = 0;
+  let weeklyData: { week: number; target: number; date: number }[] = [];
+
+  if (activePlan && activePlan.startDate && activePlan.durationWeeks && activePlan.startWeight !== undefined && (activePlan.targetChangeKg !== undefined || (activePlan as any).targetLossKg !== undefined)) {
+    const elapsedMs = Date.now() - activePlan.startDate;
+    const elapsedWeeks = elapsedMs / (1000 * 60 * 60 * 24 * 7);
+    currentWeek = Math.min(activePlan.durationWeeks, Math.floor(elapsedWeeks) + 1);
+    
+    const changeKg = activePlan.targetChangeKg ?? (activePlan as any).targetLossKg;
+    const weeklyChange = changeKg / activePlan.durationWeeks;
+    
+    // Generate weekly targets
+    for (let i = 1; i <= activePlan.durationWeeks; i++) {
+      const targetWeight = activePlan.goal === 'gain' 
+        ? activePlan.startWeight + (weeklyChange * i)
+        : activePlan.startWeight - (weeklyChange * i);
+      
+      weeklyData.push({
+        week: i,
+        target: Math.round(targetWeight * 10) / 10,
+        date: activePlan.startDate + (i * 7 * 24 * 60 * 60 * 1000)
+      });
+    }
+
+    currentWeekTarget = weeklyData[currentWeek - 1]?.target || activePlan.startWeight;
+    
+    // Find latest measurement within the active plan period
+    const relevantMeasurements = state.measurements
+      .filter(m => m.timestamp >= (activePlan.startDate || 0))
+      .sort((a, b) => b.timestamp - a.timestamp);
+    
+    if (relevantMeasurements.length > 0) {
+      latestWeight = relevantMeasurements[0].weight;
+      
+      const startWeight = activePlan.startWeight;
+      const totalChangeNeeded = Math.abs(changeKg);
+      const currentChange = Math.abs(latestWeight - startWeight);
+      
+      weekProgress = Math.min(100, Math.max(0, (currentChange / totalChangeNeeded) * 100));
+    }
+  }
+
   return (
     <Shell>
       <div className="space-y-6 animate-in slide-in-from-right-4 duration-300 pb-20">
@@ -93,39 +140,132 @@ export default function PlannerPage() {
         </div>
 
         {/* Active Plan Card */}
-        {state.activePlan && (
-          <Card className="border-2 border-primary/20 bg-primary/5 rounded-3xl overflow-hidden">
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <CardTitle className="text-lg font-bold flex items-center gap-2">
-                <Target className="w-5 h-5 text-primary" /> {(t as any).activePlan}
-              </CardTitle>
-              <Button variant="ghost" size="icon" onClick={handleCancelActivePlan} className="text-destructive">
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </CardHeader>
-            <CardContent className="p-6 pt-0 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-white rounded-2xl shadow-sm">
-                   <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">{t.dailyTarget}</p>
-                   <p className="text-2xl font-bold text-primary">{state.activePlan.dailyTarget}</p>
-                   <p className="text-[10px] font-bold text-muted-foreground">kcal/day</p>
+        {activePlan && (
+          <div className="space-y-6">
+            <Card className="border-2 border-primary/20 bg-primary/5 rounded-3xl overflow-hidden">
+              <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                  <Target className="w-5 h-5 text-primary" /> {(t as any).activePlan}
+                </CardTitle>
+                <Button variant="ghost" size="icon" onClick={handleCancelActivePlan} className="text-destructive">
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </CardHeader>
+              <CardContent className="p-6 pt-0 space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-white rounded-2xl shadow-sm">
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">{t.dailyTarget}</p>
+                    <p className="text-2xl font-bold text-primary">{activePlan.dailyTarget}</p>
+                    <p className="text-[10px] font-bold text-muted-foreground">kcal/day</p>
+                  </div>
+                  <div className="text-center p-3 bg-white rounded-2xl shadow-sm">
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Target {activePlan.goal === 'gain' ? 'Gain' : 'Loss'}</p>
+                    <p className="text-2xl font-bold text-secondary">{activePlan.goal === 'gain' ? '+' : '-'}{activePlan.targetChangeKg ?? (activePlan as any).targetLossKg} kg</p>
+                    <p className="text-[10px] font-bold text-muted-foreground">in {activePlan.durationWeeks} weeks</p>
+                  </div>
                 </div>
-                <div className="text-center p-3 bg-white rounded-2xl shadow-sm">
-                   <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Target {state.activePlan.goal === 'gain' ? 'Gain' : 'Loss'}</p>
-                   <p className="text-2xl font-bold text-secondary">{state.activePlan.goal === 'gain' ? '+' : '-'}{state.activePlan.targetChangeKg ?? (state.activePlan as any).targetLossKg} kg</p>
-                   <p className="text-[10px] font-bold text-muted-foreground">in {state.activePlan.durationWeeks} weeks</p>
+
+                {/* Weekly Progress Section */}
+                <div className="bg-white p-4 rounded-2xl shadow-sm space-y-4">
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground">{(t as any).currentWeek}</p>
+                      <h4 className="text-lg font-bold">{(t as any).week} {currentWeek} of {activePlan.durationWeeks}</h4>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground">{(t as any).weeklyGoal}</p>
+                      <p className="text-lg font-bold text-primary">{currentWeekTarget} kg</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs font-bold">
+                      <span>{(t as any).progress}</span>
+                      <span>{Math.round(weekProgress)}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-primary transition-all duration-1000" 
+                        style={{ width: `${weekProgress}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <span>{activePlan.startWeight} kg</span>
+                      <span>{activePlan.goal === 'gain' ? (activePlan.startWeight! + (activePlan.targetChangeKg ?? (activePlan as any).targetLossKg)) : (activePlan.startWeight! - (activePlan.targetChangeKg ?? (activePlan as any).targetLossKg))} kg</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
+                        <TrendingDown className={cn("w-4 h-4 text-secondary", activePlan.goal === 'gain' && "rotate-180")} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-muted-foreground">Latest Weight</p>
+                        <p className="text-sm font-bold">{latestWeight} kg</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-muted-foreground">{(t as any).weightLeft}</p>
+                      <p className="text-sm font-bold text-secondary">
+                        {Math.abs(Math.round((latestWeight - (activePlan.goal === 'gain' ? activePlan.startWeight! + (activePlan.targetChangeKg ?? (activePlan as any).targetLossKg) : activePlan.startWeight! - (activePlan.targetChangeKg ?? (activePlan as any).targetLossKg))) * 10) / 10)} kg
+                      </p>
+                    </div>
+                  </div>
                 </div>
+                
+                <Button onClick={() => setIsCompleteDialogOpen(true)} className="w-full h-12 rounded-xl font-bold text-lg">
+                  <Award className="w-5 h-5 mr-2" /> {(t as any).completePlan}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Weekly Breakdown */}
+            <div className="space-y-3">
+              <h3 className="font-bold text-sm px-1 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-primary" /> Weekly Breakdown
+              </h3>
+              <div className="grid gap-2">
+                {weeklyData.map((week) => {
+                  const isPast = week.week < currentWeek;
+                  const isCurrent = week.week === currentWeek;
+                  
+                  return (
+                    <div 
+                      key={week.week}
+                      className={cn(
+                        "p-4 rounded-2xl flex items-center justify-between border-2 transition-all",
+                        isCurrent ? "bg-white border-primary shadow-sm scale-[1.02]" : "bg-white/50 border-transparent text-muted-foreground"
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={cn(
+                          "w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs",
+                          isPast ? "bg-green-100 text-green-600" : 
+                          isCurrent ? "bg-primary text-primary-foreground" : 
+                          "bg-muted text-muted-foreground"
+                        )}>
+                          {isPast ? <CheckCircle2 className="w-4 h-4" /> : week.week}
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold">{(t as any).week} {week.week}</p>
+                          <p className="text-[10px] opacity-70">{new Date(week.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={cn("text-sm font-bold", isCurrent && "text-primary")}>{week.target} kg</p>
+                        <p className="text-[10px] opacity-70">Target</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              
-              <Button onClick={() => setIsCompleteDialogOpen(true)} className="w-full h-12 rounded-xl font-bold text-lg">
-                <Award className="w-5 h-5 mr-2" /> {(t as any).completePlan}
-              </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* Maintain Message */}
-        {isMaintain && !state.activePlan && (
+        {isMaintain && !activePlan && (
           <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-primary/5">
             <CardContent className="p-8 text-center space-y-4">
               <CheckCircle2 className="w-12 h-12 text-primary mx-auto" />
@@ -138,7 +278,7 @@ export default function PlannerPage() {
         )}
 
         {/* Planner Input Card */}
-        {!state.activePlan && !isMaintain && (
+        {!activePlan && !isMaintain && (
           <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
             <CardContent className="p-6 space-y-4">
               <div className="space-y-2">
@@ -173,7 +313,7 @@ export default function PlannerPage() {
         )}
 
         {/* Calculation Result */}
-        {calcResult && !state.activePlan && !isMaintain && (
+        {calcResult && !activePlan && !isMaintain && (
           <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
             {calcResult.status !== 'safe' && (
               <Alert variant="destructive" className="rounded-2xl border-2">
