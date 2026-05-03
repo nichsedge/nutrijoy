@@ -37,7 +37,7 @@ export function SelfCareChecklist() {
     }
     
     addSelfCareLog({
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
       checkedItems: nextChecked
     });

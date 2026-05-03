@@ -20,7 +20,7 @@ export function SleepTracker() {
 
   const handleLogSleep = () => {
     addSleepLog({
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
       durationHours: hours,
       restednessScore: restedness
