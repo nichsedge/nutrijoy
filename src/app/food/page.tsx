@@ -42,7 +42,7 @@ export default function FoodLoggingPage() {
     if (!formData.name.trim()) return;
 
     addFoodLog({
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
       name: formData.name,
       quantity: formData.quantity || '1 serving',

@@ -53,7 +53,7 @@ export default function ActivityPage() {
     const burned = Math.round(met * state.profile.weight * (totalMins / 60));
 
     addActivity({
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
       name,
       duration: totalMins,

@@ -34,7 +34,7 @@ export function CycleTracker() {
 
   const handleLogCycle = () => {
     addCycleLog({
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
       cycleDay: day,
       symptoms: selectedSymptoms
