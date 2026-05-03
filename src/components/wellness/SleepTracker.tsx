@@ -16,7 +16,8 @@ export function SleepTracker() {
   const [restedness, setRestedness] = useState(3);
 
   const today = new Date().setHours(0, 0, 0, 0);
-  const todaysSleep = state.sleepLogs?.find(s => new Date(s.timestamp).setHours(0,0,0,0) === today);
+  const tomorrow = new Date(today).setHours(24, 0, 0, 0);
+  const todaysSleep = state.sleepLogs?.find(s => s.timestamp >= today && s.timestamp < tomorrow);
 
   const handleLogSleep = () => {
     addSleepLog({

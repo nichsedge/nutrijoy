@@ -35,9 +35,10 @@ export default function Home() {
   const sugarLimit = state.activePlan ? (recommendedCalories * 0.1) / 4 : baseGoals.sugarLimit;
   
   const today = new Date().setHours(0, 0, 0, 0);
-  const todaysFood = state.foodLogs.filter(log => new Date(log.timestamp).setHours(0,0,0,0) === today);
-  const todaysActivities = state.activities.filter(act => new Date(act.timestamp).setHours(0,0,0,0) === today);
-  const todaysWater = state.waterLogs?.filter(log => new Date(log.timestamp).setHours(0,0,0,0) === today) || [];
+  const tomorrow = new Date(today).setHours(24, 0, 0, 0);
+  const todaysFood = state.foodLogs.filter(log => log.timestamp >= today && log.timestamp < tomorrow);
+  const todaysActivities = state.activities.filter(act => act.timestamp >= today && act.timestamp < tomorrow);
+  const todaysWater = state.waterLogs?.filter(log => log.timestamp >= today && log.timestamp < tomorrow) || [];
 
   const caloriesConsumed = todaysFood.reduce((acc, curr) => acc + curr.calories, 0);
   const caloriesBurned = todaysActivities.reduce((acc, curr) => acc + curr.caloriesBurned, 0);
