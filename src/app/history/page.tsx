@@ -58,13 +58,15 @@ export default function HistoryPage() {
 
   // Group logs by date
   const groupedLogs: { [date: string]: typeof allLogs } = {};
+  const dateFormatter = new Intl.DateTimeFormat(undefined, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
   allLogs.forEach(log => {
-    const date = new Date(log.timestamp).toLocaleDateString(undefined, { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+    const date = dateFormatter.format(new Date(log.timestamp));
     if (!groupedLogs[date]) {
       groupedLogs[date] = [];
     }
