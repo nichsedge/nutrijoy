@@ -60,7 +60,7 @@ export default function MeasurementsPage() {
     if (bf && (bf < 0 || bf > 100)) bf = undefined;
 
     addMeasurement({
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
       weight: w,
       waist,

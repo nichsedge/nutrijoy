@@ -16,9 +16,10 @@ export default function CheckInPage() {
   const t = getTranslation(state.profile?.language || 'en');
 
   const today = new Date().setHours(0, 0, 0, 0);
-  const hasSleep = state.sleepLogs?.some(s => new Date(s.timestamp).setHours(0,0,0,0) === today);
-  const hasCycle = state.cycleLogs?.some(c => new Date(c.timestamp).setHours(0,0,0,0) === today);
-  const hasSelfCare = state.selfCareLogs?.some(sc => new Date(sc.timestamp).setHours(0,0,0,0) === today);
+  const tomorrow = new Date(today).setHours(24, 0, 0, 0);
+  const hasSleep = state.sleepLogs?.some(s => s.timestamp >= today && s.timestamp < tomorrow);
+  const hasCycle = state.cycleLogs?.some(c => c.timestamp >= today && c.timestamp < tomorrow);
+  const hasSelfCare = state.selfCareLogs?.some(sc => sc.timestamp >= today && sc.timestamp < tomorrow);
 
   const allDone = hasSleep && hasCycle && hasSelfCare;
 

@@ -25,8 +25,9 @@ export function DailyProgress() {
   const goals = { ...baseGoals, recommendedCalories, sugarLimit: Math.round(sugarLimit) };
   
   const today = new Date().setHours(0, 0, 0, 0);
-  const todaysFood = state.foodLogs.filter(log => new Date(log.timestamp).setHours(0,0,0,0) === today);
-  const todaysActivities = state.activities.filter(act => new Date(act.timestamp).setHours(0,0,0,0) === today);
+  const tomorrow = new Date(today).setHours(24, 0, 0, 0);
+  const todaysFood = state.foodLogs.filter(log => log.timestamp >= today && log.timestamp < tomorrow);
+  const todaysActivities = state.activities.filter(act => act.timestamp >= today && act.timestamp < tomorrow);
 
   const caloriesConsumed = todaysFood.reduce((acc, curr) => acc + curr.calories, 0);
   const sugarConsumed = todaysFood.reduce((acc, curr) => acc + curr.sugar, 0);
@@ -40,7 +41,7 @@ export function DailyProgress() {
   const vitaminEConsumed = todaysFood.reduce((acc, curr) => acc + (curr.vitaminE || 0), 0);
   const caloriesBurned = todaysActivities.reduce((acc, curr) => acc + curr.caloriesBurned, 0);
 
-  const todaysWater = state.waterLogs?.filter(log => new Date(log.timestamp).setHours(0,0,0,0) === today) || [];
+  const todaysWater = state.waterLogs?.filter(log => log.timestamp >= today && log.timestamp < tomorrow) || [];
   const waterConsumed = todaysWater.reduce((acc, curr) => acc + curr.amountMl, 0);
   const waterGoal = 2500; // ml
 
@@ -72,7 +73,7 @@ export function DailyProgress() {
 
   const handleAddWater = (amount: number) => {
     addWaterLog({
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
       amountMl: amount
     });

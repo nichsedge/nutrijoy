@@ -16,7 +16,8 @@ export function CycleTracker() {
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
 
   const today = new Date().setHours(0, 0, 0, 0);
-  const todaysLog = state.cycleLogs?.find(s => new Date(s.timestamp).setHours(0,0,0,0) === today);
+  const tomorrow = new Date(today).setHours(24, 0, 0, 0);
+  const todaysLog = state.cycleLogs?.find(s => s.timestamp >= today && s.timestamp < tomorrow);
 
   const symptomList = [
     { id: 'bloating', label: t.bloating },
@@ -34,7 +35,7 @@ export function CycleTracker() {
 
   const handleLogCycle = () => {
     addCycleLog({
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
       cycleDay: day,
       symptoms: selectedSymptoms

@@ -50,7 +50,7 @@ export default function PlannerPage() {
     
     setActivePlan({
       ...calcResult,
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       startDate: Date.now(),
       targetChangeKg: parseFloat(targetLoss),
       durationWeeks: parseInt(duration),
