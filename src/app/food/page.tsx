@@ -32,6 +32,8 @@ export default function FoodLoggingPage() {
     sodium: ''
   });
 
+  const parseDecimal = (val: string) => parseFloat(val.replace(',', '.')) || 0;
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -46,16 +48,16 @@ export default function FoodLoggingPage() {
       timestamp: Date.now(),
       name: formData.name,
       quantity: formData.quantity || '1 serving',
-      calories: parseInt(formData.calories) || 0,
-      protein: parseInt(formData.protein) || 0,
-      fiber: parseInt(formData.fiber) || 0,
-      vitaminC: parseInt(formData.vitaminC) || 0,
-      biotin: parseInt(formData.biotin) || 0,
-      zinc: parseInt(formData.zinc) || 0,
-      omega3: parseInt(formData.omega3) || 0,
-      vitaminE: parseInt(formData.vitaminE) || 0,
-      sugar: parseInt(formData.sugar) || 0,
-      sodium: parseInt(formData.sodium) || 0,
+      calories: parseDecimal(formData.calories),
+      protein: parseDecimal(formData.protein),
+      fiber: parseDecimal(formData.fiber),
+      vitaminC: parseDecimal(formData.vitaminC),
+      biotin: parseDecimal(formData.biotin),
+      zinc: parseDecimal(formData.zinc),
+      omega3: parseDecimal(formData.omega3),
+      vitaminE: parseDecimal(formData.vitaminE),
+      sugar: parseDecimal(formData.sugar),
+      sodium: parseDecimal(formData.sodium),
     });
 
     setFormData({
@@ -136,6 +138,7 @@ export default function FoodLoggingPage() {
                     id="calories"
                     name="calories"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.calories}
                     onChange={handleInputChange}
@@ -151,6 +154,7 @@ export default function FoodLoggingPage() {
                     id="protein"
                     name="protein"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.protein}
                     onChange={handleInputChange}
@@ -166,6 +170,7 @@ export default function FoodLoggingPage() {
                     id="fiber"
                     name="fiber"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.fiber}
                     onChange={handleInputChange}
@@ -178,6 +183,7 @@ export default function FoodLoggingPage() {
                     id="vitaminC"
                     name="vitaminC"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.vitaminC}
                     onChange={handleInputChange}
@@ -193,6 +199,7 @@ export default function FoodLoggingPage() {
                     id="biotin"
                     name="biotin"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.biotin}
                     onChange={handleInputChange}
@@ -205,6 +212,7 @@ export default function FoodLoggingPage() {
                     id="zinc"
                     name="zinc"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.zinc}
                     onChange={handleInputChange}
@@ -220,6 +228,7 @@ export default function FoodLoggingPage() {
                     id="omega3"
                     name="omega3"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.omega3}
                     onChange={handleInputChange}
@@ -232,6 +241,7 @@ export default function FoodLoggingPage() {
                     id="vitaminE"
                     name="vitaminE"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.vitaminE}
                     onChange={handleInputChange}
@@ -247,6 +257,7 @@ export default function FoodLoggingPage() {
                     id="sugar"
                     name="sugar"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.sugar}
                     onChange={handleInputChange}
@@ -259,6 +270,7 @@ export default function FoodLoggingPage() {
                     id="sodium"
                     name="sodium"
                     type="number"
+                    step="any"
                     placeholder="0" 
                     value={formData.sodium}
                     onChange={handleInputChange}
