@@ -133,7 +133,7 @@ export default function FoodLoggingPage() {
 
   return (
     <Shell>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         className="space-y-6 pb-24"
@@ -162,9 +162,9 @@ export default function FoodLoggingPage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">{t.quickAddFromHistory || 'Quick Add from History'}</h3>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setShowHistory(!showHistory)}
                 className="text-xs font-bold text-primary"
               >
@@ -183,7 +183,7 @@ export default function FoodLoggingPage() {
                 </button>
               ))}
             </div>
-            
+
             {showHistory && (
               <Card className="border-2 border-primary/10 rounded-3xl overflow-hidden shadow-sm bg-primary/5 animate-in fade-in slide-in-from-top-2">
                 <CardContent className="p-4 space-y-2 max-h-[300px] overflow-y-auto">
@@ -212,10 +212,10 @@ export default function FoodLoggingPage() {
               <div className="space-y-2">
                 <Label htmlFor="name">Food Name</Label>
                 <div className="relative">
-                  <Input 
+                  <Input
                     id="name"
                     name="name"
-                    placeholder="e.g. Nasi Goreng" 
+                    placeholder="e.g. Nasi Goreng"
                     value={formData.name}
                     onChange={handleInputChange}
                     onFocus={() => setShowHistory(false)}
@@ -245,14 +245,14 @@ export default function FoodLoggingPage() {
                   )}
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="quantity">Quantity</Label>
-                  <Input 
+                  <Input
                     id="quantity"
                     name="quantity"
-                    placeholder="e.g. 1 plate" 
+                    placeholder="e.g. 1 plate"
                     value={formData.quantity}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -260,12 +260,12 @@ export default function FoodLoggingPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="calories">Calories (kcal)</Label>
-                  <Input 
+                  <Input
                     id="calories"
                     name="calories"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.calories}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -276,12 +276,12 @@ export default function FoodLoggingPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="protein">{t.protein || 'Protein'} (g)</Label>
-                  <Input 
+                  <Input
                     id="protein"
                     name="protein"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.protein}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -292,12 +292,12 @@ export default function FoodLoggingPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="fiber">{t.fiber || 'Fiber'} (g)</Label>
-                  <Input 
+                  <Input
                     id="fiber"
                     name="fiber"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.fiber}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -305,12 +305,12 @@ export default function FoodLoggingPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="vitaminC">{t.vitaminC || 'Vitamin C'} (mg)</Label>
-                  <Input 
+                  <Input
                     id="vitaminC"
                     name="vitaminC"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.vitaminC}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -321,12 +321,12 @@ export default function FoodLoggingPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="biotin">{t.biotin || 'Biotin'} (mcg)</Label>
-                  <Input 
+                  <Input
                     id="biotin"
                     name="biotin"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.biotin}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -334,12 +334,12 @@ export default function FoodLoggingPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="zinc">{t.zinc || 'Zinc'} (mg)</Label>
-                  <Input 
+                  <Input
                     id="zinc"
                     name="zinc"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.zinc}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -350,12 +350,12 @@ export default function FoodLoggingPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="omega3">{t.omega3 || 'Omega-3'} (mg)</Label>
-                  <Input 
+                  <Input
                     id="omega3"
                     name="omega3"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.omega3}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -363,12 +363,12 @@ export default function FoodLoggingPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="vitaminE">{t.vitaminE || 'Vitamin E'} (mg)</Label>
-                  <Input 
+                  <Input
                     id="vitaminE"
                     name="vitaminE"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.vitaminE}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -379,12 +379,12 @@ export default function FoodLoggingPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="sugar">{t.sugar || 'Sugar'} (g)</Label>
-                  <Input 
+                  <Input
                     id="sugar"
                     name="sugar"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.sugar}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -392,12 +392,12 @@ export default function FoodLoggingPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="sodium">{t.sodium || 'Sodium'} (mg)</Label>
-                  <Input 
+                  <Input
                     id="sodium"
                     name="sodium"
                     type="text"
                     inputMode="decimal"
-                    placeholder="0" 
+                    placeholder="0"
                     value={formData.sodium}
                     onChange={handleInputChange}
                     className="rounded-xl border-primary/20"
@@ -436,13 +436,13 @@ export default function FoodLoggingPage() {
                       <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.sugar || 'Sugar'}</p>
                       <p className="text-xs font-bold text-secondary">{log.sugar}g</p>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => removeFoodLog(log.id)}
                       className="w-8 h-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                       <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
                 </CardContent>
