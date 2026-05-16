@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Utensils, Plus, Check, Trash2, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import type { FoodLogEntry } from '@/lib/types';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -50,7 +51,7 @@ export default function FoodLoggingPage() {
     return Array.from(map.values());
   }, [state.foodLogs]);
 
-  const selectPreviousFood = (food: any) => {
+  const selectPreviousFood = (food: FoodLogEntry) => {
     setFormData({
       name: food.name,
       quantity: food.quantity,

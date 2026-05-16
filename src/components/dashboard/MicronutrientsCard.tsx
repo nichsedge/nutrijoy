@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import type { Translation } from '@/lib/translations';
 
 interface NutrientProps {
   label: string;
@@ -15,7 +16,7 @@ interface NutrientProps {
   percent: number;
 }
 
-export function MicronutrientsCard({ t, nutrients }: { t: any, nutrients: NutrientProps[] }) {
+export function MicronutrientsCard({ t, nutrients }: { t: Translation, nutrients: NutrientProps[] }) {
   const [isOpen, setIsOpen] = useState(false);
   
   // Show first 2 by default, rest in collapsible

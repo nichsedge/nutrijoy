@@ -331,6 +331,8 @@ const translations = {
   }
 };
 
+export type Translation = typeof translations.en;
+
 export function getTranslation(lang: Language) {
   return translations[lang];
 }

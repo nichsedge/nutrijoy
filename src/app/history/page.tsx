@@ -6,13 +6,12 @@ import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Utensils, 
-  Activity, 
-  ChevronLeft, 
-  Calendar, 
-  Trash2, 
-  Droplets, 
+import {
+  Utensils,
+  Activity,
+  ChevronLeft,
+  Trash2,
+  Droplets,
   Sparkles,
   Moon,
   Ruler,
@@ -20,12 +19,39 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import Link from 'next/link';
+import type { HistoryLogEntry } from '@/lib/types';
+
+function getLogDetail(log: HistoryLogEntry): string {
+  switch (log.type) {
+    case 'food':
+      return log.quantity;
+    case 'activity':
+      return `${log.duration} mins`;
+    case 'water':
+      return `${log.amountMl}ml`;
+    case 'sleep':
+      return `${log.durationHours} hrs`;
+    case 'cycle':
+      return `Day ${log.cycleDay}`;
+    case 'selfCare':
+      return `${log.checkedItems.length} items`;
+    case 'measurement':
+      return `${log.weight} kg`;
+  }
+}
+
+function getLogKcal(log: HistoryLogEntry): string {
+  if (log.type === 'food') return `+${log.calories} kcal`;
+  if (log.type === 'activity') return `-${log.caloriesBurned} kcal`;
+  if (log.type === 'measurement') return `${log.weight}kg`;
+  return '';
+}
 
 export default function HistoryPage() {
-  const { 
-    state, 
-    removeFoodLog, 
-    removeActivity, 
+  const {
+    state,
+    removeFoodLog,
+    removeActivity,
     removeWaterLog,
     removeSleepLog,
     removeCycleLog,
@@ -34,17 +60,17 @@ export default function HistoryPage() {
   } = useApp();
   const t = getTranslation(state.profile?.language || 'en');
 
-  const allLogs = [
-    ...state.foodLogs.map(log => ({ ...log, type: 'food' as const })),
-    ...state.activities.map(act => ({ ...act, type: 'activity' as const })),
-    ...(state.waterLogs || []).map(w => ({ ...w, type: 'water' as const, name: t.water })),
-    ...(state.sleepLogs || []).map(s => ({ ...s, type: 'sleep' as const, name: t.sleep })),
-    ...(state.cycleLogs || []).map(c => ({ ...c, type: 'cycle' as const, name: t.cycle })),
-    ...(state.selfCareLogs || []).map(sc => ({ ...sc, type: 'selfCare' as const, name: t.selfCare })),
-    ...(state.measurements || []).map(m => ({ ...m, type: 'measurement' as const, name: t.measurements }))
+  const allLogs: HistoryLogEntry[] = [
+    ...state.foodLogs.map((log) => ({ ...log, type: 'food' as const })),
+    ...state.activities.map((act) => ({ ...act, type: 'activity' as const })),
+    ...(state.waterLogs || []).map((w) => ({ ...w, type: 'water' as const, name: t.water })),
+    ...(state.sleepLogs || []).map((s) => ({ ...s, type: 'sleep' as const, name: t.sleep })),
+    ...(state.cycleLogs || []).map((c) => ({ ...c, type: 'cycle' as const, name: t.cycle })),
+    ...(state.selfCareLogs || []).map((sc) => ({ ...sc, type: 'selfCare' as const, name: t.selfCare })),
+    ...(state.measurements || []).map((m) => ({ ...m, type: 'measurement' as const, name: t.measurements }))
   ].sort((a, b) => b.timestamp - a.timestamp);
 
-  const handleRemoveLog = (id: string, type: string) => {
+  const handleRemoveLog = (id: string, type: HistoryLogEntry['type']) => {
     switch (type) {
       case 'food': removeFoodLog(id); break;
       case 'activity': removeActivity(id); break;
@@ -56,8 +82,7 @@ export default function HistoryPage() {
     }
   };
 
-  // Group logs by date
-  const groupedLogs: { [date: string]: typeof allLogs } = {};
+  const groupedLogs: Record<string, HistoryLogEntry[]> = {};
   const dateFormatter = new Intl.DateTimeFormat(undefined, {
     weekday: 'long',
     year: 'numeric',
@@ -65,7 +90,7 @@ export default function HistoryPage() {
     day: 'numeric'
   });
 
-  allLogs.forEach(log => {
+  allLogs.forEach((log) => {
     const date = dateFormatter.format(new Date(log.timestamp));
     if (!groupedLogs[date]) {
       groupedLogs[date] = [];
@@ -112,8 +137,8 @@ export default function HistoryPage() {
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                            log.type === 'food' ? 'bg-primary/10 text-primary' : 
-                            log.type === 'activity' ? 'bg-secondary/10 text-secondary' : 
+                            log.type === 'food' ? 'bg-primary/10 text-primary' :
+                            log.type === 'activity' ? 'bg-secondary/10 text-secondary' :
                             log.type === 'water' ? 'bg-blue-500/10 text-blue-500' :
                             log.type === 'sleep' ? 'bg-indigo-500/10 text-indigo-500' :
                             log.type === 'cycle' ? 'bg-rose-500/10 text-rose-500' :
@@ -131,35 +156,24 @@ export default function HistoryPage() {
                           <div>
                             <p className="font-bold text-sm capitalize">{log.name}</p>
                             <p className="text-xs text-muted-foreground">
-                              {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {
-                                log.type === 'food' ? (log as any).quantity : 
-                                log.type === 'activity' ? `${(log as any).duration} mins` : 
-                                log.type === 'water' ? `${(log as any).amountMl}ml` :
-                                log.type === 'sleep' ? `${(log as any).durationHours} hrs` :
-                                log.type === 'cycle' ? `Day ${(log as any).cycleDay}` :
-                                log.type === 'selfCare' ? `${(log as any).checkedItems.length} items` :
-                                `${(log as any).weight} kg`
-                              }
+                              {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {getLogDetail(log)}
                             </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
                           <div className="text-right">
                             <p className={`font-black text-sm ${
-                              log.type === 'food' ? 'text-primary' : 
-                              log.type === 'activity' ? 'text-secondary' : 
+                              log.type === 'food' ? 'text-primary' :
+                              log.type === 'activity' ? 'text-secondary' :
                               log.type === 'water' ? 'text-blue-500' :
                               'text-muted-foreground'
                             }`}>
-                              {log.type === 'food' ? `+${(log as any).calories}` : 
-                               log.type === 'activity' ? `-${(log as any).caloriesBurned}` : 
-                               log.type === 'measurement' ? `${(log as any).weight}kg` :
-                               ''} { (log.type === 'food' || log.type === 'activity') && 'kcal' }
+                              {getLogKcal(log)}
                             </p>
                           </div>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => handleRemoveLog(log.id, log.type)}
                             className="w-8 h-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-opacity"
                           >

@@ -123,20 +123,46 @@ const defaultState: AppState = {
   planHistory: [],
 };
 
-export function sanitizeState(state: any): AppState {
+interface LegacyPlanLike {
+  targetChangeKg?: number;
+  targetLossKg?: number;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function migrateLegacyPlan(plan: unknown) {
+  if (!isRecord(plan)) return null;
+  const legacyPlan = plan as LegacyPlanLike;
+  return {
+    ...plan,
+    targetChangeKg: legacyPlan.targetChangeKg ?? legacyPlan.targetLossKg,
+  };
+}
+
+export function sanitizeState(state: unknown): AppState {
+  if (!isRecord(state)) {
+    return defaultState;
+  }
+
+  const activePlan = migrateLegacyPlan(state.activePlan);
+  const planHistoryRaw = Array.isArray(state.planHistory) ? state.planHistory : [];
+  const planHistory = planHistoryRaw.map((plan) => migrateLegacyPlan(plan)).filter(Boolean);
+
   return {
     ...defaultState,
     ...state,
     // Ensure arrays and objects exist even if missing in old state
-    foodLogs: state.foodLogs || [],
-    activities: state.activities || [],
-    measurements: state.measurements || [],
-    waterLogs: state.waterLogs || [],
-    sleepLogs: state.sleepLogs || [],
-    cycleLogs: state.cycleLogs || [],
-    selfCareLogs: state.selfCareLogs || [],
-    planHistory: state.planHistory || [],
-    activePlan: state.activePlan || null,
+    foodLogs: Array.isArray(state.foodLogs) ? state.foodLogs : [],
+    activities: Array.isArray(state.activities) ? state.activities : [],
+    measurements: Array.isArray(state.measurements) ? state.measurements : [],
+    waterLogs: Array.isArray(state.waterLogs) ? state.waterLogs : [],
+    sleepLogs: Array.isArray(state.sleepLogs) ? state.sleepLogs : [],
+    cycleLogs: Array.isArray(state.cycleLogs) ? state.cycleLogs : [],
+    selfCareLogs: Array.isArray(state.selfCareLogs) ? state.selfCareLogs : [],
+    planHistory: planHistory as AppState['planHistory'],
+    activePlan: (activePlan as AppState['activePlan']) || null,
   };
 }
 
@@ -167,7 +193,13 @@ export async function loadState(): Promise<AppState> {
     }
 
     if (!stored) return defaultState;
-    return sanitizeState(stored);
+    const sanitized = sanitizeState(stored);
+    const parsed = AppStateSchema.safeParse(sanitized);
+    if (!parsed.success) {
+      console.error('Invalid app state shape in storage', parsed.error);
+      return defaultState;
+    }
+    return parsed.data;
   } catch (e) {
     console.error("Error loading state from IndexedDB", e);
     return defaultState;

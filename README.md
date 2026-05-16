@@ -1,5 +1,20 @@
-# Firebase Studio
+# NutriJoy
 
-This is a NextJS starter in Firebase Studio.
+NutriJoy is a mobile-first nutrition and wellness tracker built with Next.js.
 
-To get started, take a look at src/app/page.tsx.
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Quality Checks
+
+Run these before opening a PR:
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+```

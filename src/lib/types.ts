@@ -115,10 +115,23 @@ export interface WeightPlanResult {
   goal?: 'lose' | 'maintain' | 'gain' | 'recompose';
 }
 
+export interface LegacyWeightPlanResult extends WeightPlanResult {
+  targetLossKg?: number;
+}
+
 export interface AchievedPlan extends WeightPlanResult {
   achievedDate: number;
   endWeight: number;
 }
+
+export type HistoryLogEntry =
+  | (FoodLogEntry & { type: 'food' })
+  | (ActivityEntry & { type: 'activity' })
+  | (WaterLogEntry & { type: 'water'; name: string })
+  | (SleepLogEntry & { type: 'sleep'; name: string })
+  | (CycleLogEntry & { type: 'cycle'; name: string })
+  | (SelfCareLogEntry & { type: 'selfCare'; name: string })
+  | (MeasurementEntry & { type: 'measurement'; name: string });
 
 export interface AppState {
   profile: UserProfile | null;

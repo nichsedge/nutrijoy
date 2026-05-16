@@ -10,22 +10,28 @@ import { getTranslation } from '@/lib/translations';
 import { ActionHub } from './ActionHub';
 import { motion } from 'framer-motion';
 
+interface NavItem {
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}
+
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { state } = useApp();
   const t = getTranslation(state.profile?.language || 'en');
 
-  const leftItems = [
+  const leftItems: NavItem[] = [
     { href: '/', icon: Home, label: t.dashboard },
     { href: '/history', icon: History, label: t.journal },
   ];
 
-  const rightItems = [
+  const rightItems: NavItem[] = [
     { href: '/planner', icon: Calendar, label: t.planner },
     { href: '/settings', icon: Settings, label: t.settings },
   ];
 
-  const renderNavItem = (item: any) => {
+  const renderNavItem = (item: NavItem) => {
     const isActive = pathname === item.href;
     const Icon = item.icon;
     return (
