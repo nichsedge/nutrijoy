@@ -25,7 +25,15 @@ export default function MeasurementsPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    if (value && !/^[0-9.,]*$/.test(value)) return;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const parseVal = (val: string) => {
+    if (!val) return 0;
+    const normalized = val.replace(',', '.');
+    const parsed = parseFloat(normalized);
+    return isNaN(parsed) ? 0 : parsed;
   };
 
   const calculateBodyFat = (waist: number, neck: number, hips: number, height: number, sex: 'male' | 'female') => {
@@ -51,10 +59,10 @@ export default function MeasurementsPage() {
     e.preventDefault();
     if (!state.profile) return;
 
-    const w = parseFloat(formData.weight) || 0;
-    const waist = parseFloat(formData.waist) || 0;
-    const hips = parseFloat(formData.hips) || 0;
-    const neck = parseFloat(formData.neck) || 0;
+    const w = parseVal(formData.weight);
+    const waist = parseVal(formData.waist);
+    const hips = parseVal(formData.hips);
+    const neck = parseVal(formData.neck);
 
     let bf = calculateBodyFat(waist, neck, hips, state.profile.height, state.profile.sex);
     if (bf && (bf < 0 || bf > 100)) bf = undefined;
@@ -99,7 +107,8 @@ export default function MeasurementsPage() {
                   <Input 
                     id="weight"
                     name="weight"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     step="0.1"
                     placeholder="0" 
                     value={formData.weight}
@@ -113,7 +122,8 @@ export default function MeasurementsPage() {
                   <Input 
                     id="waist"
                     name="waist"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     step="0.1"
                     placeholder="0" 
                     value={formData.waist}
@@ -130,7 +140,8 @@ export default function MeasurementsPage() {
                   <Input 
                     id="hips"
                     name="hips"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     step="0.1"
                     placeholder="0" 
                     value={formData.hips}
@@ -144,7 +155,8 @@ export default function MeasurementsPage() {
                   <Input 
                     id="neck"
                     name="neck"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     step="0.1"
                     placeholder="0" 
                     value={formData.neck}

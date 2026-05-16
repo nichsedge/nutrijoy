@@ -68,6 +68,33 @@
   }
   
   .glass {
-    @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-sm;
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-sm;
+  }
+
+  .glass-premium {
+    @apply bg-white/40 backdrop-blur-2xl border border-white/50 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+  }
+
+  .glass-card {
+    @apply bg-white/40 backdrop-blur-lg border border-white/60 shadow-xl;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 3s ease-in-out infinite;
   }
 }

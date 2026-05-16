@@ -58,7 +58,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <main className="flex-1 overflow-y-auto px-6 py-4">
         {children}
       </main>
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass border-t border-white/50 px-6 py-3 flex justify-between items-center z-50 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.04)]">
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass-premium px-6 py-3 flex justify-between items-center z-50 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.06)]">
         <div className="flex flex-1 justify-around items-center">
           {leftItems.map(renderNavItem)}
         </div>

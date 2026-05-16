@@ -28,12 +28,19 @@ export default function PlannerPage() {
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
   const [endWeight, setEndWeight] = useState(state.profile?.weight.toString() || '');
 
+  const parseVal = (val: string) => {
+    if (!val) return 0;
+    const normalized = val.replace(',', '.');
+    const parsed = parseFloat(normalized);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
   const handleCalculate = () => {
     if (!state.profile) return;
     
     const res = calculateWeightPlan({
       currentWeight: state.profile.weight,
-      targetChangeKg: parseFloat(targetLoss),
+      targetChangeKg: parseVal(targetLoss),
       durationWeeks: parseInt(duration),
       age: state.profile.age,
       height: state.profile.height,
@@ -52,7 +59,7 @@ export default function PlannerPage() {
       ...calcResult,
       id: crypto.randomUUID(),
       startDate: Date.now(),
-      targetChangeKg: parseFloat(targetLoss),
+      targetChangeKg: parseVal(targetLoss),
       durationWeeks: parseInt(duration),
       startWeight: state.profile.weight,
       goal: state.profile.goal,
@@ -67,7 +74,7 @@ export default function PlannerPage() {
   };
 
   const handleCompletePlan = () => {
-    completePlan(parseFloat(endWeight));
+    completePlan(parseVal(endWeight));
     setIsCompleteDialogOpen(false);
     toast({
       title: (t as any).planCompleted,
@@ -286,9 +293,13 @@ export default function PlannerPage() {
                   <Target className="w-4 h-4 text-primary" /> {isGain ? (t as any).targetWeightGain : t.targetWeightLoss}
                 </Label>
                 <Input 
-                  type="number" 
+                  type="text" 
+                  inputMode="decimal"
                   value={targetLoss} 
-                  onChange={(e) => setTargetLoss(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value && !/^[0-9.,]*$/.test(e.target.value)) return;
+                    setTargetLoss(e.target.value);
+                  }}
                   className="rounded-xl border-2 border-primary/10 h-12 text-lg font-bold"
                 />
               </div>
@@ -298,9 +309,13 @@ export default function PlannerPage() {
                   <Clock className="w-4 h-4 text-primary" /> {t.durationWeeks}
                 </Label>
                 <Input 
-                  type="number" 
+                  type="text" 
+                  inputMode="numeric"
                   value={duration} 
-                  onChange={(e) => setDuration(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value && !/^[0-9]*$/.test(e.target.value)) return;
+                    setDuration(e.target.value);
+                  }}
                   className="rounded-xl border-2 border-primary/10 h-12 text-lg font-bold"
                 />
               </div>
@@ -423,9 +438,13 @@ export default function PlannerPage() {
                 {(t as any).enterEndWeight}
               </p>
               <Input 
-                type="number" 
+                type="text" 
+                inputMode="decimal"
                 value={endWeight} 
-                onChange={(e) => setEndWeight(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value && !/^[0-9.,]*$/.test(e.target.value)) return;
+                  setEndWeight(e.target.value);
+                }}
                 className="rounded-xl h-12 text-lg font-bold"
                 placeholder="45.0"
               />

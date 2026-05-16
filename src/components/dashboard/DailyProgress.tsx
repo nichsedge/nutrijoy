@@ -95,62 +95,75 @@ export function DailyProgress() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-none bg-gradient-to-br from-primary to-secondary text-white shadow-xl overflow-hidden relative">
-        <div className="absolute top-0 right-0 p-4 opacity-20">
+      <Card className="border-none bg-gradient-to-br from-primary to-secondary text-white shadow-xl overflow-hidden relative rounded-[2.5rem] animate-in zoom-in-95 duration-700">
+        <div className="absolute top-0 right-0 p-4 opacity-20 animate-float">
           <Flame className="w-24 h-24" />
         </div>
-        <CardContent className="p-8">
-          <div className="flex flex-col gap-1">
-            <p className="text-sm font-bold opacity-80 uppercase tracking-widest">{t.calories}</p>
-            <h2 className="text-5xl font-bold font-headline">
-              {Math.max(0, goals.recommendedCalories - netCalories)}
-            </h2>
-            <p className="text-sm opacity-90">{t.remaining} kcal</p>
-          </div>
-          <div className="mt-8 grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs uppercase font-bold opacity-70">{t.consumed}</p>
-              <p className="text-xl font-bold">{caloriesConsumed} kcal</p>
+        <CardContent className="p-10">
+          <div className="flex flex-col gap-1 items-center text-center">
+            <p className="text-xs font-black opacity-80 uppercase tracking-[0.2em] mb-2">{t.calories} {t.remaining}</p>
+            <div className="relative">
+               <h2 className="text-7xl font-black font-headline tracking-tighter">
+                {Math.max(0, goals.recommendedCalories - netCalories)}
+              </h2>
+              <div className="absolute -top-2 -right-6">
+                <Sparkles className="w-6 h-6 animate-pulse text-white/50" />
+              </div>
             </div>
-            <div>
-              <p className="text-xs uppercase font-bold opacity-70">{t.burned}</p>
-              <p className="text-xl font-bold">{caloriesBurned} kcal</p>
+            <p className="text-sm font-bold opacity-90 mt-2">kcal to go</p>
+          </div>
+          <div className="mt-10 grid grid-cols-2 gap-8 border-t border-white/20 pt-8">
+            <div className="text-center">
+              <p className="text-[10px] uppercase font-black opacity-70 tracking-widest mb-1">{t.consumed}</p>
+              <p className="text-2xl font-black">{caloriesConsumed}</p>
+            </div>
+            <div className="text-center border-l border-white/20">
+              <p className="text-[10px] uppercase font-black opacity-70 tracking-widest mb-1">{t.burned}</p>
+              <p className="text-2xl font-black">{caloriesBurned}</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="border-none shadow-sm mb-4 bg-blue-500/10 border-2 border-blue-500/20">
-        <CardContent className="p-5 space-y-4">
+      <Card className="border-none shadow-sm mb-4 glass-premium border-2 border-blue-500/10 rounded-[2rem]">
+        <CardContent className="p-6 space-y-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-blue-500 font-bold">
-              <GlassWater className="w-5 h-5" />
-              <span className="text-sm uppercase tracking-tighter">{t.skinGlow || 'Skin Glow Hydration'}</span>
+            <div className="flex items-center gap-2 text-blue-600 font-black">
+              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                <GlassWater className="w-5 h-5" />
+              </div>
+              <span className="text-xs uppercase tracking-[0.1em]">{t.skinGlow || 'Skin Glow Hydration'}</span>
             </div>
             <div className="flex items-center gap-2">
-               <span className="text-xs font-bold text-blue-500">{waterConsumed} / {waterGoal}ml</span>
+               <span className="text-xs font-black text-blue-600">{waterConsumed} / {waterGoal}ml</span>
                {todaysWater.length > 0 && (
                  <button 
                   onClick={handleRemoveRecentWater}
-                  className="p-1 hover:bg-blue-500/20 rounded-full transition-colors"
+                  className="p-1.5 hover:bg-blue-500/10 rounded-full transition-colors"
                   title="Undo last entry"
                  >
-                   <RotateCcw className="w-3 h-3 text-blue-500" />
+                   <RotateCcw className="w-4 h-4 text-blue-500" />
                  </button>
                )}
             </div>
           </div>
-          <Progress value={waterPercent} className="h-3 bg-blue-500/20" indicatorClassName="bg-blue-500" />
-          <div className="flex gap-2">
+          <div className="relative h-4 w-full bg-blue-500/5 rounded-full overflow-hidden">
+             <div 
+               className="h-full bg-blue-500 transition-all duration-1000 ease-out rounded-full"
+               style={{ width: `${waterPercent}%` }}
+             />
+             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse-soft" />
+          </div>
+          <div className="flex gap-3">
             <button 
               onClick={() => handleAddWater(250)}
-              className="flex-1 bg-white hover:bg-blue-50 text-blue-500 text-xs font-bold py-2 rounded-xl border border-blue-500/20 shadow-sm transition-colors"
+              className="flex-1 bg-white/80 hover:bg-white text-blue-600 text-[10px] font-black uppercase tracking-widest py-3 rounded-2xl border border-blue-500/10 shadow-sm transition-all active:scale-95"
             >
               +250ml
             </button>
             <button 
               onClick={() => handleAddWater(500)}
-              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 rounded-xl shadow-sm transition-colors"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black uppercase tracking-widest py-3 rounded-2xl shadow-lg transition-all active:scale-95 shadow-blue-500/20"
             >
               +500ml
             </button>

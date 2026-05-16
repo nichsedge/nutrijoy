@@ -32,9 +32,58 @@ export default function FoodLoggingPage() {
     sodium: ''
   });
 
+  const [showHistory, setShowHistory] = useState(false);
+
+  // Get unique previous foods, most recent first
+  const uniquePreviousFoods = React.useMemo(() => {
+    const map = new Map();
+    [...state.foodLogs]
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .forEach(log => {
+        const key = log.name.toLowerCase();
+        if (!map.has(key)) {
+          map.set(key, log);
+        }
+      });
+    return Array.from(map.values());
+  }, [state.foodLogs]);
+
+  const selectPreviousFood = (food: any) => {
+    setFormData({
+      name: food.name,
+      quantity: food.quantity,
+      calories: food.calories.toString(),
+      protein: food.protein.toString(),
+      fiber: (food.fiber || 0).toString(),
+      vitaminC: (food.vitaminC || 0).toString(),
+      biotin: (food.biotin || 0).toString(),
+      zinc: (food.zinc || 0).toString(),
+      omega3: (food.omega3 || 0).toString(),
+      vitaminE: (food.vitaminE || 0).toString(),
+      sugar: food.sugar.toString(),
+      sodium: food.sodium.toString()
+    });
+    setShowHistory(false);
+    toast({
+      title: t.autoFilled || "Auto-filled",
+      description: `${t.loadedDetailsFor || "Loaded details for"} ${food.name}`,
+    });
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    // Allow digits, dots, and commas for nutrient fields
+    if (name !== 'name' && name !== 'quantity') {
+      if (value && !/^[0-9.,]*$/.test(value)) return;
+    }
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const parseNutrient = (val: string) => {
+    if (!val) return 0;
+    const normalized = val.replace(',', '.');
+    const parsed = parseFloat(normalized);
+    return isNaN(parsed) ? 0 : parsed;
   };
 
   const handleLog = (e: React.FormEvent) => {
@@ -46,16 +95,16 @@ export default function FoodLoggingPage() {
       timestamp: Date.now(),
       name: formData.name,
       quantity: formData.quantity || '1 serving',
-      calories: parseInt(formData.calories) || 0,
-      protein: parseInt(formData.protein) || 0,
-      fiber: parseInt(formData.fiber) || 0,
-      vitaminC: parseInt(formData.vitaminC) || 0,
-      biotin: parseInt(formData.biotin) || 0,
-      zinc: parseInt(formData.zinc) || 0,
-      omega3: parseInt(formData.omega3) || 0,
-      vitaminE: parseInt(formData.vitaminE) || 0,
-      sugar: parseInt(formData.sugar) || 0,
-      sodium: parseInt(formData.sodium) || 0,
+      calories: parseNutrient(formData.calories),
+      protein: parseNutrient(formData.protein),
+      fiber: parseNutrient(formData.fiber),
+      vitaminC: parseNutrient(formData.vitaminC),
+      biotin: parseNutrient(formData.biotin),
+      zinc: parseNutrient(formData.zinc),
+      omega3: parseNutrient(formData.omega3),
+      vitaminE: parseNutrient(formData.vitaminE),
+      sugar: parseNutrient(formData.sugar),
+      sodium: parseNutrient(formData.sodium),
     });
 
     setFormData({
@@ -102,20 +151,92 @@ export default function FoodLoggingPage() {
           </Button>
         </div>
 
+        {uniquePreviousFoods.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">{t.quickAddFromHistory || 'Quick Add from History'}</h3>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setShowHistory(!showHistory)}
+                className="text-xs font-bold text-primary"
+              >
+                {showHistory ? (t.close || 'Close') : (t.viewAll || 'View All')}
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {uniquePreviousFoods.slice(0, 5).map((food, i) => (
+                <button
+                  key={i}
+                  onClick={() => selectPreviousFood(food)}
+                  className="px-4 py-2 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 hover:border-primary/20 text-sm font-medium transition-all flex items-center gap-2"
+                >
+                  <Plus className="w-3 h-3 text-primary" />
+                  {food.name}
+                </button>
+              ))}
+            </div>
+            
+            {showHistory && (
+              <Card className="border-2 border-primary/10 rounded-3xl overflow-hidden shadow-sm bg-primary/5 animate-in fade-in slide-in-from-top-2">
+                <CardContent className="p-4 space-y-2 max-h-[300px] overflow-y-auto">
+                  {uniquePreviousFoods.map((food, i) => (
+                    <button
+                      key={i}
+                      onClick={() => selectPreviousFood(food)}
+                      className="w-full p-3 text-left rounded-xl hover:bg-white transition-colors flex items-center justify-between group"
+                    >
+                      <div>
+                        <p className="font-bold">{food.name}</p>
+                        <p className="text-xs text-muted-foreground">{food.calories} kcal • {food.protein}g protein</p>
+                      </div>
+                      <Plus className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
         <Card className="border-2 border-primary/10 rounded-3xl overflow-hidden shadow-sm">
           <CardContent className="p-6">
             <form onSubmit={handleLog} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Food Name</Label>
-                <Input 
-                  id="name"
-                  name="name"
-                  placeholder="e.g. Nasi Goreng" 
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="rounded-xl border-primary/20"
-                  required
-                />
+                <div className="relative">
+                  <Input 
+                    id="name"
+                    name="name"
+                    placeholder="e.g. Nasi Goreng" 
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    onFocus={() => setShowHistory(false)}
+                    className="rounded-xl border-primary/20"
+                    required
+                    autoComplete="off"
+                  />
+                  {formData.name.length > 1 && !uniquePreviousFoods.some(f => f.name === formData.name) && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-primary/10 rounded-xl shadow-lg max-h-40 overflow-y-auto">
+                      {uniquePreviousFoods
+                        .filter(f => f.name.toLowerCase().includes(formData.name.toLowerCase()))
+                        .map((food, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => selectPreviousFood(food)}
+                            className="w-full p-2 text-left hover:bg-primary/5 text-sm transition-colors border-b last:border-0 border-primary/5"
+                          >
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">{food.name}</span>
+                              <span className="text-[10px] text-muted-foreground">{food.calories} kcal</span>
+                            </div>
+                          </button>
+                        ))
+                      }
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -135,7 +256,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="calories"
                     name="calories"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.calories}
                     onChange={handleInputChange}
@@ -150,7 +272,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="protein"
                     name="protein"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.protein}
                     onChange={handleInputChange}
@@ -165,7 +288,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="fiber"
                     name="fiber"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.fiber}
                     onChange={handleInputChange}
@@ -177,7 +301,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="vitaminC"
                     name="vitaminC"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.vitaminC}
                     onChange={handleInputChange}
@@ -192,7 +317,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="biotin"
                     name="biotin"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.biotin}
                     onChange={handleInputChange}
@@ -204,7 +330,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="zinc"
                     name="zinc"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.zinc}
                     onChange={handleInputChange}
@@ -219,7 +346,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="omega3"
                     name="omega3"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.omega3}
                     onChange={handleInputChange}
@@ -231,7 +359,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="vitaminE"
                     name="vitaminE"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.vitaminE}
                     onChange={handleInputChange}
@@ -246,7 +375,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="sugar"
                     name="sugar"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.sugar}
                     onChange={handleInputChange}
@@ -258,7 +388,8 @@ export default function FoodLoggingPage() {
                   <Input 
                     id="sodium"
                     name="sodium"
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0" 
                     value={formData.sodium}
                     onChange={handleInputChange}

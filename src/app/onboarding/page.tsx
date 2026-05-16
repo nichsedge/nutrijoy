@@ -18,21 +18,38 @@ export default function OnboardingPage() {
   const [lang, setLang] = useState<UserProfile['language']>('en');
   const t = getTranslation(lang);
 
-  const [formData, setFormData] = useState<Partial<UserProfile>>({
+  const [formData, setFormData] = useState({
     name: '',
-    age: 25,
-    sex: 'male',
-    height: 170,
-    weight: 70,
-    activityLevel: 'moderate',
-    goal: 'maintain',
+    age: '25',
+    sex: 'male' as 'male' | 'female',
+    height: '170',
+    weight: '70',
+    activityLevel: 'moderate' as UserProfile['activityLevel'],
+    goal: 'maintain' as UserProfile['goal'],
     language: lang
   });
+
+  const parseVal = (val: string) => {
+    if (!val) return 0;
+    const normalized = val.replace(',', '.');
+    const parsed = parseFloat(normalized);
+    return isNaN(parsed) ? 0 : parsed;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.name && formData.age && formData.height && formData.weight) {
-      setProfile({ ...formData, language: lang } as UserProfile);
+      const profile: UserProfile = {
+        name: formData.name,
+        age: parseInt(formData.age),
+        sex: formData.sex,
+        height: parseVal(formData.height),
+        weight: parseVal(formData.weight),
+        activityLevel: formData.activityLevel,
+        goal: formData.goal,
+        language: lang
+      };
+      setProfile(profile);
       router.push('/');
     }
   };
@@ -72,10 +89,14 @@ export default function OnboardingPage() {
             <Label htmlFor="age">{t.age}</Label>
             <Input 
               id="age" 
-              type="number" 
+              type="text" 
+              inputMode="numeric"
               required
               value={formData.age}
-              onChange={(e) => setFormData(prev => ({ ...prev, age: parseInt(e.target.value) }))}
+              onChange={(e) => {
+                if (e.target.value && !/^[0-9]*$/.test(e.target.value)) return;
+                setFormData(prev => ({ ...prev, age: e.target.value }));
+              }}
               className="rounded-xl border-2 border-primary/10 h-12"
             />
           </div>
@@ -103,10 +124,14 @@ export default function OnboardingPage() {
             <Label htmlFor="height">{t.height}</Label>
             <Input 
               id="height" 
-              type="number" 
+              type="text" 
+              inputMode="decimal"
               required
               value={formData.height}
-              onChange={(e) => setFormData(prev => ({ ...prev, height: parseInt(e.target.value) }))}
+              onChange={(e) => {
+                if (e.target.value && !/^[0-9.,]*$/.test(e.target.value)) return;
+                setFormData(prev => ({ ...prev, height: e.target.value }));
+              }}
               className="rounded-xl border-2 border-primary/10 h-12"
             />
           </div>
@@ -114,10 +139,14 @@ export default function OnboardingPage() {
             <Label htmlFor="weight">{t.weight}</Label>
             <Input 
               id="weight" 
-              type="number" 
+              type="text" 
+              inputMode="decimal"
               required
               value={formData.weight}
-              onChange={(e) => setFormData(prev => ({ ...prev, weight: parseInt(e.target.value) }))}
+              onChange={(e) => {
+                if (e.target.value && !/^[0-9.,]*$/.test(e.target.value)) return;
+                setFormData(prev => ({ ...prev, weight: e.target.value }));
+              }}
               className="rounded-xl border-2 border-primary/10 h-12"
             />
           </div>
@@ -156,7 +185,9 @@ export default function OnboardingPage() {
 
         {formData.weight && formData.height && formData.goal === 'lose' && (
           (() => {
-            const bmi = formData.weight / Math.pow(formData.height / 100, 2);
+            const w = parseVal(formData.weight);
+            const h = parseVal(formData.height);
+            const bmi = w / Math.pow(h / 100, 2);
             if (bmi >= 18.5 && bmi <= 24.9) {
               return (
                 <div className="p-4 bg-accent/20 rounded-2xl border border-accent text-sm text-primary">

@@ -4,14 +4,12 @@ import withSerwistInit from "@serwist/next";
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
+  disable: process.env.NODE_ENV !== "production",
 });
 
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   images: {
     remotePatterns: [
@@ -28,6 +26,9 @@ const nextConfig: NextConfig = {
         hostname: 'picsum.photos',
       },
     ],
+  },
+  turbopack: {
+    root: process.cwd(),
   },
 };
 

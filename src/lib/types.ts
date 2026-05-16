@@ -132,3 +132,45 @@ export interface AppState {
   activePlan: WeightPlanResult | null;
   planHistory: AchievedPlan[];
 }
+
+export function calculateStreak(state: AppState): number {
+  const allLogs = [
+    ...(state.foodLogs || []),
+    ...(state.activities || []),
+    ...(state.waterLogs || []),
+    ...(state.sleepLogs || []),
+    ...(state.cycleLogs || []),
+    ...(state.selfCareLogs || []),
+  ];
+
+  if (allLogs.length === 0) return 0;
+
+  const dates = new Set(
+    allLogs.map(log => new Date(log.timestamp).setHours(0, 0, 0, 0))
+  );
+
+  const sortedDates = Array.from(dates).sort((a, b) => b - a);
+  
+  const today = new Date().setHours(0, 0, 0, 0);
+  const yesterday = new Date(today).getTime() - 86400000;
+
+  let streak = 0;
+  let currentDate = today;
+
+  // Check if they logged today or yesterday to continue streak
+  const lastLogDate = sortedDates[0];
+  if (lastLogDate < yesterday) return 0;
+  
+  if (lastLogDate === today || lastLogDate === yesterday) {
+    for (const date of sortedDates) {
+      if (date === currentDate) {
+        streak++;
+        currentDate -= 86400000;
+      } else if (date < currentDate) {
+        break;
+      }
+    }
+  }
+
+  return streak;
+}

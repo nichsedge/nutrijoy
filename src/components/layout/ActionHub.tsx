@@ -76,12 +76,13 @@ export function ActionHub() {
     <Sheet>
       <SheetTrigger asChild>
         <button
-          className="flex items-center justify-center -mt-12 bg-primary text-white w-14 h-14 rounded-full shadow-lg border-4 border-background transition-transform active:scale-95 z-50 hover:rotate-90 duration-300"
+          className="flex items-center justify-center -mt-12 bg-primary text-white w-16 h-16 rounded-full shadow-xl shadow-primary/30 border-4 border-background transition-all active:scale-90 z-50 hover:rotate-90 duration-500 group relative overflow-hidden"
         >
-          <Plus className="w-8 h-8" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Plus className="w-10 h-10 transition-transform group-hover:scale-110" />
         </button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="rounded-t-[3rem] p-8 border-none bg-white shadow-2xl">
+      <SheetContent side="bottom" className="rounded-t-[3rem] p-8 border-none glass-card shadow-2xl pb-12">
         <SheetHeader className="mb-8">
           <SheetTitle className="text-2xl font-black text-center tracking-tight flex items-center justify-center gap-2">
             <Sparkles className="w-6 h-6 text-primary" />
