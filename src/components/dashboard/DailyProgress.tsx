@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useApp } from '../AppContext';
+import { useApp } from '@/components/AppContext';
 import { calculateTDEE } from '@/lib/nutrition';
 import { getTranslation } from '@/lib/translations';
 import { Progress } from '@/components/ui/progress';
@@ -10,6 +10,8 @@ import { Flame, Zap, Droplets, Beef, Leaf, Pill, GlassWater, Sparkles, Sun, Chev
 import { MicronutrientsCard } from './MicronutrientsCard';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import confetti from 'canvas-confetti';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CircularProgress } from '@/components/ui/circular-progress';
 
 export function DailyProgress() {
   const { state, addWaterLog, removeWaterLog } = useApp();
@@ -46,6 +48,7 @@ export function DailyProgress() {
   const waterGoal = 2500; // ml
 
   const netCalories = caloriesConsumed - caloriesBurned;
+  const calPercent = Math.min((netCalories / goals.recommendedCalories) * 100, 100);
   const waterPercent = Math.min((waterConsumed / waterGoal) * 100, 100);
   const sugarPercent = (sugarConsumed / goals.sugarLimit) * 100;
   const sodiumPercent = (sodiumConsumed / goals.sodiumLimit) * 100;
@@ -95,35 +98,59 @@ export function DailyProgress() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-none bg-gradient-to-br from-primary to-secondary text-white shadow-xl overflow-hidden relative rounded-[2.5rem] animate-in zoom-in-95 duration-700">
-        <div className="absolute top-0 right-0 p-4 opacity-20 animate-float">
-          <Flame className="w-24 h-24" />
-        </div>
-        <CardContent className="p-10">
-          <div className="flex flex-col gap-1 items-center text-center">
-            <p className="text-xs font-black opacity-80 uppercase tracking-[0.2em] mb-2">{t.calories} {t.remaining}</p>
-            <div className="relative">
-               <h2 className="text-7xl font-black font-headline tracking-tighter">
-                {Math.max(0, goals.recommendedCalories - netCalories)}
-              </h2>
-              <div className="absolute -top-2 -right-6">
-                <Sparkles className="w-6 h-6 animate-pulse text-white/50" />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="border-none bg-gradient-to-br from-primary via-primary/90 to-secondary text-white shadow-xl overflow-hidden relative rounded-[2.5rem]">
+          <div className="absolute top-0 right-0 p-4 opacity-10 animate-float">
+            <Flame className="w-48 h-48" />
+          </div>
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between">
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-black opacity-80 uppercase tracking-[0.2em]">{t.calories} {t.remaining}</p>
+                  <h2 className="text-5xl font-black font-headline tracking-tighter">
+                    {Math.max(0, goals.recommendedCalories - netCalories)}
+                  </h2>
+                  <p className="text-xs font-bold opacity-70">kcal to go</p>
+                </div>
+                
+                <div className="flex gap-6">
+                  <div className="space-y-0.5">
+                    <p className="text-[9px] uppercase font-black opacity-60 tracking-widest">{t.consumed}</p>
+                    <p className="text-lg font-black">{caloriesConsumed}</p>
+                  </div>
+                  <div className="space-y-0.5 border-l border-white/20 pl-6">
+                    <p className="text-[9px] uppercase font-black opacity-60 tracking-widest">{t.burned}</p>
+                    <p className="text-lg font-black">{caloriesBurned}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative">
+                <CircularProgress 
+                  value={calPercent} 
+                  size={140} 
+                  strokeWidth={12} 
+                  color="rgba(255,255,255,0.9)" 
+                  backgroundColor="rgba(255,255,255,0.15)"
+                >
+                  <div className="text-center">
+                    <p className="text-xl font-black">{Math.round(calPercent)}%</p>
+                    <p className="text-[8px] font-black uppercase opacity-60">Goal</p>
+                  </div>
+                </CircularProgress>
+                <div className="absolute -top-2 -right-2">
+                  <Sparkles className="w-5 h-5 text-white/40 animate-pulse" />
+                </div>
               </div>
             </div>
-            <p className="text-sm font-bold opacity-90 mt-2">kcal to go</p>
-          </div>
-          <div className="mt-10 grid grid-cols-2 gap-8 border-t border-white/20 pt-8">
-            <div className="text-center">
-              <p className="text-[10px] uppercase font-black opacity-70 tracking-widest mb-1">{t.consumed}</p>
-              <p className="text-2xl font-black">{caloriesConsumed}</p>
-            </div>
-            <div className="text-center border-l border-white/20">
-              <p className="text-[10px] uppercase font-black opacity-70 tracking-widest mb-1">{t.burned}</p>
-              <p className="text-2xl font-black">{caloriesBurned}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       <Card className="border-none shadow-sm mb-4 glass-premium border-2 border-blue-500/10 rounded-[2rem]">
         <CardContent className="p-6 space-y-5">
@@ -147,12 +174,16 @@ export function DailyProgress() {
                )}
             </div>
           </div>
-          <div className="relative h-4 w-full bg-blue-500/5 rounded-full overflow-hidden">
-             <div 
-               className="h-full bg-blue-500 transition-all duration-1000 ease-out rounded-full"
-               style={{ width: `${waterPercent}%` }}
-             />
-             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse-soft" />
+          <div className="relative h-4 w-full bg-blue-500/5 rounded-full overflow-hidden border border-blue-500/10">
+             <motion.div 
+               initial={{ width: 0 }}
+               animate={{ width: `${waterPercent}%` }}
+               transition={{ duration: 1.5, ease: "easeOut" }}
+               className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full relative"
+             >
+               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+             </motion.div>
+             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse-soft pointer-events-none" />
           </div>
           <div className="flex gap-3">
             <button 

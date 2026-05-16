@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { useApp } from '../AppContext';
 import { getTranslation } from '@/lib/translations';
 import { ActionHub } from './ActionHub';
+import { motion } from 'framer-motion';
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -32,17 +33,28 @@ export function Shell({ children }: { children: React.ReactNode }) {
         key={item.href}
         href={item.href}
         className={cn(
-          "flex flex-col items-center gap-1 transition-colors",
-          isActive ? "text-primary" : "text-muted-foreground"
+          "flex flex-col items-center gap-1.5 transition-all relative group min-w-[64px]",
+          isActive ? "text-primary" : "text-muted-foreground hover:text-primary/60"
         )}
       >
         <div className={cn(
-          "p-2 rounded-xl transition-all",
-          isActive ? "bg-primary/10" : ""
+          "p-2.5 rounded-2xl transition-all duration-300",
+          isActive ? "bg-primary/10 glow-primary scale-110" : "group-hover:bg-primary/5"
         )}>
-          <Icon className="w-6 h-6" />
+          <Icon className={cn("w-5 h-5", isActive && "fill-primary/20")} />
         </div>
-        <span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span>
+        <span className={cn(
+          "text-[8px] font-black uppercase tracking-wider text-center leading-tight transition-all",
+          isActive ? "opacity-100 translate-y-0" : "opacity-60 group-hover:opacity-100"
+        )}>
+          {item.label}
+        </span>
+        {isActive && (
+          <motion.div 
+            layoutId="nav-pill"
+            className="absolute -bottom-2 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary),0.6)]"
+          />
+        )}
       </Link>
     );
   };
@@ -58,12 +70,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <main className="flex-1 overflow-y-auto px-6 py-4">
         {children}
       </main>
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass-premium px-6 py-3 flex justify-between items-center z-50 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.06)]">
+      <nav className="fixed bottom-6 left-4 right-4 max-w-[calc(448px-2rem)] mx-auto glass-premium px-4 py-3 flex justify-between items-center z-50 rounded-[2.5rem] shadow-2xl border border-white/40 backdrop-blur-3xl">
         <div className="flex flex-1 justify-around items-center">
           {leftItems.map(renderNavItem)}
         </div>
         
-        <ActionHub />
+        <div className="mx-2 relative">
+          <ActionHub />
+        </div>
 
         <div className="flex flex-1 justify-around items-center">
           {rightItems.map(renderNavItem)}

@@ -15,6 +15,8 @@ interface AIInsightCardProps {
   hasActivityLog: boolean;
 }
 
+import { motion, AnimatePresence } from 'framer-motion';
+
 export function AIInsightCard({ 
   caloriesRemaining, 
   waterPercent, 
@@ -34,16 +36,18 @@ export function AIInsightCard({
           icon: <Moon className="w-5 h-5 text-indigo-500" />,
           title: "Morning Check-in",
           text: `Good morning, ${userName}! How did you sleep? Logging your rest helps me tune your energy goals.`,
-          color: "bg-indigo-50/50 border-indigo-100",
-          accent: "text-indigo-600"
+          color: "bg-indigo-50/20 border-indigo-200/50",
+          accent: "text-indigo-600",
+          glow: "shadow-indigo-500/10"
         };
       }
       return {
         icon: <Coffee className="w-5 h-5 text-amber-600" />,
         title: "Fuel Your Day",
         text: "Morning is a great time for high-fiber carbs. It'll keep your focus sharp until lunch!",
-        color: "bg-amber-50/50 border-amber-100",
-        accent: "text-amber-700"
+        color: "bg-amber-50/20 border-amber-200/50",
+        accent: "text-amber-700",
+        glow: "shadow-amber-500/10"
       };
     }
 
@@ -53,8 +57,9 @@ export function AIInsightCard({
         icon: <Zap className="w-5 h-5 text-orange-500" />,
         title: "Sugar Alert",
         text: "You're near your sugar limit. Try reaching for some almonds or Greek yogurt to stabilize your energy.",
-        color: "bg-orange-50/50 border-orange-100",
-        accent: "text-orange-600"
+        color: "bg-orange-50/20 border-orange-200/50",
+        accent: "text-orange-600",
+        glow: "shadow-orange-500/10"
       };
     }
 
@@ -64,8 +69,9 @@ export function AIInsightCard({
         icon: <Droplets className="w-5 h-5 text-blue-500" />,
         title: "Hydration Logic",
         text: "Your focus might be dipping. A glass of water now can boost cognitive function by up to 14%.",
-        color: "bg-blue-50/50 border-blue-100",
-        accent: "text-blue-600"
+        color: "bg-blue-50/20 border-blue-200/50",
+        accent: "text-blue-600",
+        glow: "shadow-blue-500/10"
       };
     }
 
@@ -75,60 +81,111 @@ export function AIInsightCard({
         icon: <Flame className="w-5 h-5 text-rose-500" />,
         title: "Movement Minute",
         text: "Even a 10-minute walk now can help digestion and clear your mind for the evening.",
-        color: "bg-rose-50/50 border-rose-100",
-        accent: "text-rose-600"
+        color: "bg-rose-50/20 border-rose-200/50",
+        accent: "text-rose-600",
+        glow: "shadow-rose-500/10"
+      };
+    }
+
+    // Evening Wind-down
+    if (hour >= 20 || hour < 5) {
+      if (caloriesRemaining > 500) {
+        return {
+          icon: <Moon className="w-5 h-5 text-purple-500" />,
+          title: "Night Routine",
+          text: "Still have some calories left? A light, protein-rich snack like cottage cheese can help muscle recovery overnight.",
+          color: "bg-purple-50/20 border-purple-200/50",
+          accent: "text-purple-600",
+          glow: "shadow-purple-500/10"
+        };
+      }
+      return {
+        icon: <Brain className="w-5 h-5 text-indigo-400" />,
+        title: "Rest & Reset",
+        text: "You've hit your goals! Aim for 7-9 hours of sleep to let your metabolism do its best work.",
+        color: "bg-indigo-50/20 border-indigo-200/50",
+        accent: "text-indigo-600",
+        glow: "shadow-indigo-500/10"
+      };
+    }
+
+    // High Protein Achievement
+    if (proteinPercent > 100) {
+       return {
+        icon: <Zap className="w-5 h-5 text-emerald-500" />,
+        title: "Protein Power",
+        text: "Incredible work on your protein target! Your muscles are well-fueled for repair and growth today.",
+        color: "bg-emerald-50/20 border-emerald-200/50",
+        accent: "text-emerald-600",
+        glow: "shadow-emerald-500/10"
       };
     }
 
     // Default "Thinking" Insight
     return {
       icon: <Sparkles className="w-5 h-5 text-primary" />,
-      title: "NutriJoy AI",
-      text: "You're doing great! Keep tracking to unlock more personalized metabolic insights.",
+      title: "Metabolic Pulse",
+      text: "Analyzing your data... You're maintaining a great rhythm. Keep logging to sharpen my precision.",
       color: "bg-primary/5 border-primary/10",
-      accent: "text-primary"
+      accent: "text-primary",
+      glow: "shadow-primary/10"
     };
   }, [caloriesRemaining, waterPercent, sugarPercent, proteinPercent, userName, hasSleepLog, hasActivityLog]);
 
   return (
-    <Card className={cn(
-      "border-2 shadow-none transition-all duration-700 overflow-hidden relative group",
-      insight.color
-    )}>
-      <div className="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform duration-700 [&>svg]:w-24 [&>svg]:h-24">
-        {insight.icon}
-      </div>
-      
-      <CardContent className="p-5 flex flex-col gap-3 relative z-10">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center">
-            {insight.icon}
-          </div>
-          <span className={cn("text-xs font-black uppercase tracking-widest", insight.accent)}>
-            {insight.title}
-          </span>
-          <div className="ml-auto flex gap-1">
-            <div className="w-1 h-1 rounded-full bg-current animate-pulse opacity-40" />
-            <div className="w-1 h-1 rounded-full bg-current animate-pulse opacity-40 delay-150" />
-            <div className="w-1 h-1 rounded-full bg-current animate-pulse opacity-40 delay-300" />
-          </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      <Card className={cn(
+        "border-none shadow-lg transition-all duration-700 overflow-hidden relative group rounded-[2.5rem] glass-premium",
+        insight.color,
+        insight.glow
+      )}>
+        <div className="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform duration-700 [&>svg]:w-24 [&>svg]:h-24">
+          {insight.icon}
         </div>
         
-        <p className="text-[15px] font-medium leading-relaxed text-foreground/90">
-          {insight.text}
-        </p>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
         
-        <div className="flex items-center gap-4 mt-1">
-           <div className="flex items-center gap-1.5 text-[10px] font-bold opacity-40 uppercase">
-             <Brain className="w-3 h-3" />
-             AI Driven
-           </div>
-           <div className="flex items-center gap-1.5 text-[10px] font-bold opacity-40 uppercase">
-             <Info className="w-3 h-3" />
-             Context Aware
-           </div>
-        </div>
-      </CardContent>
-    </Card>
+        <CardContent className="p-6 flex flex-col gap-3 relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-white/80 shadow-sm flex items-center justify-center border border-white/50 group-hover:rotate-12 transition-transform duration-500">
+              {insight.icon}
+            </div>
+            <div className="flex flex-col">
+              <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", insight.accent)}>
+                {insight.title}
+              </span>
+              <div className="flex gap-1 items-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[8px] font-bold opacity-40 uppercase tracking-widest">Live Engine</span>
+              </div>
+            </div>
+            <div className="ml-auto flex gap-1 bg-black/5 px-2 py-1 rounded-full">
+              <div className="w-1 h-1 rounded-full bg-current animate-pulse opacity-40" />
+              <div className="w-1 h-1 rounded-full bg-current animate-pulse opacity-40 delay-150" />
+              <div className="w-1 h-1 rounded-full bg-current animate-pulse opacity-40 delay-300" />
+            </div>
+          </div>
+          
+          <p className="text-base font-semibold leading-relaxed text-foreground/90 mt-2">
+            {insight.text}
+          </p>
+          
+          <div className="flex items-center gap-4 mt-2 pt-4 border-t border-black/5">
+             <div className="flex items-center gap-1.5 text-[9px] font-black opacity-40 uppercase tracking-widest">
+               <Brain className="w-3.5 h-3.5" />
+               Neural Core
+             </div>
+             <div className="flex items-center gap-1.5 text-[9px] font-black opacity-40 uppercase tracking-widest">
+               <Info className="w-3.5 h-3.5" />
+               Precision Mode
+             </div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

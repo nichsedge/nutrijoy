@@ -12,6 +12,8 @@ import { Utensils, Plus, Check, Trash2, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 
+import { motion, AnimatePresence } from 'framer-motion';
+
 export default function FoodLoggingPage() {
   const { state, addFoodLog, removeFoodLog } = useApp();
   const t = getTranslation(state.profile?.language || 'en');
@@ -130,7 +132,11 @@ export default function FoodLoggingPage() {
 
   return (
     <Shell>
-      <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="space-y-6 pb-24"
+      >
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-bold">{t.logFood}</h2>
           <p className="text-sm text-muted-foreground">Manually enter your meal details below.</p>
@@ -199,7 +205,7 @@ export default function FoodLoggingPage() {
           </div>
         )}
 
-        <Card className="border-2 border-primary/10 rounded-3xl overflow-hidden shadow-sm">
+        <Card className="border-none rounded-[2.5rem] overflow-hidden shadow-xl glass-premium border border-white/40">
           <CardContent className="p-6">
             <form onSubmit={handleLog} className="space-y-4">
               <div className="space-y-2">
@@ -449,7 +455,7 @@ export default function FoodLoggingPage() {
             )}
           </div>
         </section>
-      </div>
+      </motion.div>
     </Shell>
   );
 }
