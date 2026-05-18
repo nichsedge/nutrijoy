@@ -413,46 +413,63 @@ export default function FoodLoggingPage() {
         </Card>
 
         <section>
-          <h3 className="font-bold mb-4">Today's Meal History</h3>
+          <h3 className="font-bold mb-4">{t.todaysMealHistory || "Today's Meal History"}</h3>
           <div className="space-y-3">
-            {state.foodLogs.map((log) => (
-              <Card key={log.id} className="border-none shadow-sm rounded-2xl overflow-hidden group">
-                <CardContent className="p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                      <Utensils className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="font-bold capitalize">{log.name}</p>
-                      <p className="text-xs text-muted-foreground">{log.quantity} • {log.calories} kcal</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.protein || 'Protein'}</p>
-                      <p className="text-xs font-bold text-primary">{log.protein || 0}g</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.sugar || 'Sugar'}</p>
-                      <p className="text-xs font-bold text-secondary">{log.sugar}g</p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeFoodLog(log.id)}
-                      className="w-8 h-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            <AnimatePresence mode="popLayout">
+              {[...state.foodLogs]
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .map((log) => (
+                <motion.div
+                  key={log.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Card className="border-none shadow-sm rounded-2xl overflow-hidden group">
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                          <Utensils className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <p className="font-bold capitalize">{log.name}</p>
+                          <p className="text-xs text-muted-foreground">{log.quantity} • {log.calories} kcal</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.protein || 'Protein'}</p>
+                          <p className="text-xs font-bold text-primary">{log.protein || 0}g</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.sugar || 'Sugar'}</p>
+                          <p className="text-xs font-bold text-secondary">{log.sugar}g</p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeFoodLog(log.id)}
+                          className="w-8 h-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </AnimatePresence>
             {state.foodLogs.length === 0 && (
-              <div className="text-center py-12 border-2 border-dashed border-primary/10 rounded-3xl">
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                className="text-center py-12 border-2 border-dashed border-primary/10 rounded-3xl"
+              >
                 <Utensils className="w-12 h-12 mx-auto text-primary/20 mb-3" />
-                <p className="text-sm text-muted-foreground italic">{t.noLogs}</p>
-              </div>
+                <p className="text-sm text-muted-foreground italic">{t.noLogs || "No meals logged today yet."}</p>
+              </motion.div>
             )}
           </div>
         </section>

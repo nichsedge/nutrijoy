@@ -2,6 +2,30 @@
   "name": "nutrijoy",
   "version": "0.1.0",
   "private": true,
+  "description": "Premium mobile-first PWA for nutrition, fitness, and holistic wellness tracking.",
+  "homepage": "https://nutrijoy.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nichsedge/nutrijoy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nichsedge/nutrijoy/issues"
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "pwa",
+    "progressive-web-app",
+    "wellness-tracker",
+    "nutrition-tracker",
+    "fitness-tracker",
+    "framer-motion",
+    "typescript",
+    "serwist",
+    "mobile-first",
+    "self-care",
+    "health-dashboard"
+  ],
   "scripts": {
     "dev": "next dev --turbopack -p 9002",
     "build": "NODE_ENV=production next build",
