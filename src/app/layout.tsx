@@ -1,6 +1,19 @@
 import type { Metadata, Viewport } from 'next';
+import { Poppins, PT_Sans } from 'next/font/google';
 import './globals.css';
 import { AppProviders } from '@/components/AppProviders';
+
+const poppins = Poppins({
+  weight: ['400', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-poppins',
+});
+
+const ptSans = PT_Sans({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-pt-sans',
+});
 
 export const metadata: Metadata = {
   title: 'NutriJoy | Happy Calorie Tracking',
@@ -30,12 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" className={`${poppins.variable} ${ptSans.variable}`}>
       <body className="font-body antialiased selection:bg-primary/20 bg-background min-h-screen">
         <AppProviders>
           {children}

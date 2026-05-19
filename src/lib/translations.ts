@@ -163,7 +163,8 @@ const translations = {
     weightLeft: 'Weight Left',
     progress: 'Progress',
     noMeasurementsYet: 'No measurements for this week yet.',
-    logWeightToTrack: 'Log your weight in Measurements to track progress.'
+    logWeightToTrack: 'Log your weight in Measurements to track progress.',
+    todaysMealHistory: "Today's Meal History"
   },
   id: {
     appName: 'NutriJoy',
@@ -327,7 +328,8 @@ const translations = {
     weightLeft: 'Sisa Berat',
     progress: 'Kemajuan',
     noMeasurementsYet: 'Belum ada ukuran untuk minggu ini.',
-    logWeightToTrack: 'Catat berat badanmu di Ukuran Tubuh untuk melacak kemajuan.'
+    logWeightToTrack: 'Catat berat badanmu di Ukuran Tubuh untuk melacak kemajuan.',
+    todaysMealHistory: 'Riwayat Makanan Hari Ini'
   }
 };
 
