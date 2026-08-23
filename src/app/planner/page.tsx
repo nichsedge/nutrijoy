@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useApp } from '@/components/AppContext';
+import { useAppState, useAppActions } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
 import { calculateWeightPlan } from '@/lib/nutrition';
@@ -19,7 +19,8 @@ import { getPlanFinalTargetWeight, getPlanTargetChange, parseDecimalInput } from
 import { usePlanProgress } from '@/hooks/use-plan-progress';
 
 export default function PlannerPage() {
-  const { state, setActivePlan, completePlan } = useApp();
+  const state = useAppState();
+  const { setActivePlan, completePlan } = useAppActions();
   const { toast } = useToast();
   const t = getTranslation(state.profile?.language || 'en');
 

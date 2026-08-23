@@ -16,16 +16,38 @@ import {
   Plus, 
   Moon, 
   Calendar, 
-  Sparkles 
+  Sparkles,
+  Camera,
+  Coffee,
+  Heart,
+  UserCheck
 } from 'lucide-react';
 import { getTranslation } from '@/lib/translations';
-import { useApp } from '../AppContext';
+import { useAppState, useAppActions } from '../AppContext';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import { playChime, playSuccessChord } from '@/lib/soundEffects';
+import { useToast } from '@/hooks/use-toast';
 
 export function ActionHub() {
-  const { state, addWaterLog } = useApp();
+  const state = useAppState();
+  const { addWaterLog } = useAppActions();
+  const { toast } = useToast();
   const t = getTranslation(state.profile?.language || 'en');
+  const isId = state.profile?.language === 'id';
+
+  const handleQuickWater = () => {
+    playChime();
+    addWaterLog({
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+      amountMl: 250
+    });
+    toast({
+      title: "💧 +250ml " + (isId ? "Tercatat" : "Logged"),
+      description: isId ? "Terus jaga hidrasi kulitmu!" : "Keep that radiant hydration flowing!",
+    });
+  };
 
   const actions = [
     { 
@@ -43,20 +65,14 @@ export function ActionHub() {
     { 
       label: t.drinkWater, 
       icon: <Droplets className="w-6 h-6" />, 
-      onClick: () => {
-        addWaterLog({
-          id: crypto.randomUUID(),
-          timestamp: Date.now(),
-          amountMl: 250
-        });
-      },
+      onClick: handleQuickWater,
       color: 'bg-blue-500/10 text-blue-500' 
     },
     { 
-      label: t.bodyMetrics, 
-      icon: <Ruler className="w-6 h-6" />, 
-      href: '/measurements', 
-      color: 'bg-orange-500/10 text-orange-500' 
+      label: t.skinJournal || 'Skin Photo', 
+      icon: <Camera className="w-6 h-6" />, 
+      href: '/check-in', 
+      color: 'bg-pink-500/10 text-pink-500' 
     },
     { 
       label: t.wellnessRitual, 
@@ -65,10 +81,10 @@ export function ActionHub() {
       color: 'bg-indigo-500/10 text-indigo-500' 
     },
     { 
-      label: t.planner, 
-      icon: <Calendar className="w-6 h-6" />, 
-      href: '/planner', 
-      color: 'bg-green-500/10 text-green-500' 
+      label: t.bodyMetrics, 
+      icon: <Ruler className="w-6 h-6" />, 
+      href: '/measurements', 
+      color: 'bg-orange-500/10 text-orange-500' 
     },
   ];
 

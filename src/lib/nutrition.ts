@@ -1,4 +1,4 @@
-import { UserProfile, TDEEResult, WeightPlanInput, WeightPlanResult } from './types';
+import { UserProfile, TDEEResult, WeightPlanInput, WeightPlanResult, SkinGlowScore, FoodLogEntry, WaterLogEntry, SleepLogEntry, Language } from './types';
 
 export const ACTIVITY_MULTIPLIERS = {
   sedentary: 1.2,
@@ -124,3 +124,95 @@ export function calculateWeightPlan(input: WeightPlanInput): WeightPlanResult {
     goal
   };
 }
+
+export function calculateSkinGlowScore(
+  foodLogs: FoodLogEntry[],
+  waterLogs: WaterLogEntry[],
+  sleepLogs: SleepLogEntry[],
+  profile: UserProfile | null,
+  language: Language = 'en'
+): SkinGlowScore {
+  const isId = language === 'id';
+  const sex = profile?.sex || 'female';
+
+  // 1. Antioxidant & Glow Micronutrients (40 pts)
+  const vitCTarget = 90;
+  const vitETarget = 15;
+  const zincTarget = sex === 'female' ? 8 : 11;
+  const omega3Target = sex === 'female' ? 1100 : 1600;
+  const biotinTarget = 30;
+
+  const totalVitC = foodLogs.reduce((acc, f) => acc + (f.vitaminC || 0), 0);
+  const totalVitE = foodLogs.reduce((acc, f) => acc + (f.vitaminE || 0), 0);
+  const totalZinc = foodLogs.reduce((acc, f) => acc + (f.zinc || 0), 0);
+  const totalOmega3 = foodLogs.reduce((acc, f) => acc + (f.omega3 || 0), 0);
+  const totalBiotin = foodLogs.reduce((acc, f) => acc + (f.biotin || 0), 0);
+
+  const vitCPct = Math.min(1, totalVitC / vitCTarget);
+  const vitEPct = Math.min(1, totalVitE / vitETarget);
+  const zincPct = Math.min(1, totalZinc / zincTarget);
+  const omega3Pct = Math.min(1, totalOmega3 / omega3Target);
+  const biotinPct = Math.min(1, totalBiotin / biotinTarget);
+
+  const avgMicroPct = (vitCPct * 0.3 + vitEPct * 0.2 + zincPct * 0.2 + omega3Pct * 0.2 + biotinPct * 0.1);
+  const antioxidantScore = Math.round(avgMicroPct * 40);
+
+  // 2. Hydration (35 pts)
+  const totalWater = waterLogs.reduce((acc, w) => acc + w.amountMl, 0);
+  const hydrationPct = Math.min(1, totalWater / 2000);
+  const hydrationScore = Math.round(hydrationPct * 35);
+
+  // 3. Sleep & Rest (25 pts)
+  const latestSleep = sleepLogs.length > 0 ? sleepLogs[sleepLogs.length - 1] : null;
+  let sleepScore = 15; // default reasonable base if not logged yet
+  if (latestSleep) {
+    const durPct = Math.min(1, latestSleep.durationHours / 7);
+    const restPct = Math.min(1, (latestSleep.restednessScore || 3) / 5);
+    sleepScore = Math.round((durPct * 0.6 + restPct * 0.4) * 25);
+  }
+
+  const rawScore = antioxidantScore + hydrationScore + sleepScore;
+  const score = Math.min(100, Math.max(0, rawScore));
+
+  let status: SkinGlowScore['status'] = 'needs_care';
+  let label = isId ? 'Butuh Hidrasi & Istirahat 💧' : 'Needs Hydration & Rest 💧';
+
+  if (score >= 80) {
+    status = 'radiant';
+    label = isId ? 'Bercahaya & Sehat ✨' : 'Radiant & Glowing ✨';
+  } else if (score >= 50) {
+    status = 'blooming';
+    label = isId ? 'Mekar & Segar 🌸' : 'Blooming Glow 🌸';
+  }
+
+  // Dynamic Tip based on lowest contributor
+  let topTip = '';
+  if (hydrationPct < 0.6) {
+    topTip = isId 
+      ? 'Tingkatkan asupan air putih untuk menjaga kekenyalan kulit dan mengurangi kantung mata.'
+      : 'Boost water intake to 2L+ to plump skin cells and flush out excess morning puffiness.';
+  } else if (avgMicroPct < 0.5) {
+    topTip = isId
+      ? 'Tambahkan buah beri, jeruk, atau salmon untuk asupan Vitamin C & Omega-3 pemicu kolagen.'
+      : 'Add berries, citrus, or fatty fish to support natural collagen synthesis and skin elasticity.';
+  } else if (latestSleep && latestSleep.durationHours < 7) {
+    topTip = isId
+      ? 'Prioritaskan tidur 7-8 jam malam ini untuk proses regenerasi sel kulit dan reduksi kortisol.'
+      : 'Prioritize 7–8 hours of restorative sleep tonight for overnight cellular repair.';
+  } else {
+    topTip = isId
+      ? 'Nutrisi dan hidrasimu sangat optimal! Pertahankan kilau alami kulitmu hari ini.'
+      : 'Your glow habits are on point! Radiant skin barrier is well-supported today.';
+  }
+
+  return {
+    score,
+    status,
+    label,
+    antioxidantScore,
+    hydrationScore,
+    sleepScore,
+    topTip
+  };
+}
+

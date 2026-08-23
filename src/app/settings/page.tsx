@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from 'react';
-import { useApp } from '@/components/AppContext';
+import { useAppState, useAppActions } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,8 @@ import { UserProfile } from '@/lib/types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function SettingsPage() {
-  const { state, setLanguage, setProfile, resetState } = useApp();
+  const state = useAppState();
+  const { setLanguage, setProfile, resetState } = useAppActions();
   const t = getTranslation(state.profile?.language || 'en');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();

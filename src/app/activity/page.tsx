@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useApp } from '@/components/AppContext';
+import { useAppState, useAppActions } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Activity, Zap, Search, Clock, Footprints, Wind, Bike, Home, Briefcase, ArrowUpRight, Dumbbell, ChevronLeft, Utensils } from 'lucide-react';
+import { Activity, Zap, Search, Clock, Footprints, Wind, Bike, Home, Briefcase, ArrowUpRight, Dumbbell, ChevronLeft, Utensils, Play, Sparkles, UserCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { GuidedRitualsModal } from '@/components/wellness/GuidedRitualsModal';
 
 const MOCK_ACTIVITIES = [
   { name: 'Pilates (Core & Posture)', met: 3.0, icon: Wind, color: 'bg-teal-500' },
@@ -27,11 +28,13 @@ const MOCK_ACTIVITIES = [
 const PRESETS = [15, 30, 45, 60, 90];
 
 export default function ActivityPage() {
-  const { state, addActivity } = useApp();
+  const state = useAppState();
+  const { addActivity } = useAppActions();
   const t = getTranslation(state.profile?.language || 'en');
   const [hours, setHours] = useState('0');
   const [minutes, setMinutes] = useState('30');
   const [query, setQuery] = useState('');
+  const [isPostureModalOpen, setIsPostureModalOpen] = useState(false);
   const { toast } = useToast();
 
   const handleAddActivity = (name: string, met: number) => {
@@ -95,6 +98,35 @@ export default function ActivityPage() {
             </Link>
           </Button>
         </div>
+
+        {/* 🧘 1-Minute Posture Guide Launcher */}
+        <Card className="border-none shadow-sm bg-gradient-to-r from-teal-500/10 via-emerald-500/5 to-teal-500/10 rounded-[2rem] border border-teal-500/15 overflow-hidden">
+          <CardContent className="p-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-teal-500/15 text-teal-600 flex items-center justify-center font-bold text-lg shrink-0">
+                🧘
+              </div>
+              <div className="space-y-0.5">
+                <h4 className="text-xs font-black text-teal-900 uppercase tracking-wider">
+                  {t.postureGuideTitle || '1-Minute Posture & Spine Alignment'}
+                </h4>
+                <p className="text-[11px] text-muted-foreground line-clamp-1">
+                  {t.postureGuideDesc || 'Release neck tension, reverse slouching, and improve body presence.'}
+                </p>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setIsPostureModalOpen(true)}
+              className="rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold h-9 px-4 shrink-0 shadow-sm"
+            >
+              <Play className="w-3 h-3 mr-1 fill-current" />
+              {state.profile?.language === 'id' ? 'Mulai' : 'Start'}
+            </Button>
+          </CardContent>
+        </Card>
 
         <div className="space-y-6">
            <Card className="border-none bg-white shadow-xl rounded-[2rem] overflow-hidden">
@@ -193,6 +225,13 @@ export default function ActivityPage() {
           )}
         </div>
       </div>
+
+      <GuidedRitualsModal
+        isOpen={isPostureModalOpen}
+        onClose={() => setIsPostureModalOpen(false)}
+        type="posture"
+        language={state.profile?.language || 'en'}
+      />
     </Shell>
   );
 }

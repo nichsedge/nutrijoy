@@ -3,14 +3,14 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Moon, Sparkles, RefreshCcw, CheckCircle2, Circle } from 'lucide-react';
-import { useApp } from '../AppContext';
+import { useAppState } from '../AppContext';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 
 export function WellnessSummary() {
-  const { state } = useApp();
+  const state = useAppState();
   
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = new Date(today).setHours(24, 0, 0, 0);

@@ -1,8 +1,15 @@
 import type { AppState, UserProfile, FoodLogEntry, ActivityEntry, MeasurementEntry } from './types';
-import { get, set, del } from 'idb-keyval';
+import { get, set, del, keys } from 'idb-keyval';
 import { z } from 'zod';
 
 const STORAGE_KEY = 'nutrijoy_app_state';
+
+export const STATE_SLICE_KEYS = [
+  'profile', 'foodLogs', 'activities', 'measurements', 'waterLogs',
+  'sleepLogs', 'cycleLogs', 'selfCareLogs', 'activePlan', 'planHistory',
+] as const;
+
+export type StateSliceKey = (typeof STATE_SLICE_KEYS)[number];
 
 const UserProfileSchema = z.object({
   name: z.string(),
@@ -167,43 +174,73 @@ export function sanitizeState(state: unknown): AppState {
 }
 
 /**
- * Loads state from IndexedDB with a fallback migration from localStorage.
+ * Saves a single state slice to IndexedDB under its own key.
+ * Avoids serializing the whole AppState on every change.
+ */
+export async function saveStateSlice<K extends StateSliceKey>(key: K, value: AppState[K]) {
+  if (typeof window === 'undefined') return;
+  try {
+    await set(`${STORAGE_KEY}:${key}`, value);
+  } catch (e) {
+    console.error(`Error saving state slice "${key}" to IndexedDB`, e);
+  }
+}
+
+/**
+ * Loads state from per-slice IndexedDB keys, falling back to the legacy
+ * monolithic key (and migrating it to slices when found).
  */
 export async function loadState(): Promise<AppState> {
   if (typeof window === 'undefined') return defaultState;
 
   try {
-    // Try to get from IndexedDB
-    let stored = await get(STORAGE_KEY);
+    // Per-slice read (current format)
+    const entries = await Promise.all(STATE_SLICE_KEYS.map(async (k) => [k, await get(`${STORAGE_KEY}:${k}`)] as const));
+    if (entries.some(([, v]) => v !== undefined)) {
+      const assembled = { ...defaultState } as Record<string, unknown>;
+      for (const [k, v] of entries) {
+        if (v !== undefined) assembled[k] = v;
+      }
+      return validate(assembled);
+    }
 
+    // Legacy monolithic read + migration
+    let stored = await get(STORAGE_KEY);
     if (!stored) {
-      // Fallback/Migration from legacy localStorage
       const legacyStored = localStorage.getItem(STORAGE_KEY);
       if (legacyStored) {
         try {
           stored = JSON.parse(legacyStored);
-          // Port to IndexedDB
           await set(STORAGE_KEY, stored);
-          // Optional: Clear legacy storage to prevent future confusion
-          // localStorage.removeItem(STORAGE_KEY);
         } catch (e) {
           console.error("Failed to parse legacy storage", e);
         }
       }
     }
-
     if (!stored) return defaultState;
-    const sanitized = sanitizeState(stored);
-    const parsed = AppStateSchema.safeParse(sanitized);
-    if (!parsed.success) {
-      console.error('Invalid app state shape in storage', parsed.error);
-      return defaultState;
-    }
-    return parsed.data;
+
+    const validated = await validate(stored);
+    // Migrate to per-slice keys and drop the monolithic one
+    await Promise.all([
+      ...STATE_SLICE_KEYS.map((k) => set(`${STORAGE_KEY}:${k}`, validated[k])),
+      del(STORAGE_KEY),
+    ]);
+    localStorage.removeItem(STORAGE_KEY);
+    return validated;
   } catch (e) {
     console.error("Error loading state from IndexedDB", e);
     return defaultState;
   }
+}
+
+async function validate(stored: unknown): Promise<AppState> {
+  const sanitized = sanitizeState(stored);
+  const parsed = AppStateSchema.safeParse(sanitized);
+  if (!parsed.success) {
+    console.error('Invalid app state shape in storage', parsed.error);
+    return defaultState;
+  }
+  return parsed.data;
 }
 
 /**
@@ -224,7 +261,10 @@ export async function saveState(state: AppState) {
 export async function clearState() {
   if (typeof window === 'undefined') return;
   try {
-    await del(STORAGE_KEY);
+    await Promise.all([
+      del(STORAGE_KEY),
+      ...STATE_SLICE_KEYS.map((k) => del(`${STORAGE_KEY}:${k}`)),
+    ]);
   } catch (e) {
     console.error("Error clearing IndexedDB", e);
   }

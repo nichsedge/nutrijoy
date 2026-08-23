@@ -13,6 +13,8 @@ interface AIInsightCardProps {
   userName: string;
   hasSleepLog: boolean;
   hasActivityLog: boolean;
+  glowScore?: number;
+  cyclePhase?: string;
 }
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +26,9 @@ export function AIInsightCard({
   proteinPercent,
   userName,
   hasSleepLog,
-  hasActivityLog
+  hasActivityLog,
+  glowScore,
+  cyclePhase
 }: AIInsightCardProps) {
   const insight = useMemo(() => {
     const hour = new Date().getHours();
@@ -51,6 +55,18 @@ export function AIInsightCard({
       };
     }
 
+    // Glow Score Milestone
+    if (glowScore && glowScore >= 80) {
+      return {
+        icon: <Sparkles className="w-5 h-5 text-rose-500" />,
+        title: "Radiance Peak",
+        text: `Glowing vitality, ${userName}! Your antioxidant, hydration, and recovery markers are in harmony.`,
+        color: "bg-rose-50/25 border-rose-200/60",
+        accent: "text-rose-600",
+        glow: "shadow-rose-500/15"
+      };
+    }
+
     // High Sugar Warning
     if (sugarPercent > 85) {
       return {
@@ -67,8 +83,8 @@ export function AIInsightCard({
     if (waterPercent < 40) {
       return {
         icon: <Droplets className="w-5 h-5 text-blue-500" />,
-        title: "Hydration Logic",
-        text: "Your focus might be dipping. A glass of water now can boost cognitive function by up to 14%.",
+        title: "Hydration & Glow",
+        text: "Hydration is low. A glass of water now boosts skin elasticity and helps flush out facial puffiness.",
         color: "bg-blue-50/20 border-blue-200/50",
         accent: "text-blue-600",
         glow: "shadow-blue-500/10"
@@ -80,7 +96,7 @@ export function AIInsightCard({
       return {
         icon: <Flame className="w-5 h-5 text-rose-500" />,
         title: "Movement Minute",
-        text: "Even a 10-minute walk now can help digestion and clear your mind for the evening.",
+        text: "Even a 10-minute walk or light Pilates now improves circulation, posture, and natural radiance.",
         color: "bg-rose-50/20 border-rose-200/50",
         accent: "text-rose-600",
         glow: "shadow-rose-500/10"
@@ -102,7 +118,7 @@ export function AIInsightCard({
       return {
         icon: <Brain className="w-5 h-5 text-indigo-400" />,
         title: "Rest & Reset",
-        text: "You've hit your goals! Aim for 7-9 hours of sleep to let your metabolism do its best work.",
+        text: "Wrap up your evening skincare and aim for 7-9 hours of sleep to let your skin and metabolism regenerate.",
         color: "bg-indigo-50/20 border-indigo-200/50",
         accent: "text-indigo-600",
         glow: "shadow-indigo-500/10"
@@ -114,10 +130,22 @@ export function AIInsightCard({
        return {
         icon: <Zap className="w-5 h-5 text-emerald-500" />,
         title: "Protein Power",
-        text: "Incredible work on your protein target! Your muscles are well-fueled for repair and growth today.",
+        text: "Incredible work on your protein target! Your muscles, nails, and skin collagen are well-supported today.",
         color: "bg-emerald-50/20 border-emerald-200/50",
         accent: "text-emerald-600",
         glow: "shadow-emerald-500/10"
+      };
+    }
+
+    // Cycle Phase Optimization
+    if (cyclePhase === 'luteal') {
+      return {
+        icon: <Sparkles className="w-5 h-5 text-rose-500" />,
+        title: "Luteal Phase Care",
+        text: "Your basal metabolism is burning slightly more calories today. Nourish with complex carbs and magnesium.",
+        color: "bg-rose-50/25 border-rose-200/50",
+        accent: "text-rose-600",
+        glow: "shadow-rose-500/10"
       };
     }
 
@@ -125,12 +153,12 @@ export function AIInsightCard({
     return {
       icon: <Sparkles className="w-5 h-5 text-primary" />,
       title: "Metabolic Pulse",
-      text: "Analyzing your data... You're maintaining a great rhythm. Keep logging to sharpen my precision.",
+      text: "Analyzing your data... You're maintaining a great rhythm. Keep logging to sharpen your personalized insights.",
       color: "bg-primary/5 border-primary/10",
       accent: "text-primary",
       glow: "shadow-primary/10"
     };
-  }, [caloriesRemaining, waterPercent, sugarPercent, proteinPercent, userName, hasSleepLog, hasActivityLog]);
+  }, [caloriesRemaining, waterPercent, sugarPercent, proteinPercent, userName, hasSleepLog, hasActivityLog, glowScore, cyclePhase]);
 
   return (
     <motion.div

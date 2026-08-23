@@ -1,12 +1,18 @@
 "use client";
 
-import { useApp } from '@/components/AppContext';
+import { useAppState } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { DailyProgress } from '@/components/dashboard/DailyProgress';
 import { AIInsightCard } from '@/components/dashboard/AIInsightCard';
 import { WellnessSummary } from '@/components/dashboard/WellnessSummary';
+import { CoupleSyncCard } from '@/components/wellness/CoupleSyncCard';
+import { DailyAffirmationCard } from '@/components/dashboard/DailyAffirmationCard';
+import { MorningSunlightCard } from '@/components/wellness/MorningSunlightCard';
+import { CaffeineTrackerCard } from '@/components/wellness/CaffeineTrackerCard';
+import { CircadianWindowCard } from '@/components/dashboard/CircadianWindowCard';
+import { SolfeggioPlayerCard } from '@/components/wellness/SolfeggioPlayerCard';
 import { getTranslation } from '@/lib/translations';
-import { calculateTDEE } from '@/lib/nutrition';
+import { calculateTDEE, calculateSkinGlowScore } from '@/lib/nutrition';
 import { calculateStreak } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -15,7 +21,7 @@ import { ArrowRight, Sparkles, Flame } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Home() {
-  const { state } = useApp();
+  const state = useAppState();
   const t = getTranslation(state.profile?.language || 'en');
   const router = useRouter();
 
@@ -50,9 +56,11 @@ export default function Home() {
   const sugarPercent = (sugarConsumed / sugarLimit) * 100;
   const proteinPercent = (proteinConsumed / baseGoals.proteinLimit) * 100;
 
-  const hasSleepLog = state.sleepLogs?.some(log => log.timestamp >= today && log.timestamp < tomorrow) || false;
+  const todaysSleep = state.sleepLogs?.filter(log => log.timestamp >= today && log.timestamp < tomorrow) || [];
+  const hasSleepLog = todaysSleep.length > 0;
   const hasActivityLog = todaysActivities.length > 0;
   
+  const glowScore = calculateSkinGlowScore(todaysFood, todaysWater, todaysSleep, state.profile, state.profile.language);
   const streak = calculateStreak(state);
 
   return (
@@ -81,6 +89,10 @@ export default function Home() {
           </div>
         </div>
 
+        <DailyAffirmationCard />
+
+        <MorningSunlightCard />
+
         <AIInsightCard 
           userName={state.profile.name}
           caloriesRemaining={caloriesRemaining}
@@ -89,6 +101,7 @@ export default function Home() {
           proteinPercent={proteinPercent}
           hasSleepLog={hasSleepLog}
           hasActivityLog={hasActivityLog}
+          glowScore={glowScore.score}
         />
 
         <DailyProgress />
@@ -96,6 +109,22 @@ export default function Home() {
         <section className="space-y-4">
            <h3 className="font-black text-sm uppercase tracking-widest text-foreground/60">{t.wellnessRitual}</h3>
            <WellnessSummary />
+        </section>
+
+        <section className="space-y-4">
+           <CaffeineTrackerCard />
+        </section>
+
+        <section className="space-y-4">
+           <CircadianWindowCard />
+        </section>
+
+        <section className="space-y-4">
+           <CoupleSyncCard />
+        </section>
+
+        <section className="space-y-4">
+           <SolfeggioPlayerCard />
         </section>
 
         <section>

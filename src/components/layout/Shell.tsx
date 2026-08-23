@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Settings, Calendar, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useApp } from '../AppContext';
+import { useAppState } from '../AppContext';
 import { getTranslation } from '@/lib/translations';
 import { ActionHub } from './ActionHub';
 import { motion } from 'framer-motion';
@@ -18,7 +18,7 @@ interface NavItem {
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { state } = useApp();
+  const state = useAppState();
   const t = getTranslation(state.profile?.language || 'en');
 
   const leftItems: NavItem[] = [

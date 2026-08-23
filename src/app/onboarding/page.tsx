@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useApp } from '@/components/AppContext';
+import { useAppState, useAppActions } from '@/components/AppContext';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,8 @@ import { UserProfile } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function OnboardingPage() {
-  const { setProfile, state } = useApp();
+  const state = useAppState();
+  const { setProfile } = useAppActions();
   const router = useRouter();
   const [lang, setLang] = useState<UserProfile['language']>('en');
   const t = getTranslation(lang);

@@ -1,24 +1,32 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useApp } from '@/components/AppContext';
+import { useAppState, useAppActions } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Utensils, Plus, Check, Trash2, Activity } from 'lucide-react';
+import { Utensils, Plus, Check, Trash2, Activity, Sparkles, ChevronRight, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
-import type { FoodLogEntry } from '@/lib/types';
+import type { FoodLogEntry, GlowRecipe } from '@/lib/types';
+import { GLOW_RECIPES } from '@/lib/glowRecipes';
+import { GuidedRitualsModal } from '@/components/wellness/GuidedRitualsModal';
+import { GutHealthCard } from '@/components/wellness/GutHealthCard';
+import { GlucoseCoachCard } from '@/components/wellness/GlucoseCoachCard';
+import { BeautyTeaCard } from '@/components/wellness/BeautyTeaCard';
+import { CellularHydrationCard } from '@/components/wellness/CellularHydrationCard';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function FoodLoggingPage() {
-  const { state, addFoodLog, removeFoodLog } = useApp();
+  const state = useAppState();
+  const { addFoodLog, removeFoodLog } = useAppActions();
   const t = getTranslation(state.profile?.language || 'en');
   const { toast } = useToast();
+  const [isDigestModalOpen, setIsDigestModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -72,6 +80,54 @@ export default function FoodLoggingPage() {
       description: `${t.loadedDetailsFor || "Loaded details for"} ${food.name}`,
     });
   };
+
+  const selectGlowRecipe = (recipe: GlowRecipe) => {
+    const isId = state.profile?.language === 'id';
+    setFormData({
+      name: isId ? recipe.nameId : recipe.name,
+      quantity: recipe.quantity,
+      calories: recipe.calories.toString(),
+      protein: recipe.protein.toString(),
+      fiber: recipe.fiber.toString(),
+      vitaminC: recipe.vitaminC.toString(),
+      biotin: recipe.biotin.toString(),
+      zinc: recipe.zinc.toString(),
+      omega3: recipe.omega3.toString(),
+      vitaminE: recipe.vitaminE.toString(),
+      sugar: recipe.sugar.toString(),
+      sodium: recipe.sodium.toString()
+    });
+    toast({
+      title: "✨ Glow Recipe Loaded",
+      description: `${isId ? recipe.nameId : recipe.name} loaded into logging form.`,
+    });
+  };
+
+  const quickLogGlowRecipe = (recipe: GlowRecipe) => {
+    const isId = state.profile?.language === 'id';
+    addFoodLog({
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+      name: isId ? recipe.nameId : recipe.name,
+      quantity: recipe.quantity,
+      calories: recipe.calories,
+      protein: recipe.protein,
+      fiber: recipe.fiber,
+      vitaminC: recipe.vitaminC,
+      biotin: recipe.biotin,
+      zinc: recipe.zinc,
+      omega3: recipe.omega3,
+      vitaminE: recipe.vitaminE,
+      sugar: recipe.sugar,
+      sodium: recipe.sodium
+    });
+
+    toast({
+      title: "✨ Recipe Logged!",
+      description: `${t.recipeLogged || "Added"} ${isId ? recipe.nameId : recipe.name}`,
+    });
+  };
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -157,6 +213,122 @@ export default function FoodLoggingPage() {
             </Link>
           </Button>
         </div>
+
+        {/* 🧘 30s Rest & Digest Reset Launcher */}
+        <Card className="border-none shadow-sm bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-emerald-500/10 rounded-[2rem] border border-emerald-500/15 overflow-hidden">
+          <CardContent className="p-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center font-bold text-lg shrink-0">
+                🍃
+              </div>
+              <div className="space-y-0.5">
+                <h4 className="text-xs font-black text-emerald-950 uppercase tracking-wider">
+                  {t.preMealBreathing || '30s Rest & Digest Prep'}
+                </h4>
+                <p className="text-[11px] text-muted-foreground line-clamp-1">
+                  {t.preMealBreathingDesc || '3 deep breaths to activate parasympathetic digestion and reduce post-meal bloating.'}
+                </p>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setIsDigestModalOpen(true)}
+              className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold h-9 px-4 shrink-0 shadow-sm"
+            >
+              <Zap className="w-3 h-3 mr-1 fill-current" />
+              {state.profile?.language === 'id' ? 'Mulai' : 'Start'}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* 🧬 Gut-Skin Axis */}
+        <GutHealthCard />
+
+        {/* 🥗 Glucose Sequencing & Anti-Glycation Coach */}
+        <GlucoseCoachCard />
+
+        {/* 🫖 Botanical Beauty Apothecary */}
+        <BeautyTeaCard />
+
+        {/* 🧂 Cellular Hydration & Minerals */}
+        <CellularHydrationCard />
+
+        {/* ✨ Glow Recipes Section */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-pink-500/15 flex items-center justify-center text-pink-500">
+                <Sparkles className="w-3.5 h-3.5" />
+              </div>
+              <h3 className="text-sm font-black text-rose-600 uppercase tracking-wider">
+                {t.glowRecipes || 'Glow Recipes'}
+              </h3>
+            </div>
+            <span className="text-[10px] font-bold text-muted-foreground">
+              {GLOW_RECIPES.length} {state.profile?.language === 'id' ? 'pilihan' : 'options'}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {GLOW_RECIPES.map((recipe) => {
+              const isId = state.profile?.language === 'id';
+              return (
+                <Card key={recipe.id} className="border-none shadow-xs bg-gradient-to-br from-pink-500/5 via-rose-500/5 to-amber-500/5 rounded-2xl border border-pink-500/10 hover:border-pink-500/30 transition-all overflow-hidden group">
+                  <CardContent className="p-4 space-y-2.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-0.5">
+                        <span className="text-[9px] font-black uppercase tracking-wider text-rose-600 bg-rose-500/10 px-2 py-0.5 rounded-full">
+                          {isId ? recipe.tagId : recipe.tag}
+                        </span>
+                        <h4 className="text-sm font-black text-foreground group-hover:text-rose-600 transition-colors">
+                          {isId ? recipe.nameId : recipe.name}
+                        </h4>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-xs font-black text-rose-600">{recipe.calories} kcal</p>
+                        <p className="text-[10px] font-bold text-muted-foreground">{recipe.protein}g protein</p>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                      {isId ? recipe.glowBenefitId : recipe.glowBenefit}
+                    </p>
+
+                    <div className="flex items-center gap-1.5 flex-wrap text-[9px] font-bold text-rose-700/80">
+                      <span className="bg-white/80 px-1.5 py-0.5 rounded-md border border-rose-100">🍊 Vit C: {recipe.vitaminC}mg</span>
+                      <span className="bg-white/80 px-1.5 py-0.5 rounded-md border border-rose-100">🐟 Ω-3: {recipe.omega3}mg</span>
+                      <span className="bg-white/80 px-1.5 py-0.5 rounded-md border border-rose-100">⚡ Zinc: {recipe.zinc}mg</span>
+                    </div>
+
+                    <div className="flex gap-2 pt-1">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => selectGlowRecipe(recipe)}
+                        className="flex-1 h-8 rounded-xl text-[11px] font-bold border-rose-200 text-rose-700 bg-white hover:bg-rose-50"
+                      >
+                        {isId ? 'Isi Form' : 'Fill Form'}
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => quickLogGlowRecipe(recipe)}
+                        className="flex-1 h-8 rounded-xl text-[11px] font-black bg-rose-500 hover:bg-rose-600 text-white shadow-xs"
+                      >
+                        <Plus className="w-3.5 h-3.5 mr-1" />
+                        {isId ? '1x Klik Catat' : '1-Tap Log'}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
 
         {uniquePreviousFoods.length > 0 && (
           <div className="space-y-3">
@@ -474,6 +646,13 @@ export default function FoodLoggingPage() {
           </div>
         </section>
       </motion.div>
+
+      <GuidedRitualsModal
+        isOpen={isDigestModalOpen}
+        onClose={() => setIsDigestModalOpen(false)}
+        type="digest"
+        language={state.profile?.language || 'en'}
+      />
     </Shell>
   );
 }

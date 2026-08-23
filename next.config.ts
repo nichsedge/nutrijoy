@@ -8,8 +8,9 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+  reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'date-fns', '@radix-ui/react-icons'],
   },
   images: {
     remotePatterns: [

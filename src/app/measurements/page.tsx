@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useApp } from '@/components/AppContext';
+import { useAppState, useAppActions } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,8 @@ import { Ruler, Plus, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function MeasurementsPage() {
-  const { state, addMeasurement, removeMeasurement } = useApp();
+  const state = useAppState();
+  const { addMeasurement, removeMeasurement } = useAppActions();
   const t = getTranslation(state.profile?.language || 'en');
   const { toast } = useToast();
 

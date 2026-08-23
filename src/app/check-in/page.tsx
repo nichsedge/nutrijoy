@@ -1,18 +1,25 @@
 "use client";
 
 import React from 'react';
-import { useApp } from '@/components/AppContext';
+import { useAppState } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { SleepTracker } from '@/components/wellness/SleepTracker';
 import { CycleTracker } from '@/components/wellness/CycleTracker';
 import { SelfCareChecklist } from '@/components/wellness/SelfCareChecklist';
-import { ChevronLeft, Sparkles, CheckCircle2 } from 'lucide-react';
+import { VisualSkinJournal } from '@/components/wellness/VisualSkinJournal';
+import { ChevronLeft, Sparkles, CheckCircle2, Camera, Sun, Scissors } from 'lucide-react';
 import Link from 'next/link';
+import { SleepQualityCard } from '@/components/wellness/SleepQualityCard';
+import { UVProtectionCard } from '@/components/wellness/UVProtectionCard';
+import { HairNailVitalityCard } from '@/components/wellness/HairNailVitalityCard';
+import { SkinBarrierCard } from '@/components/wellness/SkinBarrierCard';
+import { SkincareShelfCard } from '@/components/wellness/SkincareShelfCard';
+import { PeriodReliefCard } from '@/components/wellness/PeriodReliefCard';
 
 export default function CheckInPage() {
-  const { state } = useApp();
+  const state = useAppState();
   const t = getTranslation(state.profile?.language || 'en');
 
   const today = new Date().setHours(0, 0, 0, 0);
@@ -39,19 +46,25 @@ export default function CheckInPage() {
         </div>
 
         {allDone ? (
-          <div className="text-center py-12 bg-emerald-50 rounded-[3rem] border-2 border-dashed border-emerald-200 flex flex-col items-center gap-4 mx-2">
-            <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center text-emerald-500 shadow-sm">
-              <CheckCircle2 className="w-10 h-10" />
+          <div className="space-y-6">
+            <div className="text-center py-10 bg-emerald-50 rounded-[3rem] border-2 border-dashed border-emerald-200 flex flex-col items-center gap-4 mx-2">
+              <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center text-emerald-500 shadow-sm">
+                <CheckCircle2 className="w-10 h-10" />
+              </div>
+              <div className="space-y-1 px-8">
+                <p className="text-xl font-black text-emerald-900">You're All Set!</p>
+                <p className="text-sm text-emerald-700/70 leading-relaxed">
+                  Your daily wellness ritual is complete. You're doing amazing things for your body today! ✨
+                </p>
+              </div>
+              <Button asChild className="rounded-full bg-emerald-500 hover:bg-emerald-600 px-8 mt-2">
+                <Link href="/">{t.dashboard}</Link>
+              </Button>
             </div>
-            <div className="space-y-1 px-8">
-              <p className="text-xl font-black text-emerald-900">You're All Set!</p>
-              <p className="text-sm text-emerald-700/70 leading-relaxed">
-                Your daily wellness ritual is complete. You're doing amazing things for your body today! ✨
-              </p>
+
+            <div className="space-y-3 px-1">
+              <VisualSkinJournal />
             </div>
-            <Button asChild className="rounded-full bg-emerald-500 hover:bg-emerald-600 px-8 mt-4">
-              <Link href="/">{t.dashboard}</Link>
-            </Button>
           </div>
         ) : (
           <div className="px-1 flex flex-col gap-8">
@@ -74,6 +87,55 @@ export default function CheckInPage() {
                 <Sparkles className="w-3 h-3" /> Step 3: Mindful Care
               </h3>
               <SelfCareChecklist />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+                <Camera className="w-3 h-3" /> Step 4: Visual Skin Journal
+              </h3>
+              <VisualSkinJournal />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+                <Sparkles className="w-3 h-3" /> Step 5: Sleep Quality
+              </h3>
+              <SleepQualityCard />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+                <Sun className="w-3 h-3" /> Step 6: UV Protection
+              </h3>
+              <UVProtectionCard />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+                <Scissors className="w-3 h-3" /> Step 7: Hair & Nail Vitality
+              </h3>
+              <HairNailVitalityCard />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+                <Sparkles className="w-3 h-3" /> Step 8: Skin Barrier & TEWL
+              </h3>
+              <SkinBarrierCard />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+                <Sparkles className="w-3 h-3" /> Step 9: Gentle Flow Period Sanctuary
+              </h3>
+              <PeriodReliefCard />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+                <Sparkles className="w-3 h-3" /> Step 10: Skincare Vanity Shelf
+              </h3>
+              <SkincareShelfCard />
             </div>
           </div>
         )}

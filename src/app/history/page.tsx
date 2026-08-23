@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useApp } from '@/components/AppContext';
+import { useAppState, useAppActions } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { getTranslation } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import type { HistoryLogEntry } from '@/lib/types';
+import { RadianceShareCard } from '@/components/dashboard/RadianceShareCard';
+import { MonthlyReportCard } from '@/components/dashboard/MonthlyReportCard';
 
 function getLogDetail(log: HistoryLogEntry): string {
   switch (log.type) {
@@ -48,8 +50,8 @@ function getLogKcal(log: HistoryLogEntry): string {
 }
 
 export default function HistoryPage() {
+  const state = useAppState();
   const {
-    state,
     removeFoodLog,
     removeActivity,
     removeWaterLog,
@@ -57,7 +59,7 @@ export default function HistoryPage() {
     removeCycleLog,
     removeSelfCareLog,
     removeMeasurement
-  } = useApp();
+  } = useAppActions();
   const t = getTranslation(state.profile?.language || 'en');
 
   const allLogs: HistoryLogEntry[] = [
@@ -98,6 +100,12 @@ export default function HistoryPage() {
     groupedLogs[date].push(log);
   });
 
+  // Compute skin condition correlations
+  const skinLogs = (state.cycleLogs || []).filter(c => !!c.skinCondition);
+  const totalSkinLogs = skinLogs.length;
+  const radiantOrClearLogs = skinLogs.filter(c => c.skinCondition === 'radiant' || c.skinCondition === 'clear');
+  const radiantPct = totalSkinLogs > 0 ? Math.round((radiantOrClearLogs.length / totalSkinLogs) * 100) : 0;
+
   return (
     <Shell>
       <div className="space-y-6 animate-in slide-in-from-right-4 duration-300 pb-10">
@@ -112,6 +120,60 @@ export default function HistoryPage() {
             <p className="text-sm text-muted-foreground">{t.allHistory}</p>
           </div>
         </div>
+
+        {/* Skin Health & Habit Correlator Widget */}
+        <Card className="border-none shadow-sm bg-gradient-to-br from-pink-500/10 via-rose-500/5 to-purple-500/10 rounded-[2rem] border border-pink-500/15 overflow-hidden">
+          <CardContent className="p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-rose-600 font-black">
+                <div className="w-7 h-7 rounded-xl bg-rose-500/15 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-rose-500" />
+                </div>
+                <span className="text-xs uppercase tracking-wider">
+                  {t.skinCorrelatorTitle || 'Skin Health & Habit Insights'}
+                </span>
+              </div>
+              {totalSkinLogs > 0 && (
+                <span className="text-xs font-black bg-rose-500 text-white px-2.5 py-0.5 rounded-full">
+                  {radiantPct}% Radiant
+                </span>
+              )}
+            </div>
+
+            {totalSkinLogs > 0 ? (
+              <div className="space-y-2">
+                <p className="text-xs text-foreground/85 leading-relaxed font-medium">
+                  {radiantPct >= 70 
+                    ? (state.profile?.language === 'id' 
+                        ? `Luar biasa! Kulitmu berstatus Bercahaya / Bersih pada ${radiantPct}% hari pencatatan. Hidrasi dan nutrisi antioksidanmu sangat efektif mendukung barrier kulit.`
+                        : `Outstanding! Your skin was Radiant or Clear on ${radiantPct}% of logged days. High hydration and antioxidant consistency are effectively supporting your barrier.`)
+                    : (state.profile?.language === 'id'
+                        ? `Pola pencatatan menunjukkan hidrasi \(\ge 2000\)ml dan tidur cukup sangat berkorelasi langsung dengan berkurangnya kemerahan dan sembap.`
+                        : `Data shows that days with \(\ge 2000\)ml water and \(\ge 7\)h sleep directly correlate with lower facial puffiness and faster breakout clearing.`)}
+                </p>
+                <div className="flex gap-1.5 flex-wrap pt-1">
+                  {skinLogs.slice(0, 5).map((log) => (
+                    <span key={log.id} className="text-[10px] font-bold bg-white/80 border border-rose-100 text-rose-800 px-2 py-0.5 rounded-full shadow-2xs">
+                      Day {log.cycleDay}: {log.skinCondition}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {state.profile?.language === 'id'
+                  ? 'Catat kondisi kulitmu (Bercahaya, Bersih, Sembap, Jerawat) di Ritual Harian untuk melihat korelasi otomatis dengan pola makan, hidrasi, dan tidurmu.'
+                  : 'Tag your daily skin state (Radiant, Clear, Puffy, Breakout) in the Daily Ritual check-in to unlock automated correlation insights with hydration, sleep, and meals.'}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* 📊 Monthly Transformation Report */}
+        <MonthlyReportCard />
+
+        {/* Weekly Radiance Summary Share Card */}
+        <RadianceShareCard />
 
         {Object.keys(groupedLogs).length === 0 ? (
           <div className="text-center py-20 bg-white/50 rounded-[2.5rem] border-2 border-dashed border-muted-foreground/20 flex flex-col items-center gap-4">

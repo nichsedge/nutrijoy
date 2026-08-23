@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useApp } from '@/components/AppContext';
-import { calculateTDEE } from '@/lib/nutrition';
+import { useAppState, useAppActions } from '@/components/AppContext';
+import { calculateTDEE, calculateSkinGlowScore } from '@/lib/nutrition';
 import { getTranslation } from '@/lib/translations';
+import { TIMED_HYDRATION_MILESTONES } from '@/lib/glowRecipes';
+import { playChime } from '@/lib/soundEffects';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
-import { Flame, Zap, Droplets, Beef, Leaf, Pill, GlassWater, Sparkles, Sun, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react';
+import { Flame, Zap, Droplets, Beef, Leaf, Pill, GlassWater, Sparkles, Sun, ChevronDown, ChevronUp, RotateCcw, CheckCircle2 } from 'lucide-react';
 import { MicronutrientsCard } from './MicronutrientsCard';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import confetti from 'canvas-confetti';
@@ -14,7 +16,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CircularProgress } from '@/components/ui/circular-progress';
 
 export function DailyProgress() {
-  const { state, addWaterLog, removeWaterLog } = useApp();
+  const state = useAppState();
+  const { addWaterLog, removeWaterLog } = useAppActions();
   const [showAllNutrients, setShowAllNutrients] = useState(false);
   const [waterGoalReached, setWaterGoalReached] = useState(false);
   const t = getTranslation(state.profile?.language || 'en');
@@ -44,8 +47,11 @@ export function DailyProgress() {
   const caloriesBurned = todaysActivities.reduce((acc, curr) => acc + curr.caloriesBurned, 0);
 
   const todaysWater = state.waterLogs?.filter(log => log.timestamp >= today && log.timestamp < tomorrow) || [];
+  const todaysSleep = state.sleepLogs?.filter(log => log.timestamp >= today && log.timestamp < tomorrow) || [];
   const waterConsumed = todaysWater.reduce((acc, curr) => acc + curr.amountMl, 0);
   const waterGoal = 2500; // ml
+
+  const glowScore = calculateSkinGlowScore(todaysFood, todaysWater, todaysSleep, state.profile, state.profile.language);
 
   const netCalories = caloriesConsumed - caloriesBurned;
   const calPercent = Math.min((netCalories / goals.recommendedCalories) * 100, 100);
@@ -75,6 +81,7 @@ export function DailyProgress() {
   }, [waterPercent, waterGoalReached]);
 
   const handleAddWater = (amount: number) => {
+    playChime();
     addWaterLog({
       id: crypto.randomUUID(),
       timestamp: Date.now(),
@@ -185,6 +192,42 @@ export function DailyProgress() {
              </motion.div>
              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse-soft pointer-events-none" />
           </div>
+
+          {/* Timed Hydration Milestones */}
+          <div className="space-y-1.5 pt-1">
+            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-blue-600/70 px-1">
+              <span>{t.timedMilestones || 'Hydration Timeline'}</span>
+              <span>{waterConsumed >= waterGoal ? '🎉 All Done' : `${Math.max(0, waterGoal - waterConsumed)}ml left`}</span>
+            </div>
+            <div className="grid grid-cols-4 gap-1.5">
+              {TIMED_HYDRATION_MILESTONES.map((m, idx) => {
+                const reached = waterConsumed >= m.targetMl;
+                const isId = state.profile?.language === 'id';
+                return (
+                  <div
+                    key={idx}
+                    className={`p-2 rounded-xl border text-center transition-all ${
+                      reached 
+                        ? 'bg-blue-500/15 border-blue-300/50 text-blue-700 font-black shadow-2xs' 
+                        : 'bg-white/60 border-blue-100 text-muted-foreground opacity-75'
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-1 text-[10px]">
+                      <span>{m.emoji}</span>
+                      <span className="font-bold">{m.hour}:00</span>
+                    </div>
+                    <p className="text-[9px] font-bold mt-0.5">{m.targetMl}ml</p>
+                    {reached && (
+                      <div className="flex items-center justify-center mt-0.5 text-blue-600">
+                        <CheckCircle2 className="w-2.5 h-2.5" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="flex gap-3">
             <button 
               onClick={() => handleAddWater(250)}
@@ -253,6 +296,7 @@ export function DailyProgress() {
 
             <MicronutrientsCard 
               t={t} 
+              glowScore={glowScore}
               nutrients={[
                 { label: t.vitaminC, consumed: vitaminCConsumed, limit: goals.vitaminCLimit, unit: 'mg', icon: <Pill />, percent: vitaminCPercent },
                 { label: t.biotin, consumed: biotinConsumed, limit: goals.biotinLimit, unit: 'mcg', icon: <Sparkles />, percent: biotinPercent },

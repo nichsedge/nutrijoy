@@ -1,19 +1,22 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useApp } from '../AppContext';
+import { useAppState, useAppActions } from '../AppContext';
 import { getTranslation } from '@/lib/translations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { Moon, Star } from 'lucide-react';
+import { Moon, Star, Play } from 'lucide-react';
+import { GuidedRitualsModal } from './GuidedRitualsModal';
 
 export function SleepTracker() {
-  const { state, addSleepLog } = useApp();
+  const state = useAppState();
+  const { addSleepLog } = useAppActions();
   const t = getTranslation(state.profile?.language || 'en');
   
   const [hours, setHours] = useState(8);
   const [restedness, setRestedness] = useState(3);
+  const [isBreathworkModalOpen, setIsBreathworkModalOpen] = useState(false);
 
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = new Date(today).setHours(24, 0, 0, 0);
@@ -105,11 +108,32 @@ export function SleepTracker() {
 
           <Button 
             onClick={handleLogSleep} 
-            className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-6 rounded-2xl shadow-lg"
+            className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-6 rounded-2xl shadow-lg shadow-purple-500/20"
           >
             {t.logSleep}
           </Button>
+
+          <button
+            type="button"
+            onClick={() => setIsBreathworkModalOpen(true)}
+            className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-purple-50/60 text-purple-600 border border-purple-200/80 shadow-xs flex items-center justify-between text-xs font-black transition-all active:scale-[0.99] group"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-base">🌙</span>
+              <span>{t.startBreathwork || '4-7-8 Sleep Breathwork'}</span>
+            </div>
+            <div className="w-6 h-6 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+              <Play className="w-3 h-3 fill-current ml-0.5" />
+            </div>
+          </button>
         </div>
+
+        <GuidedRitualsModal 
+          isOpen={isBreathworkModalOpen}
+          onClose={() => setIsBreathworkModalOpen(false)}
+          type="breathwork"
+          language={state.profile?.language || 'en'}
+        />
       </CardContent>
     </Card>
   );
