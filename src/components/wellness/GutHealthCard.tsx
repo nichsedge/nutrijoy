@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -24,12 +24,14 @@ export function GutHealthCard() {
     try {
       const saved = localStorage.getItem('nutrijoy_probiotic_logs');
       if (saved) setProbioticLogs(JSON.parse(saved));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = today + 86400000;
-  const todaysProbiotics = probioticLogs.filter(l => l.timestamp >= today && l.timestamp < tomorrow);
+  const todaysProbiotics = probioticLogs.filter((l) => l.timestamp >= today && l.timestamp < tomorrow);
   const probioticServings = todaysProbiotics.reduce((s, l) => s + l.servings, 0);
 
   // Fiber from food logs
@@ -39,36 +41,49 @@ export function GutHealthCard() {
 
   // Gut-skin correlation
   const lastWeekSkins: SkinCondition[] = (state.cycleLogs || [])
-    .filter(l => l.timestamp >= today - 7 * 86400000 && l.skinCondition)
-    .map(l => l.skinCondition!);
-  const breakoutDays = lastWeekSkins.filter(c => c === 'breakout').length;
-  const gutInsight = getGutSkinInsight(score.total, breakoutDays, lastWeekSkins.length, state.profile?.language || 'en');
+    .filter((l) => l.timestamp >= today - 7 * 86400000 && l.skinCondition)
+    .map((l) => l.skinCondition!);
+  const breakoutDays = lastWeekSkins.filter((c) => c === 'breakout').length;
+  const gutInsight = getGutSkinInsight(
+    score.total,
+    breakoutDays,
+    lastWeekSkins.length,
+    state.profile?.language || 'en'
+  );
 
-  const handleAddProbiotic = (preset: typeof PROBIOTIC_PRESETS[0]) => {
+  const handleAddProbiotic = (preset: (typeof PROBIOTIC_PRESETS)[0]) => {
     const entry: ProbioticLogEntry = {
       id: crypto.randomUUID(),
       timestamp: Date.now(),
       foodName: preset.name,
       foodNameId: preset.nameId,
       icon: preset.icon,
-      servings: 1
+      servings: 1,
     };
     const updated = [entry, ...probioticLogs];
     setProbioticLogs(updated);
-    try { localStorage.setItem('nutrijoy_probiotic_logs', JSON.stringify(updated)); } catch { /* ignore */ }
+    try {
+      localStorage.setItem('nutrijoy_probiotic_logs', JSON.stringify(updated));
+    } catch {
+      /* ignore */
+    }
 
     playChime();
     toast({
       title: `${preset.icon} ${isId ? preset.nameId : preset.name}`,
-      description: isId ? preset.benefitId : preset.benefit
+      description: isId ? preset.benefitId : preset.benefit,
     });
     setShowPresets(false);
   };
 
   const handleDelete = (id: string) => {
-    const updated = probioticLogs.filter(l => l.id !== id);
+    const updated = probioticLogs.filter((l) => l.id !== id);
     setProbioticLogs(updated);
-    try { localStorage.setItem('nutrijoy_probiotic_logs', JSON.stringify(updated)); } catch { /* ignore */ }
+    try {
+      localStorage.setItem('nutrijoy_probiotic_logs', JSON.stringify(updated));
+    } catch {
+      /* ignore */
+    }
   };
 
   const fiberBarW = Math.min(score.fiberPercent, 100);
@@ -102,7 +117,9 @@ export function GutHealthCard() {
           <div className="space-y-1">
             <div className="flex items-center justify-between text-[11px] font-black text-foreground/80">
               <span>{t.fiberProgress || 'Daily Fiber'}</span>
-              <span className={fiberG >= 25 ? 'text-emerald-600' : 'text-amber-600'}>{fiberG.toFixed(1)}g / {score.fiberTarget}g</span>
+              <span className={fiberG >= 25 ? 'text-emerald-600' : 'text-amber-600'}>
+                {fiberG.toFixed(1)}g / {score.fiberTarget}g
+              </span>
             </div>
             <div className="h-2.5 bg-emerald-100 rounded-full overflow-hidden">
               <div
@@ -116,7 +133,9 @@ export function GutHealthCard() {
           <div className="space-y-1">
             <div className="flex items-center justify-between text-[11px] font-black text-foreground/80">
               <span>{t.probioticServings || 'Probiotic Servings'}</span>
-              <span className={probioticServings >= 2 ? 'text-emerald-600' : 'text-amber-600'}>{probioticServings} / {score.probioticTarget}</span>
+              <span className={probioticServings >= 2 ? 'text-emerald-600' : 'text-amber-600'}>
+                {probioticServings} / {score.probioticTarget}
+              </span>
             </div>
             <div className="h-2.5 bg-emerald-100 rounded-full overflow-hidden">
               <div
@@ -153,7 +172,7 @@ export function GutHealthCard() {
 
           {showPresets && (
             <div className="bg-white p-3 rounded-2xl border border-emerald-200 shadow-xs grid grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-2">
-              {PROBIOTIC_PRESETS.map(p => (
+              {PROBIOTIC_PRESETS.map((p) => (
                 <button
                   key={p.id}
                   type="button"
@@ -163,7 +182,9 @@ export function GutHealthCard() {
                   <span className="text-lg">{p.icon}</span>
                   <div className="truncate min-w-0">
                     <p className="text-[11px] font-bold text-emerald-950 truncate">{isId ? p.nameId : p.name}</p>
-                    <p className="text-[9px] text-emerald-700 font-bold">{p.isPrebiotic ? (isId ? 'Prebiotik' : 'Prebiotic') : (isId ? 'Probiotik' : 'Probiotic')}</p>
+                    <p className="text-[9px] text-emerald-700 font-bold">
+                      {p.isPrebiotic ? (isId ? 'Prebiotik' : 'Prebiotic') : isId ? 'Probiotik' : 'Probiotic'}
+                    </p>
                   </div>
                 </button>
               ))}
@@ -173,11 +194,17 @@ export function GutHealthCard() {
           {/* Today's logged probiotics */}
           {todaysProbiotics.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
-              {todaysProbiotics.map(l => (
-                <div key={l.id} className="bg-white px-2.5 py-1 rounded-full border border-emerald-200 text-[11px] font-bold text-emerald-900 flex items-center gap-1.5">
+              {todaysProbiotics.map((l) => (
+                <div
+                  key={l.id}
+                  className="bg-white px-2.5 py-1 rounded-full border border-emerald-200 text-[11px] font-bold text-emerald-900 flex items-center gap-1.5"
+                >
                   <span>{l.icon}</span>
                   <span>{isId ? l.foodNameId : l.foodName}</span>
-                  <button onClick={() => handleDelete(l.id)} className="text-muted-foreground hover:text-destructive transition-colors">
+                  <button
+                    onClick={() => handleDelete(l.id)}
+                    className="text-muted-foreground hover:text-destructive transition-colors"
+                  >
                     <Trash2 className="w-3 h-3" />
                   </button>
                 </div>

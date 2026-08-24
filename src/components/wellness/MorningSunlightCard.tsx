@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -35,17 +35,17 @@ export function MorningSunlightCard() {
     if (!isRunning) return;
 
     timerRef.current = setInterval(() => {
-      setSecondsLeft(prev => {
+      setSecondsLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timerRef.current!);
           setIsRunning(false);
           playSuccessChord();
           confetti({ particleCount: 70, spread: 60, origin: { y: 0.5 } });
           toast({
-            title: isId ? "☀️ Sinkronisasi Cahaya Pagi Selesai!" : "☀️ Morning Lux Sync Complete!",
+            title: isId ? '☀️ Sinkronisasi Cahaya Pagi Selesai!' : '☀️ Morning Lux Sync Complete!',
             description: isId
-              ? "Jam biologis master (SCN) telah terkunci untuk energi prima hari ini dan tidur nyenyak malam nanti."
-              : "Suprachiasmatic nucleus master clock locked for daytime alertness and restorative sleep tonight."
+              ? 'Jam biologis master (SCN) telah terkunci untuk energi prima hari ini dan tidur nyenyak malam nanti.'
+              : 'Suprachiasmatic nucleus master clock locked for daytime alertness and restorative sleep tonight.',
           });
           return 0;
         }
@@ -64,7 +64,9 @@ export function MorningSunlightCard() {
   const progressPercent = Math.min(100, (elapsedSeconds / totalSeconds) * 100);
 
   const formatTimer = (sec: number) => {
-    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const m = Math.floor(sec / 60)
+      .toString()
+      .padStart(2, '0');
     const s = (sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
@@ -79,7 +81,9 @@ export function MorningSunlightCard() {
               <Sun className="w-4 h-4 text-amber-600 animate-spin" style={{ animationDuration: '20s' }} />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-wider">{t.morningSunlight || 'Morning Sunlight & Circadian Sync'}</p>
+              <p className="text-xs uppercase tracking-wider">
+                {t.morningSunlight || 'Morning Sunlight & Circadian Sync'}
+              </p>
               <p className="text-[10px] text-muted-foreground font-bold">
                 {isId ? 'Sinkronisasi jam biologis & hormon melatonin' : 'Retinal ipRGC lux synchronization'}
               </p>
@@ -90,7 +94,10 @@ export function MorningSunlightCard() {
           <div className="flex gap-1 bg-white/70 p-1 rounded-xl border border-amber-200/80">
             <button
               type="button"
-              onClick={() => { setIsOvercast(false); playChime(); }}
+              onClick={() => {
+                setIsOvercast(false);
+                playChime();
+              }}
               className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all ${
                 !isOvercast ? 'bg-amber-500 text-white shadow-2xs' : 'text-muted-foreground hover:text-amber-800'
               }`}
@@ -99,7 +106,10 @@ export function MorningSunlightCard() {
             </button>
             <button
               type="button"
-              onClick={() => { setIsOvercast(true); playChime(); }}
+              onClick={() => {
+                setIsOvercast(true);
+                playChime();
+              }}
               className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all ${
                 isOvercast ? 'bg-amber-500 text-white shadow-2xs' : 'text-muted-foreground hover:text-amber-800'
               }`}
@@ -112,7 +122,10 @@ export function MorningSunlightCard() {
         {/* Circular Sun Timer Visual */}
         <div className="bg-white/90 p-4 rounded-2xl border border-amber-100 shadow-2xs flex items-center gap-4">
           <div className="relative w-20 h-20 shrink-0 flex items-center justify-center">
-            <div className={`absolute inset-0 rounded-full bg-amber-400/20 ${isRunning ? 'animate-ping' : ''}`} style={{ animationDuration: '3s' }} />
+            <div
+              className={`absolute inset-0 rounded-full bg-amber-400/20 ${isRunning ? 'animate-ping' : ''}`}
+              style={{ animationDuration: '3s' }}
+            />
             <div className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 flex items-center justify-center shadow-md">
               <Sun className="w-8 h-8 text-white drop-shadow-xs" />
             </div>
@@ -120,9 +133,7 @@ export function MorningSunlightCard() {
 
           <div className="space-y-1 min-w-0 flex-1">
             <div className="flex justify-between items-center">
-              <span className="text-xl font-black font-mono text-amber-950">
-                {formatTimer(secondsLeft)}
-              </span>
+              <span className="text-xl font-black font-mono text-amber-950">{formatTimer(secondsLeft)}</span>
               <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
                 {Math.round(progressPercent)}%
               </span>
@@ -136,7 +147,9 @@ export function MorningSunlightCard() {
             </div>
 
             <p className="text-[10px] text-muted-foreground font-bold">
-              {isId ? 'Pandang ke arah langit terbuka (tanpa kacamata hitam)' : 'Face outdoor open sky (no sunglasses, natural light)'}
+              {isId
+                ? 'Pandang ke arah langit terbuka (tanpa kacamata hitam)'
+                : 'Face outdoor open sky (no sunglasses, natural light)'}
             </p>
           </div>
         </div>
@@ -160,9 +173,20 @@ export function MorningSunlightCard() {
             }`}
           >
             {isRunning ? (
-              <><Pause className="w-3.5 h-3.5 mr-1" /> {isId ? 'Jeda' : 'Pause'}</>
+              <>
+                <Pause className="w-3.5 h-3.5 mr-1" /> {isId ? 'Jeda' : 'Pause'}
+              </>
             ) : (
-              <><Play className="w-3.5 h-3.5 mr-1" /> {secondsLeft === totalSeconds ? (isId ? 'Mulai Berjemur Pagi' : 'Start Sun Sync') : (isId ? 'Lanjutkan' : 'Resume')}</>
+              <>
+                <Play className="w-3.5 h-3.5 mr-1" />{' '}
+                {secondsLeft === totalSeconds
+                  ? isId
+                    ? 'Mulai Berjemur Pagi'
+                    : 'Start Sun Sync'
+                  : isId
+                    ? 'Lanjutkan'
+                    : 'Resume'}
+              </>
             )}
           </Button>
 

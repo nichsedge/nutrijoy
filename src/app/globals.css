@@ -59,14 +59,20 @@
   }
   body {
     @apply bg-background text-foreground font-body antialiased;
-    background-image: radial-gradient(at 0% 0%, hsla(340, 60%, 95%, 1) 0px, transparent 50%),
-                      radial-gradient(at 100% 0%, hsla(20, 60%, 95%, 1) 0px, transparent 50%);
+    background-image:
+      radial-gradient(at 0% 0%, hsla(340, 60%, 95%, 1) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(20, 60%, 95%, 1) 0px, transparent 50%);
     background-attachment: fixed;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-headline font-bold text-foreground/90 tracking-tight;
   }
-  
+
   .glass {
     @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-sm;
   }
@@ -92,9 +98,15 @@
   }
 
   @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
   }
 
   .animate-float {
@@ -102,8 +114,13 @@
   }
 
   @keyframes pulse-soft {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
   }
 
   .animate-pulse-soft {
@@ -111,8 +128,12 @@
   }
 
   @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 
   .shimmer {
@@ -127,12 +148,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     animation: shimmer 2s infinite;
   }
 }

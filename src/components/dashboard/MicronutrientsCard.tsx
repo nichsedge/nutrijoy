@@ -24,7 +24,7 @@ interface MicronutrientsCardProps {
 
 export function MicronutrientsCard({ t, nutrients, glowScore }: MicronutrientsCardProps) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Show first 2 by default, rest in collapsible
   const primaryNutrients = nutrients.slice(0, 2);
   const secondaryNutrients = nutrients.slice(2);
@@ -51,22 +51,29 @@ export function MicronutrientsCard({ t, nutrients, glowScore }: MicronutrientsCa
               </div>
               <div className="flex flex-col">
                 <span className="text-xs uppercase tracking-widest">{t.glowIndex || 'Skin Glow & Beauty'}</span>
-                {glowScore && (
-                  <span className="text-[11px] font-bold text-muted-foreground">{glowScore.label}</span>
-                )}
+                {glowScore && <span className="text-[11px] font-bold text-muted-foreground">{glowScore.label}</span>}
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               {glowScore && (
-                <div className={cn("px-2.5 py-1 rounded-full text-xs font-black border flex items-center gap-1", getStatusBadge())}>
+                <div
+                  className={cn(
+                    'px-2.5 py-1 rounded-full text-xs font-black border flex items-center gap-1',
+                    getStatusBadge()
+                  )}
+                >
                   <span className="text-xs">✨</span>
                   <span>{glowScore.score}%</span>
                 </div>
               )}
               <CollapsibleTrigger asChild>
                 <button className="p-1 hover:bg-white/60 rounded-full transition-colors">
-                  {isOpen ? <ChevronUp className="w-4 h-4 text-rose-500" /> : <ChevronDown className="w-4 h-4 text-rose-500" />}
+                  {isOpen ? (
+                    <ChevronUp className="w-4 h-4 text-rose-500" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-rose-500" />
+                  )}
                 </button>
               </CollapsibleTrigger>
             </div>
@@ -80,21 +87,30 @@ export function MicronutrientsCard({ t, nutrients, glowScore }: MicronutrientsCa
                   <Zap className="w-2.5 h-2.5" />
                   <span>Antioxidants</span>
                 </div>
-                <p className="text-xs font-black">{glowScore.antioxidantScore}<span className="text-[9px] font-normal opacity-50">/40</span></p>
+                <p className="text-xs font-black">
+                  {glowScore.antioxidantScore}
+                  <span className="text-[9px] font-normal opacity-50">/40</span>
+                </p>
               </div>
               <div className="space-y-0.5 border-x border-pink-500/10 px-1">
                 <div className="flex items-center justify-center gap-1 text-[9px] font-black text-blue-600 uppercase tracking-tight">
                   <Droplets className="w-2.5 h-2.5" />
                   <span>Hydration</span>
                 </div>
-                <p className="text-xs font-black">{glowScore.hydrationScore}<span className="text-[9px] font-normal opacity-50">/35</span></p>
+                <p className="text-xs font-black">
+                  {glowScore.hydrationScore}
+                  <span className="text-[9px] font-normal opacity-50">/35</span>
+                </p>
               </div>
               <div className="space-y-0.5">
                 <div className="flex items-center justify-center gap-1 text-[9px] font-black text-purple-600 uppercase tracking-tight">
                   <Moon className="w-2.5 h-2.5" />
                   <span>Sleep</span>
                 </div>
-                <p className="text-xs font-black">{glowScore.sleepScore}<span className="text-[9px] font-normal opacity-50">/25</span></p>
+                <p className="text-xs font-black">
+                  {glowScore.sleepScore}
+                  <span className="text-[9px] font-normal opacity-50">/25</span>
+                </p>
               </div>
             </div>
           )}
@@ -114,8 +130,14 @@ export function MicronutrientsCard({ t, nutrients, glowScore }: MicronutrientsCa
                   {n.label}
                 </div>
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span>{n.consumed}{n.unit}</span>
-                  <span className="opacity-50">/ {n.limit}{n.unit}</span>
+                  <span>
+                    {n.consumed}
+                    {n.unit}
+                  </span>
+                  <span className="opacity-50">
+                    / {n.limit}
+                    {n.unit}
+                  </span>
                 </div>
                 <Progress value={n.percent} className="h-1.5 bg-rose-100 [&>div]:bg-rose-500" />
               </div>
@@ -132,8 +154,14 @@ export function MicronutrientsCard({ t, nutrients, glowScore }: MicronutrientsCa
                       {n.label}
                     </div>
                     <div className="flex justify-between text-[10px] font-bold">
-                      <span>{n.consumed}{n.unit}</span>
-                      <span className="opacity-50">/ {n.limit}{n.unit}</span>
+                      <span>
+                        {n.consumed}
+                        {n.unit}
+                      </span>
+                      <span className="opacity-50">
+                        / {n.limit}
+                        {n.unit}
+                      </span>
                     </div>
                     <Progress value={n.percent} className="h-1.5 bg-rose-100 [&>div]:bg-rose-500" />
                   </div>
@@ -146,4 +174,3 @@ export function MicronutrientsCard({ t, nutrients, glowScore }: MicronutrientsCa
     </Card>
   );
 }
-

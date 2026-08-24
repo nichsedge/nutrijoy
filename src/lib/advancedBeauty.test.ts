@@ -20,7 +20,7 @@ test('GLOW_RECIPES: contains valid nutrient profiles and benefits', () => {
 test('TIMED_HYDRATION_MILESTONES: defines 4 progressive daily milestones up to 2500ml', () => {
   assert.equal(TIMED_HYDRATION_MILESTONES.length, 4);
 
-  const targets = TIMED_HYDRATION_MILESTONES.map(m => m.targetMl);
+  const targets = TIMED_HYDRATION_MILESTONES.map((m) => m.targetMl);
   assert.deepEqual(targets, [500, 1250, 2000, 2500]);
 
   // Ensure hours are strictly ascending

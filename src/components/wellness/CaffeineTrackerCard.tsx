@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,7 +8,13 @@ import { useToast } from '@/hooks/use-toast';
 import { getTranslation } from '@/lib/translations';
 import { useAppState } from '../AppContext';
 import { CaffeineLogEntry } from '@/lib/types';
-import { CAFFEINE_PRESETS, CaffeinePreset, calculateRemainingCaffeine, getCaffeineCutoffHour, getSleepImpact } from '@/lib/caffeine';
+import {
+  CAFFEINE_PRESETS,
+  CaffeinePreset,
+  calculateRemainingCaffeine,
+  getCaffeineCutoffHour,
+  getSleepImpact,
+} from '@/lib/caffeine';
 import { playChime, playSuccessChord } from '@/lib/soundEffects';
 
 export function CaffeineTrackerCard() {
@@ -34,7 +40,7 @@ export function CaffeineTrackerCard() {
 
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = new Date(today).setHours(24, 0, 0, 0);
-  const todaysLogs = logs.filter(l => l.timestamp >= today && l.timestamp < tomorrow);
+  const todaysLogs = logs.filter((l) => l.timestamp >= today && l.timestamp < tomorrow);
 
   // Calculate remaining caffeine now and at 11:00 PM
   const now = Date.now();
@@ -51,7 +57,7 @@ export function CaffeineTrackerCard() {
       timestamp: Date.now(),
       name: isId ? preset.nameId : preset.name,
       caffeineMg: preset.caffeineMg,
-      icon: preset.icon
+      icon: preset.icon,
     };
 
     const updated = [newEntry, ...logs];
@@ -71,7 +77,7 @@ export function CaffeineTrackerCard() {
   };
 
   const handleDeleteLog = (id: string) => {
-    const updated = logs.filter(l => l.id !== id);
+    const updated = logs.filter((l) => l.id !== id);
     setLogs(updated);
     try {
       localStorage.setItem('nutrijoy_caffeine_logs', JSON.stringify(updated));
@@ -90,7 +96,9 @@ export function CaffeineTrackerCard() {
             </div>
             <div>
               <span className="text-xs uppercase tracking-wider">{t.caffeineTracker || 'Caffeine & Sleep Cutoff'}</span>
-              <p className="text-[10px] text-muted-foreground font-bold">{todaysLogs.length} {isId ? 'minuman hari ini' : 'drinks today'}</p>
+              <p className="text-[10px] text-muted-foreground font-bold">
+                {todaysLogs.length} {isId ? 'minuman hari ini' : 'drinks today'}
+              </p>
             </div>
           </div>
 
@@ -133,21 +141,31 @@ export function CaffeineTrackerCard() {
         <div className="grid grid-cols-3 gap-2">
           {/* Active Now */}
           <div className="bg-white/80 p-3 rounded-2xl border border-amber-100 shadow-2xs text-center space-y-0.5">
-            <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{t.activeCaffeine || 'Active Now'}</span>
-            <p className="text-lg font-black text-amber-700">{activeNowMg}<span className="text-[10px] font-bold">mg</span></p>
+            <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
+              {t.activeCaffeine || 'Active Now'}
+            </span>
+            <p className="text-lg font-black text-amber-700">
+              {activeNowMg}
+              <span className="text-[10px] font-bold">mg</span>
+            </p>
           </div>
 
           {/* At Bedtime */}
           <div className="bg-white/80 p-3 rounded-2xl border border-amber-100 shadow-2xs text-center space-y-0.5">
-            <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{t.atBedtime || 'At Bedtime'}</span>
+            <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
+              {t.atBedtime || 'At Bedtime'}
+            </span>
             <p className={`text-lg font-black ${remainingAtBedtimeMg > 50 ? 'text-rose-600' : 'text-purple-700'}`}>
-              {remainingAtBedtimeMg}<span className="text-[10px] font-bold">mg</span>
+              {remainingAtBedtimeMg}
+              <span className="text-[10px] font-bold">mg</span>
             </p>
           </div>
 
           {/* Cutoff Window */}
           <div className="bg-white/80 p-3 rounded-2xl border border-amber-100 shadow-2xs text-center space-y-0.5">
-            <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{t.caffeineCutoff || 'Cutoff'}</span>
+            <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
+              {t.caffeineCutoff || 'Cutoff'}
+            </span>
             <p className="text-xs font-black text-foreground pt-1">{cutoffInfo.cutoffTimeStr}</p>
           </div>
         </div>
@@ -166,7 +184,10 @@ export function CaffeineTrackerCard() {
           <div className="space-y-1.5 pt-1">
             <div className="flex gap-1.5 flex-wrap">
               {todaysLogs.map((log) => (
-                <div key={log.id} className="bg-white px-2.5 py-1 rounded-full border border-amber-200/60 shadow-2xs flex items-center gap-1.5 text-xs font-bold text-amber-900 group">
+                <div
+                  key={log.id}
+                  className="bg-white px-2.5 py-1 rounded-full border border-amber-200/60 shadow-2xs flex items-center gap-1.5 text-xs font-bold text-amber-900 group"
+                >
                   <span>{log.icon || '☕'}</span>
                   <span>{log.name}</span>
                   <span className="text-[10px] text-muted-foreground">({log.caffeineMg}mg)</span>

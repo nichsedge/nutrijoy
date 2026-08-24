@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,19 +25,21 @@ export function MonthlyReportCard() {
     try {
       const saved = localStorage.getItem('nutrijoy_skin_journal');
       if (saved) setSkinJournal(JSON.parse(saved));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const report = useMemo(() => generateMonthlyReport(state, skinJournal), [state, skinJournal]);
 
-  const photoEntries = skinJournal.filter(e => e.photoUrl).sort((a, b) => a.timestamp - b.timestamp);
+  const photoEntries = skinJournal.filter((e) => e.photoUrl).sort((a, b) => a.timestamp - b.timestamp);
 
   const skinConditionColors: Record<string, string> = {
     radiant: 'bg-yellow-100 text-yellow-800',
     clear: 'bg-green-100 text-green-800',
     dry: 'bg-blue-100 text-blue-800',
     puffy: 'bg-purple-100 text-purple-800',
-    breakout: 'bg-red-100 text-red-800'
+    breakout: 'bg-red-100 text-red-800',
   };
 
   const skinLabels: Record<string, { en: string; id: string }> = {
@@ -45,7 +47,7 @@ export function MonthlyReportCard() {
     clear: { en: '🌿 Clear', id: '🌿 Cerah' },
     dry: { en: '💧 Dry', id: '💧 Kering' },
     puffy: { en: '🧊 Puffy', id: '🧊 Sembap' },
-    breakout: { en: '🫧 Breakout', id: '🫧 Jerawat' }
+    breakout: { en: '🫧 Breakout', id: '🫧 Jerawat' },
   };
 
   const totalSkinDays = Object.values(report.skinDistribution).reduce((a, b) => a + b, 0);
@@ -60,17 +62,26 @@ export function MonthlyReportCard() {
       `🌿 Top Nutrients: ${report.topNutrients.join(', ')}`,
       report.milestones.length > 0 ? `🏆 Milestones: ${report.milestones.join(' · ')}` : '',
       '',
-      'Tracked with NutriJoy 💖'
-    ].filter(Boolean).join('\n');
+      'Tracked with NutriJoy 💖',
+    ]
+      .filter(Boolean)
+      .join('\n');
 
     if (navigator.share) {
       try {
         await navigator.share({ title: `NutriJoy — ${report.month}`, text: summaryLines });
         playSuccessChord();
-      } catch { /* cancelled */ }
+      } catch {
+        /* cancelled */
+      }
     } else {
       await navigator.clipboard.writeText(summaryLines);
-      toast({ title: isId ? '📋 Laporan disalin!' : '📋 Report copied!', description: isId ? 'Tempel di mana saja untuk berbagi perjalananmu.' : 'Paste anywhere to share your transformation journey.' });
+      toast({
+        title: isId ? '📋 Laporan disalin!' : '📋 Report copied!',
+        description: isId
+          ? 'Tempel di mana saja untuk berbagi perjalananmu.'
+          : 'Paste anywhere to share your transformation journey.',
+      });
     }
   };
 
@@ -114,8 +125,11 @@ export function MonthlyReportCard() {
             { label: t.avgSleep || 'Avg Sleep', value: `${report.avgSleepHours}h`, icon: '🌙' },
             { label: t.waterAdherence || 'Hydration Rate', value: `${report.waterAdherencePercent}%`, icon: '💧' },
             { label: t.daysTracked || 'Days Tracked', value: String(report.daysTracked), icon: '📅' },
-          ].map(s => (
-            <div key={s.label} className="bg-white/80 p-3 rounded-2xl border border-fuchsia-100 flex items-center gap-2.5">
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="bg-white/80 p-3 rounded-2xl border border-fuchsia-100 flex items-center gap-2.5"
+            >
               <span className="text-xl">{s.icon}</span>
               <div>
                 <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{s.label}</p>
@@ -128,10 +142,15 @@ export function MonthlyReportCard() {
         {/* Top nutrients */}
         {report.topNutrients.length > 0 && (
           <div className="bg-white/80 p-3 rounded-2xl border border-fuchsia-100 space-y-1.5">
-            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{t.topNutrients || 'Top Nutrients This Month'}</p>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
+              {t.topNutrients || 'Top Nutrients This Month'}
+            </p>
             <div className="flex flex-wrap gap-1.5">
               {report.topNutrients.map((n, i) => (
-                <span key={n} className={`px-2 py-0.5 rounded-full text-[10px] font-black ${i === 0 ? 'bg-fuchsia-100 text-fuchsia-800' : 'bg-slate-100 text-slate-700'}`}>
+                <span
+                  key={n}
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-black ${i === 0 ? 'bg-fuchsia-100 text-fuchsia-800' : 'bg-slate-100 text-slate-700'}`}
+                >
                   {i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} {n}
                 </span>
               ))}
@@ -142,13 +161,18 @@ export function MonthlyReportCard() {
         {/* Skin condition distribution */}
         {totalSkinDays > 0 && (
           <div className="space-y-2">
-            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{t.skinHistory || 'Skin Condition History'}</p>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
+              {t.skinHistory || 'Skin Condition History'}
+            </p>
             <div className="flex gap-1.5 flex-wrap">
               {Object.entries(report.skinDistribution)
                 .filter(([, count]) => count > 0)
                 .sort((a, b) => b[1] - a[1])
                 .map(([cond, count]) => (
-                  <div key={cond} className={`px-2.5 py-1 rounded-full text-[10px] font-black ${skinConditionColors[cond]}`}>
+                  <div
+                    key={cond}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-black ${skinConditionColors[cond]}`}
+                  >
                     {isId ? skinLabels[cond]?.id : skinLabels[cond]?.en} ({count}d)
                   </div>
                 ))}
@@ -159,7 +183,9 @@ export function MonthlyReportCard() {
         {/* Before / After photos */}
         {photoEntries.length >= 2 && (
           <div className="space-y-2">
-            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{t.beforeAfterPhotos || 'Before & After'}</p>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
+              {t.beforeAfterPhotos || 'Before & After'}
+            </p>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { label: isId ? 'Sebelum' : 'Before', entry: photoEntries[0] },
@@ -187,7 +213,10 @@ export function MonthlyReportCard() {
             </p>
             <div className="flex flex-wrap gap-1.5">
               {report.milestones.map((m, i) => (
-                <span key={i} className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black border border-amber-200">
+                <span
+                  key={i}
+                  className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black border border-amber-200"
+                >
                   {isId ? report.milestonesId[i] : m}
                 </span>
               ))}

@@ -26,15 +26,15 @@ export const GLOW_RECIPES: GlowRecipe[] = [
       '1/2 Medium avocado, sliced',
       '1 cup Steamed quinoa',
       '1 cup Baby spinach & cucumber slices',
-      '1 tbsp Extra virgin olive oil with lemon dressing'
+      '1 tbsp Extra virgin olive oil with lemon dressing',
     ],
     ingredientsId: [
       '140g Fillet salmon panggang',
       '1/2 Buah alpukat iris',
       '1 mangkuk Quinoa matang',
       '1 mangkuk Bayam muda & timun',
-      '1 sdm Minyak zaitun perasan lemon'
-    ]
+      '1 sdm Minyak zaitun perasan lemon',
+    ],
   },
   {
     id: 'berry-collagen-smoothie',
@@ -55,21 +55,22 @@ export const GLOW_RECIPES: GlowRecipe[] = [
     quantity: '1 large glass (400ml)',
     prepTime: '5 mins',
     glowBenefit: 'Delivers 100%+ daily Vitamin C to stimulate fibroblasts for firm, youthful collagen synthesis.',
-    glowBenefitId: 'Memberikan 100%+ kebutuhan harian Vitamin C untuk memicu sintesis kolagen kulit yang kencang dan kenyal.',
+    glowBenefitId:
+      'Memberikan 100%+ kebutuhan harian Vitamin C untuk memicu sintesis kolagen kulit yang kencang dan kenyal.',
     ingredients: [
       '1 cup Mixed frozen berries (blueberries, strawberries, raspberries)',
       '1 scoop Collagen peptides or plant protein',
       '1 cup Unsweetened almond milk',
       '1 tbsp Ground flaxseed or chia seeds',
-      '1/2 Frozen banana'
+      '1/2 Frozen banana',
     ],
     ingredientsId: [
       '1 cangkir Campuran buah beri beku',
       '1 sendok Peptida kolagen / bubuk protein',
       '1 cangkir Susu almond tawar',
       '1 sdm Biji chia / biji rami halus',
-      '1/2 Buah pisang beku'
-    ]
+      '1/2 Buah pisang beku',
+    ],
   },
   {
     id: 'greek-yogurt-chia-parfait',
@@ -96,15 +97,15 @@ export const GLOW_RECIPES: GlowRecipe[] = [
       '1 tbsp Chia seeds soaked in almond milk',
       '1/2 cup Fresh raspberries or blueberries',
       '1 tbsp Raw pumpkin seeds (zinc boost)',
-      '1 tsp Pure raw honey'
+      '1 tsp Pure raw honey',
     ],
     ingredientsId: [
       '170g Yogurt Yunani tawar',
       '1 sdm Biji chia rendam susu almond',
       '1/2 cangkir Raspberry / blueberry segar',
       '1 sdm Biji labu mentah (sumber Zinc)',
-      '1 sdt Madu murni'
-    ]
+      '1 sdt Madu murni',
+    ],
   },
   {
     id: 'avocado-poached-egg-toast',
@@ -124,20 +125,22 @@ export const GLOW_RECIPES: GlowRecipe[] = [
     sodium: 280,
     quantity: '1 toast serving',
     prepTime: '10 mins',
-    glowBenefit: 'Loaded with natural Biotin from egg yolks and monounsaturated lipids for lustrous hair and skin barrier.',
-    glowBenefitId: 'Mengandung Biotin alami dari kuning telur dan lemak tak jenuh untuk kilau rambut dan kesehatan barrier kulit.',
+    glowBenefit:
+      'Loaded with natural Biotin from egg yolks and monounsaturated lipids for lustrous hair and skin barrier.',
+    glowBenefitId:
+      'Mengandung Biotin alami dari kuning telur dan lemak tak jenuh untuk kilau rambut dan kesehatan barrier kulit.',
     ingredients: [
       '1 slice Sprouted whole grain bread, toasted',
       '1/2 Mashed avocado with lime juice',
       '1 Farm-fresh poached egg',
-      'Pinch of chili flakes and hemp seeds'
+      'Pinch of chili flakes and hemp seeds',
     ],
     ingredientsId: [
       '1 lembar Roti gandum berkecambah panggang',
       '1/2 Alpukat tumbuk dengan perasan jeruk nipis',
       '1 Butir telur rebus setengah matang',
-      'Sejumput biji rami & serpihan cabai'
-    ]
+      'Sejumput biji rami & serpihan cabai',
+    ],
   },
   {
     id: 'golden-turmeric-elixir',
@@ -164,15 +167,15 @@ export const GLOW_RECIPES: GlowRecipe[] = [
       '1/2 tsp Organic turmeric powder',
       '1/4 tsp Grated fresh ginger',
       'Pinch of black pepper (boosts curcumin absorption 2000%)',
-      '1/2 tsp Pure maple syrup or honey'
+      '1/2 tsp Pure maple syrup or honey',
     ],
     ingredientsId: [
       '1 cangkir Susu oat / almond hangat',
       '1/2 sdt Bubuk kunyit organik',
       '1/4 sdt Jahe parut segar',
       'Sejumput lada hitam (meningkatkan penyerapan kurkumin)',
-      '1/2 sdt Madu atau sirup maple murni'
-    ]
+      '1/2 sdt Madu atau sirup maple murni',
+    ],
   },
   {
     id: 'rainbow-kale-citrus-salad',
@@ -193,22 +196,23 @@ export const GLOW_RECIPES: GlowRecipe[] = [
     quantity: '1 large bowl (300g)',
     prepTime: '12 mins',
     glowBenefit: 'High chlorophyll and bioflavonoids to support hepatic detoxification and clear, even skin tone.',
-    glowBenefitId: 'Tinggi klorofil dan bioflavonoid untuk mendukung detoksifikasi tubuh dan warna kulit yang cerah merata.',
+    glowBenefitId:
+      'Tinggi klorofil dan bioflavonoid untuk mendukung detoksifikasi tubuh dan warna kulit yang cerah merata.',
     ingredients: [
       '2 cups Massaged curly kale & purple cabbage',
       '1/2 cup Cooked quinoa',
       '1 Orange or ruby grapefruit segments',
       '2 tbsp Toasted walnuts (Omega-3 & Vitamin E)',
-      '1 tbsp Citrus olive oil vinaigrette'
+      '1 tbsp Citrus olive oil vinaigrette',
     ],
     ingredientsId: [
       '2 mangkuk Daun kale & kubis ungu',
       '1/2 mangkuk Quinoa matang',
       '1 Buah jeruk manis / jeruk bali kupas',
       '2 sdm Kacang kenari panggang',
-      '1 sdm Minyak zaitun perasan jeruk'
-    ]
-  }
+      '1 sdm Minyak zaitun perasan jeruk',
+    ],
+  },
 ];
 
 export const TIMED_HYDRATION_MILESTONES = [

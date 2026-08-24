@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,7 +22,7 @@ export function GlucoseCoachCard() {
   const [checklist, setChecklist] = useState<PlateSequenceCheck>({
     veggiesFirst: false,
     proteinSecond: false,
-    carbsLast: false
+    carbsLast: false,
   });
 
   // Post-meal walk timer state (10 mins = 600s)
@@ -35,15 +35,17 @@ export function GlucoseCoachCard() {
 
   const toggleCheck = (key: keyof PlateSequenceCheck) => {
     playChime();
-    setChecklist(prev => {
+    setChecklist((prev) => {
       const next = { ...prev, [key]: !prev[key] };
       const allDone = next.veggiesFirst && next.proteinSecond && next.carbsLast;
       if (allDone) {
         playSuccessChord();
         confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
         toast({
-          title: "✨ " + (isId ? "Urutan Makan Sempurna!" : "Anti-Glycation Master!"),
-          description: isId ? "Kolagen kulit terlindungi dari lonjakan gula darah." : "Collagen protected from sugar-spike glycation."
+          title: '✨ ' + (isId ? 'Urutan Makan Sempurna!' : 'Anti-Glycation Master!'),
+          description: isId
+            ? 'Kolagen kulit terlindungi dari lonjakan gula darah.'
+            : 'Collagen protected from sugar-spike glycation.',
         });
       }
       return next;
@@ -55,15 +57,17 @@ export function GlucoseCoachCard() {
     if (!isWalkRunning) return;
 
     timerRef.current = setInterval(() => {
-      setWalkSecondsLeft(prev => {
+      setWalkSecondsLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timerRef.current!);
           setIsWalkRunning(false);
           playSuccessChord();
           confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 } });
           toast({
-            title: isId ? "🚶‍♀️ Jalan Pasca Makan Selesai!" : "🚶‍♀️ Post-Meal Walk Complete!",
-            description: isId ? "Glukosa telah diserap langsung ke sel otot tanpa lonjakan insulin." : "Muscles cleared postprandial glucose with zero insulin spike."
+            title: isId ? '🚶‍♀️ Jalan Pasca Makan Selesai!' : '🚶‍♀️ Post-Meal Walk Complete!',
+            description: isId
+              ? 'Glukosa telah diserap langsung ke sel otot tanpa lonjakan insulin.'
+              : 'Muscles cleared postprandial glucose with zero insulin spike.',
           });
           return 0;
         }
@@ -77,7 +81,9 @@ export function GlucoseCoachCard() {
   }, [isWalkRunning, isId, toast]);
 
   const formatTimer = (sec: number) => {
-    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const m = Math.floor(sec / 60)
+      .toString()
+      .padStart(2, '0');
     const s = (sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
@@ -123,22 +129,24 @@ export function GlucoseCoachCard() {
                     : 'bg-white/80 border-teal-100 hover:border-teal-300 shadow-2xs'
                 }`}
               >
-                <div className={`w-6 h-6 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-all ${
-                  isChecked ? 'bg-emerald-600 text-white' : 'border-2 border-muted-foreground/30'
-                }`}>
+                <div
+                  className={`w-6 h-6 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                    isChecked ? 'bg-emerald-600 text-white' : 'border-2 border-muted-foreground/30'
+                  }`}
+                >
                   {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                 </div>
 
                 <div className="space-y-0.5 min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm">{s.icon}</span>
-                    <p className={`text-xs font-black ${isChecked ? 'text-emerald-950 line-through opacity-80' : 'text-foreground'}`}>
+                    <p
+                      className={`text-xs font-black ${isChecked ? 'text-emerald-950 line-through opacity-80' : 'text-foreground'}`}
+                    >
                       {isId ? s.titleId : s.title}
                     </p>
                   </div>
-                  <p className="text-[10px] text-muted-foreground leading-snug">
-                    {isId ? s.descId : s.desc}
-                  </p>
+                  <p className="text-[10px] text-muted-foreground leading-snug">{isId ? s.descId : s.desc}</p>
                 </div>
               </button>
             );
@@ -156,17 +164,15 @@ export function GlucoseCoachCard() {
             <div className="flex items-center gap-2">
               <Footprints className="w-4 h-4 text-teal-600" />
               <div>
-                <h4 className="text-xs font-black text-teal-950">
-                  {t.postMealWalk || '10-Min Post-Meal Glow Walk'}
-                </h4>
+                <h4 className="text-xs font-black text-teal-950">{t.postMealWalk || '10-Min Post-Meal Glow Walk'}</h4>
                 <p className="text-[10px] text-muted-foreground">
-                  {isId ? 'Gerakan ringan untuk meredam insulin pasca makan' : 'Clears postprandial glucose without insulin spikes'}
+                  {isId
+                    ? 'Gerakan ringan untuk meredam insulin pasca makan'
+                    : 'Clears postprandial glucose without insulin spikes'}
                 </p>
               </div>
             </div>
-            <span className="text-sm font-black font-mono text-teal-800">
-              {formatTimer(walkSecondsLeft)}
-            </span>
+            <span className="text-sm font-black font-mono text-teal-800">{formatTimer(walkSecondsLeft)}</span>
           </div>
 
           {/* Progress bar */}
@@ -188,9 +194,20 @@ export function GlucoseCoachCard() {
               className="flex-1 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs h-8 shadow-xs"
             >
               {isWalkRunning ? (
-                <><Pause className="w-3.5 h-3.5 mr-1" /> {isId ? 'Jeda' : 'Pause'}</>
+                <>
+                  <Pause className="w-3.5 h-3.5 mr-1" /> {isId ? 'Jeda' : 'Pause'}
+                </>
               ) : (
-                <><Play className="w-3.5 h-3.5 mr-1" /> {walkSecondsLeft === WALK_DURATION_SEC ? (isId ? 'Mulai Jalan' : 'Start Walk') : (isId ? 'Lanjutkan' : 'Resume')}</>
+                <>
+                  <Play className="w-3.5 h-3.5 mr-1" />{' '}
+                  {walkSecondsLeft === WALK_DURATION_SEC
+                    ? isId
+                      ? 'Mulai Jalan'
+                      : 'Start Walk'
+                    : isId
+                      ? 'Lanjutkan'
+                      : 'Resume'}
+                </>
               )}
             </Button>
 

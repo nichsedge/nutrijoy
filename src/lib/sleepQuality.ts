@@ -26,9 +26,8 @@ export function calculateSleepScore(
   const durationRatio = Math.min(log.durationHours / IDEAL_SLEEP_HOURS, 1.2);
   const rawDuration = durationRatio * 50;
   // Slight penalty for sleeping way too long (>9.5h)
-  const durationScore = log.durationHours > 9.5
-    ? Math.max(rawDuration - (log.durationHours - 9.5) * 10, 0)
-    : rawDuration;
+  const durationScore =
+    log.durationHours > 9.5 ? Math.max(rawDuration - (log.durationHours - 9.5) * 10, 0) : rawDuration;
 
   // 2. Rested feeling score (0–35 pts): 1–5 scale → 0–35
   const restednessScore = ((log.restednessScore - 1) / 4) * 35;
@@ -44,9 +43,10 @@ export function calculateSleepScore(
     consistencyBonus = diff <= 0.5 ? 15 : diff <= 1 ? 10 : diff <= 2 ? 5 : 0;
   }
 
-  const total = Math.max(0, Math.min(100, Math.round(
-    durationScore + restednessScore - caffeinePenalty + consistencyBonus
-  )));
+  const total = Math.max(
+    0,
+    Math.min(100, Math.round(durationScore + restednessScore - caffeinePenalty + consistencyBonus))
+  );
 
   const { label, labelId, tip, tipId, colorClass } = getSleepLabel(total);
 
@@ -60,7 +60,7 @@ export function calculateSleepScore(
     labelId,
     tip,
     tipId,
-    colorClass
+    colorClass,
   };
 }
 
@@ -71,31 +71,34 @@ function getSleepLabel(score: number) {
       labelId: 'Tidur Nyenyak Sempurna ✨',
       tip: 'Peak melatonin and growth hormone activity overnight—your skin is regenerating beautifully.',
       tipId: 'Melatonin dan hormon pertumbuhan aktif maksimal—kulitmu beregenerasi dengan indah semalam.',
-      colorClass: 'text-indigo-700 bg-indigo-50 border-indigo-200'
+      colorClass: 'text-indigo-700 bg-indigo-50 border-indigo-200',
     };
   } else if (score >= 60) {
     return {
       label: 'Good Sleep 🌙',
       labelId: 'Tidur Cukup Baik 🌙',
       tip: 'Good rest! Try silk pillowcase and no screens after 9pm to maximize skin repair next cycle.',
-      tipId: 'Istirahat cukup! Coba sarung bantal sutra dan hindari layar setelah pukul 21.00 untuk pemulihan kulit optimal.',
-      colorClass: 'text-purple-700 bg-purple-50 border-purple-200'
+      tipId:
+        'Istirahat cukup! Coba sarung bantal sutra dan hindari layar setelah pukul 21.00 untuk pemulihan kulit optimal.',
+      colorClass: 'text-purple-700 bg-purple-50 border-purple-200',
     };
   } else if (score >= 40) {
     return {
       label: 'Light Sleep 💤',
       labelId: 'Tidur Ringan 💤',
       tip: 'Sleep was lighter than ideal. Magnesium glycinate + chamomile tea 30min before bed can deepen sleep cycles.',
-      tipId: 'Tidur kurang optimal. Magnesium glisin dan teh chamomile 30 menit sebelum tidur bisa membantu tidur lebih nyenyak.',
-      colorClass: 'text-amber-700 bg-amber-50 border-amber-200'
+      tipId:
+        'Tidur kurang optimal. Magnesium glisin dan teh chamomile 30 menit sebelum tidur bisa membantu tidur lebih nyenyak.',
+      colorClass: 'text-amber-700 bg-amber-50 border-amber-200',
     };
   } else {
     return {
       label: 'Poor Sleep ⚠️',
       labelId: 'Tidur Buruk ⚠️',
       tip: 'Poor sleep raises cortisol—which spikes oil production and causes skin inflammation. Prioritize tonight!',
-      tipId: 'Tidur buruk meningkatkan kortisol yang memicu produksi minyak dan peradangan kulit. Prioritaskan malam ini!',
-      colorClass: 'text-rose-700 bg-rose-50 border-rose-200'
+      tipId:
+        'Tidur buruk meningkatkan kortisol yang memicu produksi minyak dan peradangan kulit. Prioritaskan malam ini!',
+      colorClass: 'text-rose-700 bg-rose-50 border-rose-200',
     };
   }
 }
@@ -117,24 +120,27 @@ export function getSleepSkinCorrelation(
   for (const sleep of sleepLogs) {
     const nextDayStart = sleep.timestamp + DAY_MS;
     const nextDayEnd = nextDayStart + DAY_MS;
-    const nextDaySkin = skinJournalEntries.find(
-      j => j.timestamp >= nextDayStart && j.timestamp < nextDayEnd
-    );
+    const nextDaySkin = skinJournalEntries.find((j) => j.timestamp >= nextDayStart && j.timestamp < nextDayEnd);
     if (!nextDaySkin) continue;
 
-    const glowValue = nextDaySkin.skinCondition === 'radiant' ? 5
-      : nextDaySkin.skinCondition === 'clear' ? 4
-      : nextDaySkin.skinCondition === 'dry' ? 3
-      : nextDaySkin.skinCondition === 'puffy' ? 2
-      : 1; // breakout
+    const glowValue =
+      nextDaySkin.skinCondition === 'radiant'
+        ? 5
+        : nextDaySkin.skinCondition === 'clear'
+          ? 4
+          : nextDaySkin.skinCondition === 'dry'
+            ? 3
+            : nextDaySkin.skinCondition === 'puffy'
+              ? 2
+              : 1; // breakout
 
     pairs.push({ sleep: sleep.durationHours, glow: glowValue });
   }
 
   if (pairs.length < 3) return null;
 
-  const radiantAfter7h = pairs.filter(p => p.sleep >= 7 && p.glow >= 4).length;
-  const totalWith7h = pairs.filter(p => p.sleep >= 7).length;
+  const radiantAfter7h = pairs.filter((p) => p.sleep >= 7 && p.glow >= 4).length;
+  const totalWith7h = pairs.filter((p) => p.sleep >= 7).length;
 
   if (totalWith7h === 0) return null;
 

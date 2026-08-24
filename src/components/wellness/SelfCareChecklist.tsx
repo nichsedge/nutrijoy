@@ -23,7 +23,7 @@ export function SelfCareChecklist() {
 
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = new Date(today).setHours(24, 0, 0, 0);
-  const todaysLog = state.selfCareLogs?.find(s => s.timestamp >= today && s.timestamp < tomorrow);
+  const todaysLog = state.selfCareLogs?.find((s) => s.timestamp >= today && s.timestamp < tomorrow);
 
   const morningItems = [
     { id: 'sunscreen', label: t.spfApplied || 'SPF 50+ Sunscreen Applied', icon: '☀️' },
@@ -42,7 +42,7 @@ export function SelfCareChecklist() {
   const handleToggle = (id: string, checked: boolean) => {
     const currentChecked = todaysLog?.checkedItems || [];
     let nextChecked = [];
-    
+
     if (checked) {
       nextChecked = [...currentChecked, id];
       if (nextChecked.length === allItems.length) {
@@ -51,30 +51,35 @@ export function SelfCareChecklist() {
           particleCount: 120,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#ec4899', '#f43f5e', '#a855f7']
+          colors: ['#ec4899', '#f43f5e', '#a855f7'],
         });
       } else {
         playChime();
       }
     } else {
-      nextChecked = currentChecked.filter(i => i !== id);
+      nextChecked = currentChecked.filter((i) => i !== id);
     }
 
     if (todaysLog) {
       removeSelfCareLog(todaysLog.id);
     }
-    
+
     addSelfCareLog({
       id: crypto.randomUUID(),
       timestamp: Date.now(),
-      checkedItems: nextChecked
+      checkedItems: nextChecked,
     });
   };
 
   const checkedCount = todaysLog?.checkedItems?.length || 0;
   const progress = Math.round((checkedCount / allItems.length) * 100);
 
-  const renderSection = (title: string, items: typeof morningItems, icon: React.ReactNode, colorClass: 'pink' | 'purple') => (
+  const renderSection = (
+    title: string,
+    items: typeof morningItems,
+    icon: React.ReactNode,
+    colorClass: 'pink' | 'purple'
+  ) => (
     <div className="space-y-2.5">
       <div className="flex items-center gap-1.5 px-1">
         {icon}
@@ -89,7 +94,9 @@ export function SelfCareChecklist() {
               onClick={() => handleToggle(item.id, !isChecked)}
               className={`flex items-center justify-between p-3.5 rounded-2xl transition-all border cursor-pointer ${
                 isChecked
-                  ? colorClass === 'pink' ? 'bg-pink-500/10 border-pink-300/40 text-pink-900 font-bold' : 'bg-purple-500/10 border-purple-300/40 text-purple-900 font-bold'
+                  ? colorClass === 'pink'
+                    ? 'bg-pink-500/10 border-pink-300/40 text-pink-900 font-bold'
+                    : 'bg-purple-500/10 border-purple-300/40 text-purple-900 font-bold'
                   : 'bg-white hover:bg-slate-50 border-slate-100 text-slate-700'
               }`}
             >
@@ -97,9 +104,15 @@ export function SelfCareChecklist() {
                 <span className="text-base">{item.icon}</span>
                 <span className="text-xs">{item.label}</span>
               </div>
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
-                isChecked ? (colorClass === 'pink' ? 'bg-pink-500 text-white' : 'bg-purple-500 text-white') : 'border-2 border-slate-200'
-              }`}>
+              <div
+                className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
+                  isChecked
+                    ? colorClass === 'pink'
+                      ? 'bg-pink-500 text-white'
+                      : 'bg-purple-500 text-white'
+                    : 'border-2 border-slate-200'
+                }`}
+              >
                 {isChecked && <CheckCircle2 className="w-4 h-4 fill-current" />}
               </div>
             </div>
@@ -124,7 +137,7 @@ export function SelfCareChecklist() {
 
         {/* Progress Bar */}
         <div className="h-2 w-full bg-pink-500/10 rounded-full overflow-hidden">
-          <motion.div 
+          <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5 }}
@@ -133,10 +146,20 @@ export function SelfCareChecklist() {
         </div>
 
         {/* AM Rituals */}
-        {renderSection(t.morningRoutine || 'Morning Glow (AM)', morningItems, <Sun className="w-3.5 h-3.5 text-amber-500" />, 'pink')}
+        {renderSection(
+          t.morningRoutine || 'Morning Glow (AM)',
+          morningItems,
+          <Sun className="w-3.5 h-3.5 text-amber-500" />,
+          'pink'
+        )}
 
         {/* PM Rituals */}
-        {renderSection(t.eveningRoutine || 'Night Renewal (PM)', eveningItems, <Moon className="w-3.5 h-3.5 text-indigo-500" />, 'purple')}
+        {renderSection(
+          t.eveningRoutine || 'Night Renewal (PM)',
+          eveningItems,
+          <Moon className="w-3.5 h-3.5 text-indigo-500" />,
+          'purple'
+        )}
 
         {/* Guided Ritual Launchers Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
@@ -225,42 +248,42 @@ export function SelfCareChecklist() {
           </button>
         </div>
 
-        <GuidedRitualsModal 
+        <GuidedRitualsModal
           isOpen={isGuaShaModalOpen}
           onClose={() => setIsGuaShaModalOpen(false)}
           type="guasha"
           language={state.profile?.language || 'en'}
         />
 
-        <GuidedRitualsModal 
+        <GuidedRitualsModal
           isOpen={isCryoModalOpen}
           onClose={() => setIsCryoModalOpen(false)}
           type="cryo"
           language={state.profile?.language || 'en'}
         />
 
-        <GuidedRitualsModal 
+        <GuidedRitualsModal
           isOpen={isDrybrushModalOpen}
           onClose={() => setIsDrybrushModalOpen(false)}
           type="drybrush"
           language={state.profile?.language || 'en'}
         />
 
-        <GuidedRitualsModal 
+        <GuidedRitualsModal
           isOpen={isEyeModalOpen}
           onClose={() => setIsEyeModalOpen(false)}
           type="eye_refresh"
           language={state.profile?.language || 'en'}
         />
 
-        <GuidedRitualsModal 
+        <GuidedRitualsModal
           isOpen={isDePuffModalOpen}
           onClose={() => setIsDePuffModalOpen(false)}
           type="depuff"
           language={state.profile?.language || 'en'}
         />
 
-        <GuidedRitualsModal 
+        <GuidedRitualsModal
           isOpen={isPostureModalOpen}
           onClose={() => setIsPostureModalOpen(false)}
           type="posture"

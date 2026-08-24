@@ -78,13 +78,43 @@ test('calculateGutScore: partial score for 50% fiber and 1 probiotic', () => {
   assert.ok(score.total > 0 && score.total < 100);
 });
 
-test('getTodayFiber: sums fiber from today\'s food logs correctly', () => {
+test("getTodayFiber: sums fiber from today's food logs correctly", () => {
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = today + 86400000;
   const logs: FoodLogEntry[] = [
-    { id: '1', timestamp: today + 1000, name: 'Oats', quantity: '100g', calories: 300, protein: 10, fiber: 8, sugar: 2, sodium: 10 },
-    { id: '2', timestamp: today + 2000, name: 'Kale', quantity: '50g', calories: 30, protein: 2, fiber: 3, sugar: 1, sodium: 5 },
-    { id: '3', timestamp: tomorrow + 1000, name: 'Yesterday', quantity: '1', calories: 0, protein: 0, fiber: 10, sugar: 0, sodium: 0 },
+    {
+      id: '1',
+      timestamp: today + 1000,
+      name: 'Oats',
+      quantity: '100g',
+      calories: 300,
+      protein: 10,
+      fiber: 8,
+      sugar: 2,
+      sodium: 10,
+    },
+    {
+      id: '2',
+      timestamp: today + 2000,
+      name: 'Kale',
+      quantity: '50g',
+      calories: 30,
+      protein: 2,
+      fiber: 3,
+      sugar: 1,
+      sodium: 5,
+    },
+    {
+      id: '3',
+      timestamp: tomorrow + 1000,
+      name: 'Yesterday',
+      quantity: '1',
+      calories: 0,
+      protein: 0,
+      fiber: 10,
+      sugar: 0,
+      sodium: 0,
+    },
   ];
   const total = getTodayFiber(logs, today, tomorrow);
   assert.equal(total, 11);
@@ -143,7 +173,12 @@ test('getMealTimingAnalysis: detects late eating when last meal <2h before bedti
   const lateLog: FoodLogEntry = {
     id: '1',
     timestamp: today + 22 * 3600 * 1000, // 10pm
-    name: 'Late Snack', quantity: '1', calories: 200, protein: 5, sugar: 5, sodium: 100
+    name: 'Late Snack',
+    quantity: '1',
+    calories: 200,
+    protein: 5,
+    sugar: 5,
+    sodium: 100,
   };
   const result = getMealTimingAnalysis([lateLog], 23, today);
   assert.equal(result.status, 'late_eating');
@@ -152,12 +187,24 @@ test('getMealTimingAnalysis: detects late eating when last meal <2h before bedti
 test('getMealTimingAnalysis: optimal when eating window <= 12h and 3h+ before bed', () => {
   const today = new Date().setHours(0, 0, 0, 0);
   const morning: FoodLogEntry = {
-    id: '1', timestamp: today + 8 * 3600 * 1000, // 8am
-    name: 'Breakfast', quantity: '1', calories: 400, protein: 20, sugar: 5, sodium: 200
+    id: '1',
+    timestamp: today + 8 * 3600 * 1000, // 8am
+    name: 'Breakfast',
+    quantity: '1',
+    calories: 400,
+    protein: 20,
+    sugar: 5,
+    sodium: 200,
   };
   const afternoon: FoodLogEntry = {
-    id: '2', timestamp: today + 17 * 3600 * 1000, // 5pm
-    name: 'Dinner', quantity: '1', calories: 600, protein: 30, sugar: 8, sodium: 400
+    id: '2',
+    timestamp: today + 17 * 3600 * 1000, // 5pm
+    name: 'Dinner',
+    quantity: '1',
+    calories: 600,
+    protein: 30,
+    sugar: 8,
+    sodium: 400,
   };
   const result = getMealTimingAnalysis([morning, afternoon], 23, today);
   assert.equal(result.status, 'optimal');
@@ -169,9 +216,15 @@ test('getMealTimingAnalysis: optimal when eating window <= 12h and 3h+ before be
 test('generateMonthlyReport: generates valid report for empty state', () => {
   const emptyState: AppState = {
     profile: null,
-    foodLogs: [], activities: [], measurements: [],
-    waterLogs: [], sleepLogs: [], cycleLogs: [],
-    selfCareLogs: [], activePlan: null, planHistory: []
+    foodLogs: [],
+    activities: [],
+    measurements: [],
+    waterLogs: [],
+    sleepLogs: [],
+    cycleLogs: [],
+    selfCareLogs: [],
+    activePlan: null,
+    planHistory: [],
   };
   const report = generateMonthlyReport(emptyState, []);
   assert.equal(report.daysTracked, 0);
@@ -185,12 +238,16 @@ test('generateMonthlyReport: correctly counts tracking days', () => {
   const emptyState: AppState = {
     profile: null,
     foodLogs: [
-      { id: '1', timestamp: today, name: 'Test', quantity: '1', calories: 300, protein: 10, sugar: 5, sodium: 100 }
+      { id: '1', timestamp: today, name: 'Test', quantity: '1', calories: 300, protein: 10, sugar: 5, sodium: 100 },
     ],
-    activities: [], measurements: [],
+    activities: [],
+    measurements: [],
     waterLogs: [{ id: 'w1', timestamp: today, amountMl: 2500 }],
-    sleepLogs: [], cycleLogs: [], selfCareLogs: [],
-    activePlan: null, planHistory: []
+    sleepLogs: [],
+    cycleLogs: [],
+    selfCareLogs: [],
+    activePlan: null,
+    planHistory: [],
   };
   const report = generateMonthlyReport(emptyState, []);
   assert.ok(report.daysTracked >= 1);

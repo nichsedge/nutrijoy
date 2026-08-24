@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { AppProvider } from './AppContext';
 import { Toaster } from '@/components/ui/toaster';

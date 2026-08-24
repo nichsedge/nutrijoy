@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -73,9 +73,11 @@ export function VisualSkinJournal() {
   const handleSaveEntry = () => {
     if (!previewImage && !note.trim()) {
       toast({
-        title: isId ? "Tambahkan foto atau catatan" : "Add a photo or note",
-        description: isId ? "Silakan pilih foto atau tulis catatan kondisimu." : "Please capture a photo or enter a quick note.",
-        variant: "destructive"
+        title: isId ? 'Tambahkan foto atau catatan' : 'Add a photo or note',
+        description: isId
+          ? 'Silakan pilih foto atau tulis catatan kondisimu.'
+          : 'Please capture a photo or enter a quick note.',
+        variant: 'destructive',
       });
       return;
     }
@@ -85,7 +87,7 @@ export function VisualSkinJournal() {
       timestamp: Date.now(),
       skinCondition: selectedCondition,
       photoUrl: previewImage,
-      note: note.trim() || undefined
+      note: note.trim() || undefined,
     };
 
     const updated = [newEntry, ...entries];
@@ -100,12 +102,14 @@ export function VisualSkinJournal() {
     confetti({
       particleCount: 60,
       spread: 50,
-      origin: { y: 0.6 }
+      origin: { y: 0.6 },
     });
 
     toast({
-      title: isId ? "✨ Catatan Kulit Tersimpan" : "✨ Skin Entry Saved",
-      description: isId ? "Catatan transformasi kulitmu berhasil disimpan secara privat." : "Your visual skin entry is safely stored.",
+      title: isId ? '✨ Catatan Kulit Tersimpan' : '✨ Skin Entry Saved',
+      description: isId
+        ? 'Catatan transformasi kulitmu berhasil disimpan secara privat.'
+        : 'Your visual skin entry is safely stored.',
     });
 
     setIsAdding(false);
@@ -114,7 +118,7 @@ export function VisualSkinJournal() {
   };
 
   const handleDeleteEntry = (id: string) => {
-    const updated = entries.filter(e => e.id !== id);
+    const updated = entries.filter((e) => e.id !== id);
     setEntries(updated);
     try {
       localStorage.setItem('nutrijoy_skin_journal', JSON.stringify(updated));
@@ -133,7 +137,9 @@ export function VisualSkinJournal() {
             </div>
             <div className="flex flex-col">
               <span className="text-xs uppercase tracking-wider">{t.skinJournal || 'Visual Skin Journal'}</span>
-              <span className="text-[10px] font-bold text-muted-foreground">{entries.length} {isId ? 'catatan' : 'entries'}</span>
+              <span className="text-[10px] font-bold text-muted-foreground">
+                {entries.length} {isId ? 'catatan' : 'entries'}
+              </span>
             </div>
           </div>
 
@@ -143,12 +149,13 @@ export function VisualSkinJournal() {
             className="rounded-full bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold h-8 px-3 shadow-xs"
           >
             {isAdding ? <X className="w-3.5 h-3.5 mr-1" /> : <Plus className="w-3.5 h-3.5 mr-1" />}
-            {isAdding ? (isId ? 'Tutup' : 'Cancel') : (isId ? 'Tambah Foto' : 'New Entry')}
+            {isAdding ? (isId ? 'Tutup' : 'Cancel') : isId ? 'Tambah Foto' : 'New Entry'}
           </Button>
         </div>
 
         <p className="text-xs text-foreground/80 leading-relaxed font-medium">
-          {t.skinJournalDesc || 'Capture private skin photos & notes to visually follow your glow transformation alongside hydration & sleep data.'}
+          {t.skinJournalDesc ||
+            'Capture private skin photos & notes to visually follow your glow transformation alongside hydration & sleep data.'}
         </p>
 
         {/* Add Entry Form */}
@@ -157,7 +164,7 @@ export function VisualSkinJournal() {
             <div className="space-y-1.5">
               <p className="text-xs font-bold text-rose-700">{t.skinCondition || 'Skin State'}</p>
               <div className="flex flex-wrap gap-1.5">
-                {skinConditions.map(sc => (
+                {skinConditions.map((sc) => (
                   <button
                     key={sc.id}
                     type="button"
@@ -190,7 +197,9 @@ export function VisualSkinJournal() {
               ) : (
                 <label className="w-full h-24 rounded-2xl border-2 border-dashed border-rose-200 hover:border-rose-400 bg-rose-50/30 flex flex-col items-center justify-center cursor-pointer transition-all gap-1 text-rose-500">
                   <Camera className="w-6 h-6" />
-                  <span className="text-[11px] font-bold">{isId ? 'Ketuk untuk ambil / unggah foto' : 'Tap to snap or upload skin selfie'}</span>
+                  <span className="text-[11px] font-bold">
+                    {isId ? 'Ketuk untuk ambil / unggah foto' : 'Tap to snap or upload skin selfie'}
+                  </span>
                   <input type="file" accept="image/*" capture="user" onChange={handleImageUpload} className="hidden" />
                 </label>
               )}
@@ -227,12 +236,15 @@ export function VisualSkinJournal() {
                   month: 'short',
                   day: 'numeric',
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
                 });
-                const conditionInfo = skinConditions.find(s => s.id === entry.skinCondition);
+                const conditionInfo = skinConditions.find((s) => s.id === entry.skinCondition);
 
                 return (
-                  <div key={entry.id} className="bg-white p-3 rounded-2xl border border-rose-100 shadow-xs flex gap-3 items-start relative group">
+                  <div
+                    key={entry.id}
+                    className="bg-white p-3 rounded-2xl border border-rose-100 shadow-xs flex gap-3 items-start relative group"
+                  >
                     {entry.photoUrl ? (
                       <div className="w-16 h-16 rounded-xl overflow-hidden border border-rose-100 shrink-0 bg-slate-100">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -259,9 +271,7 @@ export function VisualSkinJournal() {
                       </div>
 
                       {entry.note && (
-                        <p className="text-xs text-foreground/90 font-medium line-clamp-2 leading-snug">
-                          {entry.note}
-                        </p>
+                        <p className="text-xs text-foreground/90 font-medium line-clamp-2 leading-snug">{entry.note}</p>
                       )}
 
                       <p className="text-[10px] text-muted-foreground font-bold">{dateStr}</p>
@@ -273,7 +283,9 @@ export function VisualSkinJournal() {
           </div>
         ) : (
           <div className="text-center py-4 px-2 bg-white/50 rounded-2xl border border-dashed border-rose-200 text-muted-foreground text-xs">
-            {isId ? 'Belum ada foto kulit. Ketuk "Tambah Foto" untuk mulai memantau kilau wajahmu!' : 'No skin entries yet. Tap "New Entry" to track your skin radiance over time!'}
+            {isId
+              ? 'Belum ada foto kulit. Ketuk "Tambah Foto" untuk mulai memantau kilau wajahmu!'
+              : 'No skin entries yet. Tap "New Entry" to track your skin radiance over time!'}
           </div>
         )}
       </CardContent>

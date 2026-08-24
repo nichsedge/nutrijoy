@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,7 +17,7 @@ const SOLFEGGIO_PRESETS: SolfeggioPreset[] = [
     purpose: 'Downregulates sympathetic cortisol, relaxes vascular tone, and soothes facial tension.',
     purposeId: 'Menenangkan kortisol, merelaksasi ketegangan pembuluh darah, dan melepas stres wajah.',
     icon: '🌿',
-    color: 'border-emerald-300 bg-emerald-50 text-emerald-900'
+    color: 'border-emerald-300 bg-emerald-50 text-emerald-900',
   },
   {
     freq: 528,
@@ -26,7 +26,7 @@ const SOLFEGGIO_PRESETS: SolfeggioPreset[] = [
     purpose: 'Resonant harmonic associated with cellular longevity, collagen synthesis, and deep renewal.',
     purposeId: 'Frekuensi resonansi untuk regenerasi seluler, sintesis kolagen, dan peremajaan mendalam.',
     icon: '✨',
-    color: 'border-purple-300 bg-purple-50 text-purple-900'
+    color: 'border-purple-300 bg-purple-50 text-purple-900',
   },
   {
     freq: 639,
@@ -35,7 +35,7 @@ const SOLFEGGIO_PRESETS: SolfeggioPreset[] = [
     purpose: 'Fosters inner warmth, relational connection, and release of emotional constriction.',
     purposeId: 'Membuka kehangatan batin, kedekatan relasi cinta, dan melepas beban emosional.',
     icon: '💖',
-    color: 'border-rose-300 bg-rose-50 text-rose-900'
+    color: 'border-rose-300 bg-rose-50 text-rose-900',
   },
   {
     freq: 963,
@@ -44,8 +44,8 @@ const SOLFEGGIO_PRESETS: SolfeggioPreset[] = [
     purpose: 'Elevates mental clarity, dissolves afternoon brain fog, and awakens spiritual lightness.',
     purposeId: 'Tingkatkan fokus jernih, hilangkan kantuk/kabut otak, dan bangkitkan ketenangan pikiran.',
     icon: '👑',
-    color: 'border-sky-300 bg-sky-50 text-sky-900'
-  }
+    color: 'border-sky-300 bg-sky-50 text-sky-900',
+  },
 ];
 
 export function SolfeggioPlayerCard() {
@@ -59,7 +59,7 @@ export function SolfeggioPlayerCard() {
   const [timerSecondsLeft, setTimerSecondsLeft] = useState<number>(300);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const activePreset = SOLFEGGIO_PRESETS.find(p => p.freq === selectedFreq) || SOLFEGGIO_PRESETS[1];
+  const activePreset = SOLFEGGIO_PRESETS.find((p) => p.freq === selectedFreq) || SOLFEGGIO_PRESETS[1];
 
   const handleTogglePlay = () => {
     if (isPlaying) {
@@ -85,7 +85,7 @@ export function SolfeggioPlayerCard() {
     if (!isPlaying || timerMinutes === 0) return;
 
     timerRef.current = setInterval(() => {
-      setTimerSecondsLeft(prev => {
+      setTimerSecondsLeft((prev) => {
         if (prev <= 1) {
           stopSolfeggioTone();
           setIsPlaying(false);
@@ -109,7 +109,9 @@ export function SolfeggioPlayerCard() {
   }, []);
 
   const formatTimer = (sec: number) => {
-    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const m = Math.floor(sec / 60)
+      .toString()
+      .padStart(2, '0');
     const s = (sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
@@ -141,7 +143,7 @@ export function SolfeggioPlayerCard() {
 
         {/* Frequency Preset Buttons */}
         <div className="grid grid-cols-2 gap-2">
-          {SOLFEGGIO_PRESETS.map(preset => {
+          {SOLFEGGIO_PRESETS.map((preset) => {
             const isSelected = preset.freq === selectedFreq;
             return (
               <button
@@ -181,7 +183,7 @@ export function SolfeggioPlayerCard() {
         <div className="flex items-center justify-between gap-3 pt-1">
           {/* Duration Pills */}
           <div className="flex gap-1">
-            {[5, 10, 15].map(mins => (
+            {[5, 10, 15].map((mins) => (
               <button
                 key={mins}
                 type="button"
@@ -212,9 +214,13 @@ export function SolfeggioPlayerCard() {
             }`}
           >
             {isPlaying ? (
-              <><Pause className="w-3.5 h-3.5 mr-1.5 fill-current" /> {t.stopSound || 'Pause'}</>
+              <>
+                <Pause className="w-3.5 h-3.5 mr-1.5 fill-current" /> {t.stopSound || 'Pause'}
+              </>
             ) : (
-              <><Play className="w-3.5 h-3.5 mr-1.5 fill-current" /> {t.startSound || 'Play Frequency'}</>
+              <>
+                <Play className="w-3.5 h-3.5 mr-1.5 fill-current" /> {t.startSound || 'Play Frequency'}
+              </>
             )}
           </Button>
         </div>

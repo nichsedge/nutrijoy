@@ -60,9 +60,7 @@ export function getPlanProgress(
   const weeklyChange = changeKg / durationWeeks;
 
   for (let i = 1; i <= durationWeeks; i++) {
-    const targetWeight = plan.goal === 'gain'
-      ? startWeight + weeklyChange * i
-      : startWeight - weeklyChange * i;
+    const targetWeight = plan.goal === 'gain' ? startWeight + weeklyChange * i : startWeight - weeklyChange * i;
 
     weeklyData.push({
       week: i,

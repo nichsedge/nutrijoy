@@ -27,7 +27,7 @@ export function getUVRiskLevel(uvIndex: number): UVRisk {
       spfRequired: 15,
       icon: '🌤️',
       adviceEn: 'Minimal risk. SPF 15 sufficient, but daily SPF is always the best beauty habit.',
-      adviceId: 'Risiko minimal. SPF 15 cukup, namun SPF harian selalu menjadi kebiasaan kecantikan terbaik.'
+      adviceId: 'Risiko minimal. SPF 15 cukup, namun SPF harian selalu menjadi kebiasaan kecantikan terbaik.',
     };
   } else if (uvIndex <= 5) {
     return {
@@ -38,7 +38,7 @@ export function getUVRiskLevel(uvIndex: number): UVRisk {
       spfRequired: 30,
       icon: '☀️',
       adviceEn: 'Apply SPF 30+ before going out. Reapply every 2 hours when outdoors.',
-      adviceId: 'Oleskan SPF 30+ sebelum keluar. Ulangi setiap 2 jam saat berada di luar ruangan.'
+      adviceId: 'Oleskan SPF 30+ sebelum keluar. Ulangi setiap 2 jam saat berada di luar ruangan.',
     };
   } else if (uvIndex <= 7) {
     return {
@@ -49,7 +49,7 @@ export function getUVRiskLevel(uvIndex: number): UVRisk {
       spfRequired: 50,
       icon: '🌞',
       adviceEn: 'SPF 50+ required. Seek shade 10am–4pm. Wear a hat and UV-protective clothing.',
-      adviceId: 'SPF 50+ wajib. Cari teduh pukul 10.00–16.00. Gunakan topi dan pakaian pelindung UV.'
+      adviceId: 'SPF 50+ wajib. Cari teduh pukul 10.00–16.00. Gunakan topi dan pakaian pelindung UV.',
     };
   } else if (uvIndex <= 10) {
     return {
@@ -60,7 +60,8 @@ export function getUVRiskLevel(uvIndex: number): UVRisk {
       spfRequired: 50,
       icon: '🔆',
       adviceEn: 'Stay in shade! SPF 50+ every 90min. UVA penetrates glass — apply indoors too.',
-      adviceId: 'Hindari sinar matahari langsung! SPF 50+ tiap 90 menit. UVA menembus kaca — oleskan pula di dalam ruangan.'
+      adviceId:
+        'Hindari sinar matahari langsung! SPF 50+ tiap 90 menit. UVA menembus kaca — oleskan pula di dalam ruangan.',
     };
   } else {
     return {
@@ -71,7 +72,8 @@ export function getUVRiskLevel(uvIndex: number): UVRisk {
       spfRequired: 50,
       icon: '☢️',
       adviceEn: 'Extreme UV today! Avoid outdoor exposure. If unavoidable: SPF 50+, wide hat, long sleeves.',
-      adviceId: 'UV ekstrem hari ini! Hindari paparan luar ruangan. Jika terpaksa: SPF 50+, topi lebar, lengan panjang.'
+      adviceId:
+        'UV ekstrem hari ini! Hindari paparan luar ruangan. Jika terpaksa: SPF 50+, topi lebar, lengan panjang.',
     };
   }
 }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -36,7 +36,7 @@ export function SkincareShelfCard() {
             activeIngredients: ['vitamin_c'],
             openedDate: Date.now() - 30 * 24 * 60 * 60 * 1000, // 30 days ago
             paoMonths: 3,
-            icon: '🍊'
+            icon: '🍊',
           },
           {
             id: '2',
@@ -45,8 +45,8 @@ export function SkincareShelfCard() {
             activeIngredients: ['ceramides'],
             openedDate: Date.now() - 45 * 24 * 60 * 60 * 1000,
             paoMonths: 12,
-            icon: '🧴'
-          }
+            icon: '🧴',
+          },
         ];
         setProducts(initial);
         localStorage.setItem('nutrijoy_skincare_shelf', JSON.stringify(initial));
@@ -58,11 +58,11 @@ export function SkincareShelfCard() {
 
   const conflicts = detectIngredientConflicts(products);
 
-  const handleAddPreset = (preset: typeof SKINCARE_PRESETS[0]) => {
+  const handleAddPreset = (preset: (typeof SKINCARE_PRESETS)[0]) => {
     const newProduct: SkincareProduct = {
       ...preset,
       id: crypto.randomUUID(),
-      openedDate: Date.now()
+      openedDate: Date.now(),
     };
     const updated = [newProduct, ...products];
     setProducts(updated);
@@ -74,13 +74,15 @@ export function SkincareShelfCard() {
     playSuccessChord();
     toast({
       title: `🧴 ${preset.name} ${isId ? 'Ditambahkan' : 'Added'}`,
-      description: isId ? `Timer PAO ${preset.paoMonths} bulan dimulai hari ini.` : `PAO ${preset.paoMonths}-month countdown timer started.`
+      description: isId
+        ? `Timer PAO ${preset.paoMonths} bulan dimulai hari ini.`
+        : `PAO ${preset.paoMonths}-month countdown timer started.`,
     });
     setShowAddMenu(false);
   };
 
   const handleDelete = (id: string) => {
-    const updated = products.filter(p => p.id !== id);
+    const updated = products.filter((p) => p.id !== id);
     setProducts(updated);
     try {
       localStorage.setItem('nutrijoy_skincare_shelf', JSON.stringify(updated));
@@ -135,7 +137,9 @@ export function SkincareShelfCard() {
                     <span className="text-base">{preset.icon}</span>
                     <div className="truncate">
                       <p className="text-[11px] font-bold text-rose-950 truncate">{preset.name}</p>
-                      <p className="text-[9px] text-rose-700 font-bold">PAO {preset.paoMonths}M ({preset.category})</p>
+                      <p className="text-[9px] text-rose-700 font-bold">
+                        PAO {preset.paoMonths}M ({preset.category})
+                      </p>
                     </div>
                   </div>
                   <Plus className="w-3 h-3 text-rose-600 shrink-0 ml-1" />
@@ -164,10 +168,12 @@ export function SkincareShelfCard() {
         <div className="space-y-2">
           {products.length === 0 ? (
             <div className="text-center py-6 bg-white/60 rounded-2xl border border-rose-100 text-xs text-muted-foreground font-bold">
-              {isId ? 'Meja rias kosong. Tambahkan botol skincare untuk melacak masa simpannya.' : 'Your shelf is empty. Add your skincare products to monitor PAO freshness.'}
+              {isId
+                ? 'Meja rias kosong. Tambahkan botol skincare untuk melacak masa simpannya.'
+                : 'Your shelf is empty. Add your skincare products to monitor PAO freshness.'}
             </div>
           ) : (
-            products.map(prod => {
+            products.map((prod) => {
               const pao = calculatePaoStatus(prod);
               return (
                 <div
@@ -176,8 +182,8 @@ export function SkincareShelfCard() {
                     pao.isExpired
                       ? 'border-rose-300 bg-rose-50/50'
                       : pao.isExpiringSoon
-                      ? 'border-amber-300 bg-amber-50/40'
-                      : 'border-rose-100'
+                        ? 'border-amber-300 bg-amber-50/40'
+                        : 'border-rose-100'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -192,13 +198,15 @@ export function SkincareShelfCard() {
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
-                        pao.isExpired
-                          ? 'bg-rose-100 text-rose-800'
-                          : pao.isExpiringSoon
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-emerald-100 text-emerald-800'
-                      }`}>
+                      <span
+                        className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                          pao.isExpired
+                            ? 'bg-rose-100 text-rose-800'
+                            : pao.isExpiringSoon
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-emerald-100 text-emerald-800'
+                        }`}
+                      >
                         {isId ? pao.statusTextId : pao.statusTextEn}
                       </span>
                       <button
@@ -218,8 +226,8 @@ export function SkincareShelfCard() {
                         pao.isExpired
                           ? 'bg-rose-600'
                           : pao.isExpiringSoon
-                          ? 'bg-amber-500'
-                          : 'bg-gradient-to-r from-emerald-400 to-teal-500'
+                            ? 'bg-amber-500'
+                            : 'bg-gradient-to-r from-emerald-400 to-teal-500'
                       }`}
                       style={{ width: `${pao.percentUsed}%` }}
                     />

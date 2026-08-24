@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -16,9 +16,9 @@ export function CircularProgress({
   value,
   size = 120,
   strokeWidth = 10,
-  color = "currentColor",
-  backgroundColor = "rgba(0,0,0,0.1)",
-  children
+  color = 'currentColor',
+  backgroundColor = 'rgba(0,0,0,0.1)',
+  children,
 }: CircularProgressProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -48,13 +48,11 @@ export function CircularProgress({
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
+          transition={{ duration: 1.5, ease: 'easeOut' }}
           strokeLinecap="round"
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        {children}
-      </div>
+      <div className="absolute inset-0 flex items-center justify-center">{children}</div>
     </div>
   );
 }

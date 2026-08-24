@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { useAppState, useAppActions } from '@/components/AppContext';
@@ -16,7 +16,7 @@ import {
   Moon,
   Ruler,
   Dna,
-  CheckCircle2
+  CheckCircle2,
 } from 'lucide-react';
 import Link from 'next/link';
 import type { HistoryLogEntry } from '@/lib/types';
@@ -58,7 +58,7 @@ export default function HistoryPage() {
     removeSleepLog,
     removeCycleLog,
     removeSelfCareLog,
-    removeMeasurement
+    removeMeasurement,
   } = useAppActions();
   const t = getTranslation(state.profile?.language || 'en');
 
@@ -69,18 +69,32 @@ export default function HistoryPage() {
     ...(state.sleepLogs || []).map((s) => ({ ...s, type: 'sleep' as const, name: t.sleep })),
     ...(state.cycleLogs || []).map((c) => ({ ...c, type: 'cycle' as const, name: t.cycle })),
     ...(state.selfCareLogs || []).map((sc) => ({ ...sc, type: 'selfCare' as const, name: t.selfCare })),
-    ...(state.measurements || []).map((m) => ({ ...m, type: 'measurement' as const, name: t.measurements }))
+    ...(state.measurements || []).map((m) => ({ ...m, type: 'measurement' as const, name: t.measurements })),
   ].sort((a, b) => b.timestamp - a.timestamp);
 
   const handleRemoveLog = (id: string, type: HistoryLogEntry['type']) => {
     switch (type) {
-      case 'food': removeFoodLog(id); break;
-      case 'activity': removeActivity(id); break;
-      case 'water': removeWaterLog(id); break;
-      case 'sleep': removeSleepLog(id); break;
-      case 'cycle': removeCycleLog(id); break;
-      case 'selfCare': removeSelfCareLog(id); break;
-      case 'measurement': removeMeasurement(id); break;
+      case 'food':
+        removeFoodLog(id);
+        break;
+      case 'activity':
+        removeActivity(id);
+        break;
+      case 'water':
+        removeWaterLog(id);
+        break;
+      case 'sleep':
+        removeSleepLog(id);
+        break;
+      case 'cycle':
+        removeCycleLog(id);
+        break;
+      case 'selfCare':
+        removeSelfCareLog(id);
+        break;
+      case 'measurement':
+        removeMeasurement(id);
+        break;
     }
   };
 
@@ -89,7 +103,7 @@ export default function HistoryPage() {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   });
 
   allLogs.forEach((log) => {
@@ -101,9 +115,9 @@ export default function HistoryPage() {
   });
 
   // Compute skin condition correlations
-  const skinLogs = (state.cycleLogs || []).filter(c => !!c.skinCondition);
+  const skinLogs = (state.cycleLogs || []).filter((c) => !!c.skinCondition);
   const totalSkinLogs = skinLogs.length;
-  const radiantOrClearLogs = skinLogs.filter(c => c.skinCondition === 'radiant' || c.skinCondition === 'clear');
+  const radiantOrClearLogs = skinLogs.filter((c) => c.skinCondition === 'radiant' || c.skinCondition === 'clear');
   const radiantPct = totalSkinLogs > 0 ? Math.round((radiantOrClearLogs.length / totalSkinLogs) * 100) : 0;
 
   return (
@@ -143,17 +157,20 @@ export default function HistoryPage() {
             {totalSkinLogs > 0 ? (
               <div className="space-y-2">
                 <p className="text-xs text-foreground/85 leading-relaxed font-medium">
-                  {radiantPct >= 70 
-                    ? (state.profile?.language === 'id' 
-                        ? `Luar biasa! Kulitmu berstatus Bercahaya / Bersih pada ${radiantPct}% hari pencatatan. Hidrasi dan nutrisi antioksidanmu sangat efektif mendukung barrier kulit.`
-                        : `Outstanding! Your skin was Radiant or Clear on ${radiantPct}% of logged days. High hydration and antioxidant consistency are effectively supporting your barrier.`)
-                    : (state.profile?.language === 'id'
-                        ? `Pola pencatatan menunjukkan hidrasi \(\ge 2000\)ml dan tidur cukup sangat berkorelasi langsung dengan berkurangnya kemerahan dan sembap.`
-                        : `Data shows that days with \(\ge 2000\)ml water and \(\ge 7\)h sleep directly correlate with lower facial puffiness and faster breakout clearing.`)}
+                  {radiantPct >= 70
+                    ? state.profile?.language === 'id'
+                      ? `Luar biasa! Kulitmu berstatus Bercahaya / Bersih pada ${radiantPct}% hari pencatatan. Hidrasi dan nutrisi antioksidanmu sangat efektif mendukung barrier kulit.`
+                      : `Outstanding! Your skin was Radiant or Clear on ${radiantPct}% of logged days. High hydration and antioxidant consistency are effectively supporting your barrier.`
+                    : state.profile?.language === 'id'
+                      ? `Pola pencatatan menunjukkan hidrasi \(\ge 2000\)ml dan tidur cukup sangat berkorelasi langsung dengan berkurangnya kemerahan dan sembap.`
+                      : `Data shows that days with \(\ge 2000\)ml water and \(\ge 7\)h sleep directly correlate with lower facial puffiness and faster breakout clearing.`}
                 </p>
                 <div className="flex gap-1.5 flex-wrap pt-1">
                   {skinLogs.slice(0, 5).map((log) => (
-                    <span key={log.id} className="text-[10px] font-bold bg-white/80 border border-rose-100 text-rose-800 px-2 py-0.5 rounded-full shadow-2xs">
+                    <span
+                      key={log.id}
+                      className="text-[10px] font-bold bg-white/80 border border-rose-100 text-rose-800 px-2 py-0.5 rounded-full shadow-2xs"
+                    >
                       Day {log.cycleDay}: {log.skinCondition}
                     </span>
                   ))}
@@ -195,18 +212,29 @@ export default function HistoryPage() {
                 <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground px-1">{date}</h3>
                 <div className="space-y-3">
                   {logs.map((log) => (
-                    <Card key={log.id} className="border-none shadow-sm rounded-3xl overflow-hidden active:bg-accent/5 transition-all">
+                    <Card
+                      key={log.id}
+                      className="border-none shadow-sm rounded-3xl overflow-hidden active:bg-accent/5 transition-all"
+                    >
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                            log.type === 'food' ? 'bg-primary/10 text-primary' :
-                            log.type === 'activity' ? 'bg-secondary/10 text-secondary' :
-                            log.type === 'water' ? 'bg-blue-500/10 text-blue-500' :
-                            log.type === 'sleep' ? 'bg-indigo-500/10 text-indigo-500' :
-                            log.type === 'cycle' ? 'bg-rose-500/10 text-rose-500' :
-                            log.type === 'selfCare' ? 'bg-emerald-500/10 text-emerald-500' :
-                            'bg-orange-500/10 text-orange-500'
-                          }`}>
+                          <div
+                            className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+                              log.type === 'food'
+                                ? 'bg-primary/10 text-primary'
+                                : log.type === 'activity'
+                                  ? 'bg-secondary/10 text-secondary'
+                                  : log.type === 'water'
+                                    ? 'bg-blue-500/10 text-blue-500'
+                                    : log.type === 'sleep'
+                                      ? 'bg-indigo-500/10 text-indigo-500'
+                                      : log.type === 'cycle'
+                                        ? 'bg-rose-500/10 text-rose-500'
+                                        : log.type === 'selfCare'
+                                          ? 'bg-emerald-500/10 text-emerald-500'
+                                          : 'bg-orange-500/10 text-orange-500'
+                            }`}
+                          >
                             {log.type === 'food' && <Utensils className="w-6 h-6" />}
                             {log.type === 'activity' && <Activity className="w-6 h-6" />}
                             {log.type === 'water' && <Droplets className="w-6 h-6" />}
@@ -218,18 +246,24 @@ export default function HistoryPage() {
                           <div>
                             <p className="font-bold text-sm capitalize">{log.name}</p>
                             <p className="text-xs text-muted-foreground">
-                              {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {getLogDetail(log)}
+                              {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} •{' '}
+                              {getLogDetail(log)}
                             </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
                           <div className="text-right">
-                            <p className={`font-black text-sm ${
-                              log.type === 'food' ? 'text-primary' :
-                              log.type === 'activity' ? 'text-secondary' :
-                              log.type === 'water' ? 'text-blue-500' :
-                              'text-muted-foreground'
-                            }`}>
+                            <p
+                              className={`font-black text-sm ${
+                                log.type === 'food'
+                                  ? 'text-primary'
+                                  : log.type === 'activity'
+                                    ? 'text-secondary'
+                                    : log.type === 'water'
+                                      ? 'text-blue-500'
+                                      : 'text-muted-foreground'
+                              }`}
+                            >
                               {getLogKcal(log)}
                             </p>
                           </div>
@@ -239,7 +273,7 @@ export default function HistoryPage() {
                             onClick={() => handleRemoveLog(log.id, log.type)}
                             className="w-8 h-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-opacity"
                           >
-                             <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
                       </CardContent>

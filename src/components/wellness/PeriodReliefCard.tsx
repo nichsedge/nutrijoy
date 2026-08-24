@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -42,7 +42,7 @@ export function PeriodReliefCard() {
     if (!isHeatRunning) return;
 
     heatTimerRef.current = setInterval(() => {
-      setHeatSecondsLeft(prev => {
+      setHeatSecondsLeft((prev) => {
         if (prev <= 1) {
           clearInterval(heatTimerRef.current!);
           setIsHeatRunning(false);
@@ -50,8 +50,10 @@ export function PeriodReliefCard() {
           playSuccessChord();
           confetti({ particleCount: 60, spread: 60, origin: { y: 0.5 } });
           toast({
-            title: isId ? "♨️ Sesi Kompres Hangat Selesai!" : "♨️ Warm Heat Pack Session Complete!",
-            description: isId ? "Otot panggul telah rileks dan sirkulasi darah membaik." : "Pelvic muscles relaxed and uterine circulation soothed."
+            title: isId ? '♨️ Sesi Kompres Hangat Selesai!' : '♨️ Warm Heat Pack Session Complete!',
+            description: isId
+              ? 'Otot panggul telah rileks dan sirkulasi darah membaik.'
+              : 'Pelvic muscles relaxed and uterine circulation soothed.',
           });
           return 0;
         }
@@ -72,7 +74,9 @@ export function PeriodReliefCard() {
   }, []);
 
   const formatTimer = (sec: number) => {
-    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const m = Math.floor(sec / 60)
+      .toString()
+      .padStart(2, '0');
     const s = (sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
@@ -113,13 +117,13 @@ export function PeriodReliefCard() {
                   {t.heatPackTimer || '15-Min Heat Pack & 432Hz Calm'}
                 </h4>
                 <p className="text-[10px] text-muted-foreground">
-                  {isId ? 'Kompres perut bawah + suara frekuensi pereda kram' : 'Warm abdomen compress + 432Hz relaxation tone'}
+                  {isId
+                    ? 'Kompres perut bawah + suara frekuensi pereda kram'
+                    : 'Warm abdomen compress + 432Hz relaxation tone'}
                 </p>
               </div>
             </div>
-            <span className="text-sm font-black font-mono text-rose-700">
-              {formatTimer(heatSecondsLeft)}
-            </span>
+            <span className="text-sm font-black font-mono text-rose-700">{formatTimer(heatSecondsLeft)}</span>
           </div>
 
           {/* Progress bar */}
@@ -136,15 +140,24 @@ export function PeriodReliefCard() {
               size="sm"
               onClick={handleToggleHeatTimer}
               className={`flex-1 rounded-xl font-bold text-xs h-8 shadow-xs ${
-                isHeatRunning
-                  ? 'bg-rose-500 hover:bg-rose-600 text-white'
-                  : 'bg-rose-600 hover:bg-rose-700 text-white'
+                isHeatRunning ? 'bg-rose-500 hover:bg-rose-600 text-white' : 'bg-rose-600 hover:bg-rose-700 text-white'
               }`}
             >
               {isHeatRunning ? (
-                <><Pause className="w-3.5 h-3.5 mr-1" /> {isId ? 'Jeda Kompres' : 'Pause Session'}</>
+                <>
+                  <Pause className="w-3.5 h-3.5 mr-1" /> {isId ? 'Jeda Kompres' : 'Pause Session'}
+                </>
               ) : (
-                <><Play className="w-3.5 h-3.5 mr-1" /> {heatSecondsLeft === HEAT_DURATION ? (isId ? 'Mulai Kompres Hangat' : 'Start Heat Pack') : (isId ? 'Lanjutkan' : 'Resume')}</>
+                <>
+                  <Play className="w-3.5 h-3.5 mr-1" />{' '}
+                  {heatSecondsLeft === HEAT_DURATION
+                    ? isId
+                      ? 'Mulai Kompres Hangat'
+                      : 'Start Heat Pack'
+                    : isId
+                      ? 'Lanjutkan'
+                      : 'Resume'}
+                </>
               )}
             </Button>
 
@@ -181,11 +194,14 @@ export function PeriodReliefCard() {
           {showYoga && (
             <div className="bg-white p-3.5 rounded-2xl border border-rose-200 shadow-2xs space-y-3 animate-in fade-in slide-in-from-top-2">
               <div className="flex gap-1.5 overflow-x-auto pb-1">
-                {RESTORATIVE_YOGA_POSES.map(pose => (
+                {RESTORATIVE_YOGA_POSES.map((pose) => (
                   <button
                     key={pose.id}
                     type="button"
-                    onClick={() => { setActiveYogaPose(pose); playChime(); }}
+                    onClick={() => {
+                      setActiveYogaPose(pose);
+                      playChime();
+                    }}
                     className={`px-3 py-1.5 rounded-xl border text-[11px] font-bold shrink-0 transition-all ${
                       activeYogaPose.id === pose.id
                         ? 'bg-rose-600 text-white border-rose-600 shadow-2xs'
@@ -203,7 +219,9 @@ export function PeriodReliefCard() {
                   <h5 className="text-xs font-black text-rose-950">
                     {isId ? activeYogaPose.nameId : activeYogaPose.name} ({activeYogaPose.sanskrit})
                   </h5>
-                  <span className="text-[10px] font-bold text-rose-700">{Math.round(activeYogaPose.durationSec / 60)} min</span>
+                  <span className="text-[10px] font-bold text-rose-700">
+                    {Math.round(activeYogaPose.durationSec / 60)} min
+                  </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
                   {isId ? activeYogaPose.instructionsId : activeYogaPose.instructionsEn}

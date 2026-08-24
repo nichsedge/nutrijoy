@@ -1,9 +1,9 @@
 # 🥗 NutriJoy
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-flat&logo=next.js)](https://nextjs.org/)
-[![PWA](https://img.shields.io/badge/PWA-Serwist-emerald?style=flat-flat)](https://serwist.github.io/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-flat&logo=typescript)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-purple?style=flat-flat)](#license)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![PWA](https://img.shields.io/badge/PWA-Serwist-emerald?style=flat-square)](https://serwist.github.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-purple?style=flat-square)](#license)
 
 NutriJoy is a premium, mobile-first **Progressive Web Application (PWA)** designed to be a comprehensive nutrition, fitness, and holistic wellness tracking companion. It combines state-of-the-art web capabilities with rich glassmorphism aesthetics, fluid micro-animations, and personalized AI-driven health insights to help you track and optimize your daily wellness rituals.
 
@@ -49,12 +49,14 @@ Ensure you have [Node.js](https://nodejs.org/) installed (LTS recommended).
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/nichsedge/nutrijoy.git
    cd nutrijoy
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```

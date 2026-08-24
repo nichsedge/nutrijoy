@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -53,7 +53,7 @@ export function CoupleSyncCard() {
       toName: partnerName,
       message,
       timestamp: Date.now(),
-      icon
+      icon,
     };
 
     const updated = [newCheer, ...recentCheers].slice(0, 5);
@@ -68,7 +68,7 @@ export function CoupleSyncCard() {
       particleCount: 70,
       spread: 60,
       origin: { y: 0.7 },
-      colors: ['#ec4899', '#f43f5e', '#fb7185']
+      colors: ['#ec4899', '#f43f5e', '#fb7185'],
     });
 
     toast({
@@ -78,10 +78,34 @@ export function CoupleSyncCard() {
   };
 
   const cheerOptions = [
-    { label: t.cheerSpf || 'Remember SPF ☀️', message: isId ? 'Jangan lupa pakai sunscreen hari ini ya sayang! ☀️' : 'Don\'t forget your SPF today, keep that glow protected! ☀️', icon: '☀️' },
-    { label: t.cheerWater || 'Drink Water 💧', message: isId ? 'Yuk minum air 500ml biar kulitmu tetap kenyal & segar! 💧' : 'Hydration check: drink 500ml water to keep your skin plump! 💧', icon: '💧' },
-    { label: t.cheerWorkout || 'Proud of You! 💪', message: isId ? 'Bangga banget sama semangat olahragamu hari ini! 💪' : 'So proud of your workout today, you are crushing it! 💪', icon: '💪' },
-    { label: t.cheerLove || 'Glowing & Beautiful! ✨', message: isId ? 'Kamu selalu cantik dan bercahaya hari ini! ✨💖' : 'You are looking so radiant, healthy, and beautiful today! ✨💖', icon: '✨' },
+    {
+      label: t.cheerSpf || 'Remember SPF ☀️',
+      message: isId
+        ? 'Jangan lupa pakai sunscreen hari ini ya sayang! ☀️'
+        : "Don't forget your SPF today, keep that glow protected! ☀️",
+      icon: '☀️',
+    },
+    {
+      label: t.cheerWater || 'Drink Water 💧',
+      message: isId
+        ? 'Yuk minum air 500ml biar kulitmu tetap kenyal & segar! 💧'
+        : 'Hydration check: drink 500ml water to keep your skin plump! 💧',
+      icon: '💧',
+    },
+    {
+      label: t.cheerWorkout || 'Proud of You! 💪',
+      message: isId
+        ? 'Bangga banget sama semangat olahragamu hari ini! 💪'
+        : 'So proud of your workout today, you are crushing it! 💪',
+      icon: '💪',
+    },
+    {
+      label: t.cheerLove || 'Glowing & Beautiful! ✨',
+      message: isId
+        ? 'Kamu selalu cantik dan bercahaya hari ini! ✨💖'
+        : 'You are looking so radiant, healthy, and beautiful today! ✨💖',
+      icon: '✨',
+    },
   ];
 
   return (
@@ -100,8 +124,8 @@ export function CoupleSyncCard() {
               <div className="flex items-center gap-1">
                 {isEditingName ? (
                   <div className="flex items-center gap-1 mt-0.5">
-                    <Input 
-                      value={partnerName} 
+                    <Input
+                      value={partnerName}
                       onChange={(e) => setPartnerName(e.target.value)}
                       className="h-6 text-xs w-28 bg-white"
                       autoFocus
@@ -111,8 +135,8 @@ export function CoupleSyncCard() {
                     </Button>
                   </div>
                 ) : (
-                  <p 
-                    onClick={() => setIsEditingName(true)} 
+                  <p
+                    onClick={() => setIsEditingName(true)}
                     className="text-xs font-bold text-muted-foreground hover:text-rose-600 cursor-pointer underline decoration-dotted"
                     title="Click to edit partner name"
                   >
@@ -130,7 +154,8 @@ export function CoupleSyncCard() {
         </div>
 
         <p className="text-xs text-foreground/80 leading-relaxed font-medium">
-          {t.coupleSyncDesc || 'Send micro-cheers and positive nudges to inspire your partner\'s daily beauty & wellness habits.'}
+          {t.coupleSyncDesc ||
+            "Send micro-cheers and positive nudges to inspire your partner's daily beauty & wellness habits."}
         </p>
 
         {/* 1-Tap Cheer Action Buttons */}
@@ -161,7 +186,10 @@ export function CoupleSyncCard() {
             </p>
             <div className="space-y-1">
               {recentCheers.slice(0, 2).map((c) => (
-                <div key={c.id} className="text-[11px] bg-white/70 p-2 rounded-xl border border-rose-100/50 flex items-center gap-2">
+                <div
+                  key={c.id}
+                  className="text-[11px] bg-white/70 p-2 rounded-xl border border-rose-100/50 flex items-center gap-2"
+                >
                   <span>{c.icon}</span>
                   <span className="truncate text-muted-foreground italic font-medium">"{c.message}"</span>
                 </div>

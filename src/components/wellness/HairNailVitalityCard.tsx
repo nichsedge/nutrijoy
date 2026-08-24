@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,30 +22,35 @@ export function HairNailVitalityCard() {
     try {
       const saved = localStorage.getItem('nutrijoy_hair_assessment');
       if (saved) setAssessment(JSON.parse(saved));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   // Current cycle phase
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = today + 86400000;
-  const cycleLog = (state.cycleLogs || []).find(l => l.timestamp >= today && l.timestamp < tomorrow);
+  const cycleLog = (state.cycleLogs || []).find((l) => l.timestamp >= today && l.timestamp < tomorrow);
   const phaseInfo = getCyclePhase(cycleLog?.cycleDay ?? 1, state.profile?.language || 'en');
 
   // Today's food nutrition
-  const todayFoods = useMemo(() =>
-    (state.foodLogs || []).filter(l => l.timestamp >= today && l.timestamp < tomorrow),
+  const todayFoods = useMemo(
+    () => (state.foodLogs || []).filter((l) => l.timestamp >= today && l.timestamp < tomorrow),
     [state.foodLogs, today, tomorrow]
   );
 
-  const totals = useMemo(() => ({
-    biotin: todayFoods.reduce((s, f) => s + (f.biotin ?? 0), 0),
-    zinc: todayFoods.reduce((s, f) => s + (f.zinc ?? 0), 0),
-    omega3: todayFoods.reduce((s, f) => s + (f.omega3 ?? 0), 0),
-    vitaminE: todayFoods.reduce((s, f) => s + (f.vitaminE ?? 0), 0),
-  }), [todayFoods]);
+  const totals = useMemo(
+    () => ({
+      biotin: todayFoods.reduce((s, f) => s + (f.biotin ?? 0), 0),
+      zinc: todayFoods.reduce((s, f) => s + (f.zinc ?? 0), 0),
+      omega3: todayFoods.reduce((s, f) => s + (f.omega3 ?? 0), 0),
+      vitaminE: todayFoods.reduce((s, f) => s + (f.vitaminE ?? 0), 0),
+    }),
+    [todayFoods]
+  );
 
-  const score = useMemo(() =>
-    calculateHairNailScore(totals.biotin, totals.zinc, totals.omega3, totals.vitaminE),
+  const score = useMemo(
+    () => calculateHairNailScore(totals.biotin, totals.zinc, totals.omega3, totals.vitaminE),
     [totals]
   );
 
@@ -61,7 +66,11 @@ export function HairNailVitalityCard() {
   const handleSaveAssessment = (key: keyof HairNailAssessment, val: string) => {
     const updated = { ...assessment, [key]: val, id: crypto.randomUUID(), timestamp: Date.now() };
     setAssessment(updated);
-    try { localStorage.setItem('nutrijoy_hair_assessment', JSON.stringify(updated)); } catch { /* ignore */ }
+    try {
+      localStorage.setItem('nutrijoy_hair_assessment', JSON.stringify(updated));
+    } catch {
+      /* ignore */
+    }
     playChime();
   };
 
@@ -69,19 +78,19 @@ export function HairNailVitalityCard() {
     shedding: [
       { val: 'normal', label: isId ? 'Normal ✅' : 'Normal ✅' },
       { val: 'increased', label: isId ? 'Sedikit Rontok ⚠️' : 'Slightly Increased ⚠️' },
-      { val: 'significant', label: isId ? 'Banyak Rontok 🆘' : 'Significant 🆘' }
+      { val: 'significant', label: isId ? 'Banyak Rontok 🆘' : 'Significant 🆘' },
     ],
     nailCondition: [
       { val: 'strong', label: isId ? 'Kuat & Sehat 💅' : 'Strong & Healthy 💅' },
       { val: 'brittle', label: isId ? 'Rapuh & Mudah Patah ⚠️' : 'Brittle & Breaking ⚠️' },
-      { val: 'ridged', label: isId ? 'Ada Alur/Garis 🔍' : 'Ridged/Lined 🔍' }
+      { val: 'ridged', label: isId ? 'Ada Alur/Garis 🔍' : 'Ridged/Lined 🔍' },
     ],
     scalpCondition: [
       { val: 'healthy', label: isId ? 'Sehat & Nyaman ✅' : 'Healthy & Comfortable ✅' },
       { val: 'dry', label: isId ? 'Kering & Ketombe ❄️' : 'Dry & Flaky ❄️' },
       { val: 'oily', label: isId ? 'Berminyak 💦' : 'Oily 💦' },
-      { val: 'irritated', label: isId ? 'Gatal/Iritasi 🔥' : 'Itchy/Irritated 🔥' }
-    ]
+      { val: 'irritated', label: isId ? 'Gatal/Iritasi 🔥' : 'Itchy/Irritated 🔥' },
+    ],
   };
 
   return (
@@ -105,11 +114,13 @@ export function HairNailVitalityCard() {
 
         {/* Nutrient micro bars */}
         <div className="grid grid-cols-2 gap-2.5">
-          {nutrients.map(n => (
+          {nutrients.map((n) => (
             <div key={n.label} className="bg-white/80 p-2.5 rounded-2xl border border-violet-100 space-y-1.5">
               <div className="flex justify-between items-center">
                 <span className="text-[10px] font-black text-foreground/80 truncate">{n.label}</span>
-                <span className={`text-[10px] font-black ${n.score >= 70 ? 'text-emerald-600' : 'text-amber-600'}`}>{n.actual}</span>
+                <span className={`text-[10px] font-black ${n.score >= 70 ? 'text-emerald-600' : 'text-amber-600'}`}>
+                  {n.actual}
+                </span>
               </div>
               <div className="h-1.5 bg-violet-100 rounded-full overflow-hidden">
                 <div
@@ -136,7 +147,7 @@ export function HairNailVitalityCard() {
         {/* Weekly Assessment Toggle */}
         <button
           type="button"
-          onClick={() => setShowAssessment(v => !v)}
+          onClick={() => setShowAssessment((v) => !v)}
           className="w-full flex items-center justify-between text-violet-700 text-xs font-black py-1 hover:opacity-80 transition-opacity"
         >
           <span>{t.weeklyAssessment || 'Weekly Self-Assessment'}</span>
@@ -146,14 +157,26 @@ export function HairNailVitalityCard() {
         {showAssessment && (
           <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
             {[
-              { key: 'shedding' as const, label: t.hairShedding || 'Hair Shedding', options: assessmentOptions.shedding },
-              { key: 'nailCondition' as const, label: t.nailCondition || 'Nail Condition', options: assessmentOptions.nailCondition },
-              { key: 'scalpCondition' as const, label: t.scalpHealth || 'Scalp Health', options: assessmentOptions.scalpCondition },
+              {
+                key: 'shedding' as const,
+                label: t.hairShedding || 'Hair Shedding',
+                options: assessmentOptions.shedding,
+              },
+              {
+                key: 'nailCondition' as const,
+                label: t.nailCondition || 'Nail Condition',
+                options: assessmentOptions.nailCondition,
+              },
+              {
+                key: 'scalpCondition' as const,
+                label: t.scalpHealth || 'Scalp Health',
+                options: assessmentOptions.scalpCondition,
+              },
             ].map(({ key, label, options }) => (
               <div key={key} className="space-y-1.5">
                 <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">{label}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {options.map(o => (
+                  {options.map((o) => (
                     <button
                       key={o.val}
                       type="button"

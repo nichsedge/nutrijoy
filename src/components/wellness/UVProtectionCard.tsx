@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -6,7 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Sun, MapPin, RefreshCw, CheckCircle2, AlertTriangle, Clock } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { getTranslation } from '@/lib/translations';
-import { fetchCurrentUVIndex, requestGeolocation, getUVRiskLevel, SPF_REAPPLY_INTERVAL_MS, SPF_WARN_THRESHOLD_MS } from '@/lib/uvIndex';
+import {
+  fetchCurrentUVIndex,
+  requestGeolocation,
+  getUVRiskLevel,
+  SPF_REAPPLY_INTERVAL_MS,
+  SPF_WARN_THRESHOLD_MS,
+} from '@/lib/uvIndex';
 import { playChime, playSuccessChord } from '@/lib/soundEffects';
 import { useToast } from '@/hooks/use-toast';
 
@@ -35,7 +41,9 @@ export function UVProtectionCard() {
           setSpfAppliedAt(ts);
         }
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   // Countdown timer
@@ -53,7 +61,7 @@ export function UVProtectionCard() {
           title: isId ? '☀️ SPF perlu dioles ulang!' : '☀️ Time to reapply SPF!',
           description: isId
             ? 'Sudah 2 jam sejak kamu memakai tabir surya. Oleskan ulang untuk proteksi maksimal!'
-            : 'It\'s been 2 hours since you applied sunscreen. Reapply for maximum skin protection!',
+            : "It's been 2 hours since you applied sunscreen. Reapply for maximum skin protection!",
         });
       }
     };
@@ -79,11 +87,17 @@ export function UVProtectionCard() {
   const handleApplySPF = () => {
     const now = Date.now();
     setSpfAppliedAt(now);
-    try { localStorage.setItem('nutrijoy_spf_applied_at', String(now)); } catch { /* ignore */ }
+    try {
+      localStorage.setItem('nutrijoy_spf_applied_at', String(now));
+    } catch {
+      /* ignore */
+    }
     playSuccessChord();
     toast({
       title: '✅ ' + (isId ? 'SPF sudah dioleskan!' : 'SPF Applied!'),
-      description: isId ? 'Timer 2 jam dimulai. Kami akan mengingatkanmu untuk mengoles ulang.' : 'Your 2-hour reapplication timer has started. We\'ll remind you when it\'s time.'
+      description: isId
+        ? 'Timer 2 jam dimulai. Kami akan mengingatkanmu untuk mengoles ulang.'
+        : "Your 2-hour reapplication timer has started. We'll remind you when it's time.",
     });
   };
 
@@ -91,7 +105,9 @@ export function UVProtectionCard() {
 
   const formatTime = (ms: number) => {
     const totalSec = Math.ceil(ms / 1000);
-    const m = Math.floor(totalSec / 60).toString().padStart(2, '0');
+    const m = Math.floor(totalSec / 60)
+      .toString()
+      .padStart(2, '0');
     const s = (totalSec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
@@ -114,22 +130,29 @@ export function UVProtectionCard() {
           </div>
 
           <Button
-            size="sm" variant="outline"
+            size="sm"
+            variant="outline"
             onClick={handleFetchUV}
             disabled={loading}
             className="h-8 px-3 rounded-full border-amber-200 text-amber-700 text-[10px] font-bold"
           >
-            {loading
-              ? <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              : <><MapPin className="w-3 h-3 mr-1" />{t.enableLocation || 'Get UV'}</>
-            }
+            {loading ? (
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <>
+                <MapPin className="w-3 h-3 mr-1" />
+                {t.enableLocation || 'Get UV'}
+              </>
+            )}
           </Button>
         </div>
 
         {/* UV Risk Display */}
         {locationDenied && (
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs text-slate-600 font-bold">
-            {isId ? 'Izin lokasi ditolak. Aktifkan di pengaturan browser untuk mendapatkan data UV real-time.' : 'Location permission denied. Enable in browser settings to get real-time UV data.'}
+            {isId
+              ? 'Izin lokasi ditolak. Aktifkan di pengaturan browser untuk mendapatkan data UV real-time.'
+              : 'Location permission denied. Enable in browser settings to get real-time UV data.'}
           </div>
         )}
 
@@ -137,7 +160,9 @@ export function UVProtectionCard() {
           <div className={`p-4 rounded-2xl border ${risk.colorClass} space-y-2`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-black">{risk.icon} UV {uvIndex}</p>
+                <p className="text-2xl font-black">
+                  {risk.icon} UV {uvIndex}
+                </p>
                 <p className="text-xs font-black">{isId ? risk.labelId : risk.label}</p>
               </div>
               <div className="text-right">
@@ -145,9 +170,7 @@ export function UVProtectionCard() {
                 <p className="text-sm font-black">SPF {risk.spfRequired}+</p>
               </div>
             </div>
-            <p className="text-[11px] leading-snug opacity-90 font-bold">
-              {isId ? risk.adviceId : risk.adviceEn}
-            </p>
+            <p className="text-[11px] leading-snug opacity-90 font-bold">{isId ? risk.adviceId : risk.adviceEn}</p>
           </div>
         )}
 
@@ -168,12 +191,16 @@ export function UVProtectionCard() {
 
           {spfAppliedAt && !spfExpired ? (
             <div className="space-y-2">
-              <div className={`text-center p-3 rounded-xl ${spfWarning ? 'bg-amber-100 border border-amber-300' : 'bg-emerald-50 border border-emerald-200'}`}>
+              <div
+                className={`text-center p-3 rounded-xl ${spfWarning ? 'bg-amber-100 border border-amber-300' : 'bg-emerald-50 border border-emerald-200'}`}
+              >
                 <p className={`text-3xl font-black font-mono ${spfWarning ? 'text-amber-700' : 'text-emerald-700'}`}>
                   {formatTime(timeRemaining)}
                 </p>
-                <p className={`text-[10px] font-black uppercase mt-1 ${spfWarning ? 'text-amber-600 animate-pulse' : 'text-emerald-600'}`}>
-                  {spfWarning ? (isId ? 'Segera oles ulang!' : 'Reapply soon!') : (t.spfTimer || 'Reapply In')}
+                <p
+                  className={`text-[10px] font-black uppercase mt-1 ${spfWarning ? 'text-amber-600 animate-pulse' : 'text-emerald-600'}`}
+                >
+                  {spfWarning ? (isId ? 'Segera oles ulang!' : 'Reapply soon!') : t.spfTimer || 'Reapply In'}
                 </p>
               </div>
             </div>
@@ -189,7 +216,7 @@ export function UVProtectionCard() {
             className={`w-full rounded-full text-white font-bold text-xs h-9 ${spfExpired ? 'bg-rose-500 hover:bg-rose-600' : 'bg-amber-500 hover:bg-amber-600'}`}
           >
             <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
-            {spfAppliedAt && !spfExpired ? (isId ? 'Oles Ulang SPF' : 'Reapply SPF') : (t.appliedSPF || 'Applied SPF ✓')}
+            {spfAppliedAt && !spfExpired ? (isId ? 'Oles Ulang SPF' : 'Reapply SPF') : t.appliedSPF || 'Applied SPF ✓'}
           </Button>
         </div>
       </CardContent>

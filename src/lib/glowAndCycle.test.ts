@@ -39,9 +39,7 @@ test('calculateSkinGlowScore: calculates high score for optimal glow inputs', ()
     { id: 'w2', timestamp: Date.now(), amountMl: 1200 },
   ];
 
-  const sleepLogs: SleepLogEntry[] = [
-    { id: 's1', timestamp: Date.now(), durationHours: 8, restednessScore: 5 },
-  ];
+  const sleepLogs: SleepLogEntry[] = [{ id: 's1', timestamp: Date.now(), durationHours: 8, restednessScore: 5 }];
 
   const glow = calculateSkinGlowScore(foodLogs, waterLogs, sleepLogs, mockProfile, 'en');
 
@@ -67,20 +65,28 @@ test('calculateSkinGlowScore: provides hydration tip when water is low', () => {
 test('getCyclePhase: correctly identifies 4 menstrual cycle phases and advice', () => {
   const menstrual = getCyclePhase(3, 'en');
   assert.equal(menstrual.phase, 'menstrual');
-  assert.ok(menstrual.nutritionAdvice.some(a => a.toLowerCase().includes('iron')));
+  assert.ok(menstrual.nutritionAdvice.some((a) => a.toLowerCase().includes('iron')));
 
   const follicular = getCyclePhase(10, 'en');
   assert.equal(follicular.phase, 'follicular');
-  assert.ok(follicular.workoutAdvice.some(a => a.toLowerCase().includes('strength')));
+  assert.ok(follicular.workoutAdvice.some((a) => a.toLowerCase().includes('strength')));
 
   const ovulatory = getCyclePhase(14, 'en');
   assert.equal(ovulatory.phase, 'ovulatory');
-  assert.ok(ovulatory.nutritionAdvice.some(a => a.toLowerCase().includes('cruciferous') || a.toLowerCase().includes('estrogen')));
+  assert.ok(
+    ovulatory.nutritionAdvice.some(
+      (a) => a.toLowerCase().includes('cruciferous') || a.toLowerCase().includes('estrogen')
+    )
+  );
 
   const luteal = getCyclePhase(22, 'en');
   assert.equal(luteal.phase, 'luteal');
   assert.ok(luteal.calorieAdjustmentKcal > 0);
-  assert.ok(luteal.nutritionAdvice.some(a => a.toLowerCase().includes('magnesium') || a.toLowerCase().includes('complex carbs')));
+  assert.ok(
+    luteal.nutritionAdvice.some(
+      (a) => a.toLowerCase().includes('magnesium') || a.toLowerCase().includes('complex carbs')
+    )
+  );
 });
 
 test('getCyclePhase: provides Indonesian translations when language is id', () => {

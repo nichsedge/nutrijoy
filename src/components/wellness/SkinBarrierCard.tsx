@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,31 +23,27 @@ export function SkinBarrierCard() {
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = today + 86400000;
 
-  const todayFoods = useMemo(() =>
-    (state.foodLogs || []).filter(l => l.timestamp >= today && l.timestamp < tomorrow),
+  const todayFoods = useMemo(
+    () => (state.foodLogs || []).filter((l) => l.timestamp >= today && l.timestamp < tomorrow),
     [state.foodLogs, today, tomorrow]
   );
 
-  const todayWater = useMemo(() =>
-    (state.waterLogs || []).filter(l => l.timestamp >= today && l.timestamp < tomorrow)
-      .reduce((sum, l) => sum + l.amountMl, 0),
+  const todayWater = useMemo(
+    () =>
+      (state.waterLogs || [])
+        .filter((l) => l.timestamp >= today && l.timestamp < tomorrow)
+        .reduce((sum, l) => sum + l.amountMl, 0),
     [state.waterLogs, today, tomorrow]
   );
 
   const omega3Total = todayFoods.reduce((s, f) => s + (f.omega3 ?? 0), 0);
   const vitETotal = todayFoods.reduce((s, f) => s + (f.vitaminE ?? 0), 0);
 
-  const barrierScore = calculateSkinBarrierScore(
-    omega3Total,
-    vitETotal,
-    todayWater,
-    true,
-    acHours
-  );
+  const barrierScore = calculateSkinBarrierScore(omega3Total, vitETotal, todayWater, true, acHours);
 
   const toggleRescueStep = (stepIdx: number) => {
     playChime();
-    setRescueChecks(prev => {
+    setRescueChecks((prev) => {
       const next = { ...prev, [stepIdx]: !prev[stepIdx] };
       const allDone = BARRIER_RESCUE_STEPS.every((_, i) => next[i]);
       if (allDone) {
@@ -89,8 +85,19 @@ export function SkinBarrierCard() {
             <svg viewBox="0 0 90 90" className="w-full h-full -rotate-90">
               <circle cx="45" cy="45" r="40" fill="none" stroke="rgba(20,184,166,0.12)" strokeWidth="8" />
               <circle
-                cx="45" cy="45" r="40" fill="none"
-                stroke={barrierScore.score >= 80 ? '#10b981' : barrierScore.score >= 55 ? '#06b6d4' : barrierScore.score >= 35 ? '#f59e0b' : '#f43f5e'}
+                cx="45"
+                cy="45"
+                r="40"
+                fill="none"
+                stroke={
+                  barrierScore.score >= 80
+                    ? '#10b981'
+                    : barrierScore.score >= 55
+                      ? '#06b6d4'
+                      : barrierScore.score >= 35
+                        ? '#f59e0b'
+                        : '#f43f5e'
+                }
                 strokeWidth="8"
                 strokeLinecap="round"
                 strokeDasharray={`${strokeDash} ${circumference}`}
@@ -107,9 +114,7 @@ export function SkinBarrierCard() {
             <h4 className="text-xs font-black text-foreground truncate">
               {isId ? barrierScore.labelId : barrierScore.labelEn}
             </h4>
-            <p className="text-[10px] text-teal-700 font-bold">
-              TEWL: {barrierScore.tewlLevel}
-            </p>
+            <p className="text-[10px] text-teal-700 font-bold">TEWL: {barrierScore.tewlLevel}</p>
             <p className="text-[11px] text-muted-foreground leading-snug">
               {isId ? barrierScore.tipId : barrierScore.tipEn}
             </p>
@@ -120,11 +125,14 @@ export function SkinBarrierCard() {
         <div className="bg-white/70 p-3 rounded-2xl border border-teal-100 flex items-center justify-between text-xs font-bold text-teal-900">
           <span>{isId ? 'Paparan AC / Udara Kering:' : 'AC / Dry Air Exposure:'}</span>
           <div className="flex gap-1">
-            {[0, 4, 8, 12].map(h => (
+            {[0, 4, 8, 12].map((h) => (
               <button
                 key={h}
                 type="button"
-                onClick={() => { setAcHours(h); playChime(); }}
+                onClick={() => {
+                  setAcHours(h);
+                  playChime();
+                }}
                 className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all ${
                   acHours === h
                     ? 'bg-teal-600 text-white'
@@ -166,18 +174,20 @@ export function SkinBarrierCard() {
                       isChecked ? 'bg-teal-50/80 border-teal-300' : 'bg-white border-teal-100 hover:bg-teal-50/40'
                     }`}
                   >
-                    <div className={`w-5 h-5 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
-                      isChecked ? 'bg-teal-600 text-white' : 'border border-muted-foreground/40'
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
+                        isChecked ? 'bg-teal-600 text-white' : 'border border-muted-foreground/40'
+                      }`}
+                    >
                       {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
                     </div>
                     <div className="space-y-0.5 min-w-0">
-                      <p className={`text-xs font-bold ${isChecked ? 'text-teal-950 line-through opacity-80' : 'text-foreground'}`}>
+                      <p
+                        className={`text-xs font-bold ${isChecked ? 'text-teal-950 line-through opacity-80' : 'text-foreground'}`}
+                      >
                         {isId ? s.titleId : s.titleEn}
                       </p>
-                      <p className="text-[10px] text-muted-foreground leading-snug">
-                        {isId ? s.descId : s.descEn}
-                      </p>
+                      <p className="text-[10px] text-muted-foreground leading-snug">{isId ? s.descId : s.descEn}</p>
                     </div>
                   </button>
                 );

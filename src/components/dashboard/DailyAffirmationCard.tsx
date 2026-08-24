@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,7 +19,9 @@ export function DailyAffirmationCard() {
   const t = getTranslation(state.profile?.language || 'en');
   const isId = state.profile?.language === 'id';
 
-  const [partnerNote, setPartnerNote] = useState<string>('You are doing so amazing, I am so proud of you! Keep glowing my love 💖');
+  const [partnerNote, setPartnerNote] = useState<string>(
+    'You are doing so amazing, I am so proud of you! Keep glowing my love 💖'
+  );
   const [partnerAuthor, setPartnerAuthor] = useState<string>('My Love');
   const [isEditing, setIsEditing] = useState(false);
   const [editedNote, setEditedNote] = useState('');
@@ -27,7 +29,7 @@ export function DailyAffirmationCard() {
   // Determine current cycle phase
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = new Date(today).setHours(24, 0, 0, 0);
-  const todaysCycle = state.cycleLogs?.find(l => l.timestamp >= today && l.timestamp < tomorrow);
+  const todaysCycle = state.cycleLogs?.find((l) => l.timestamp >= today && l.timestamp < tomorrow);
   const activeDay = todaysCycle?.cycleDay || 1;
   const phaseInfo = getCyclePhase(activeDay, state.profile?.language || 'en');
 
@@ -60,12 +62,14 @@ export function DailyAffirmationCard() {
     confetti({
       particleCount: 50,
       spread: 50,
-      origin: { y: 0.6 }
+      origin: { y: 0.6 },
     });
 
     toast({
-      title: "💖 " + (t.loveNoteSaved || "Love Note Saved"),
-      description: isId ? "Pesan cintamu akan terpajang manis di layar utamanya." : "Your sweet note is displayed on her morning dashboard.",
+      title: '💖 ' + (t.loveNoteSaved || 'Love Note Saved'),
+      description: isId
+        ? 'Pesan cintamu akan terpajang manis di layar utamanya.'
+        : 'Your sweet note is displayed on her morning dashboard.',
     });
 
     setIsEditing(false);
@@ -81,7 +85,9 @@ export function DailyAffirmationCard() {
               <div className="w-7 h-7 rounded-xl bg-rose-500/15 flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-rose-500" />
               </div>
-              <span className="text-xs uppercase tracking-wider">{t.dailyAffirmation || 'Daily Radiance Affirmation'}</span>
+              <span className="text-xs uppercase tracking-wider">
+                {t.dailyAffirmation || 'Daily Radiance Affirmation'}
+              </span>
             </div>
             <span className="text-[9px] font-black uppercase tracking-wider text-rose-700 bg-rose-500/10 px-2 py-0.5 rounded-full">
               {phaseInfo.phaseName}
@@ -115,7 +121,7 @@ export function DailyAffirmationCard() {
               className="h-7 px-2 text-[10px] font-bold text-rose-600 hover:bg-rose-100/60 rounded-full"
             >
               <Edit2 className="w-3 h-3 mr-1" />
-              {isEditing ? (isId ? 'Batal' : 'Cancel') : (isId ? 'Tulis Pesan' : 'Write Note')}
+              {isEditing ? (isId ? 'Batal' : 'Cancel') : isId ? 'Tulis Pesan' : 'Write Note'}
             </Button>
           </div>
 
@@ -138,12 +144,8 @@ export function DailyAffirmationCard() {
           ) : (
             <div className="bg-rose-50/70 p-3 rounded-2xl border border-rose-100 shadow-2xs flex items-center justify-between gap-2">
               <div className="space-y-0.5 min-w-0">
-                <p className="text-xs text-rose-950 font-bold leading-snug truncate">
-                  "{partnerNote}"
-                </p>
-                <p className="text-[9px] text-rose-600 font-bold tracking-wide">
-                  — {partnerAuthor}
-                </p>
+                <p className="text-xs text-rose-950 font-bold leading-snug truncate">"{partnerNote}"</p>
+                <p className="text-[9px] text-rose-600 font-bold tracking-wide">— {partnerAuthor}</p>
               </div>
               <span className="text-xl shrink-0 animate-pulse-soft">💌</span>
             </div>

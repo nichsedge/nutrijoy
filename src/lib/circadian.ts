@@ -4,10 +4,10 @@ export type EatingWindowStatus = 'optimal' | 'late_eating' | 'compressed' | 'ext
 
 export interface CircadianAnalysis {
   status: EatingWindowStatus;
-  firstMealTime: number | null;   // Unix ms
-  lastMealTime: number | null;    // Unix ms
+  firstMealTime: number | null; // Unix ms
+  lastMealTime: number | null; // Unix ms
   windowHours: number;
-  hoursUntilBedtime: number;      // hours after last meal until bedtime
+  hoursUntilBedtime: number; // hours after last meal until bedtime
   firstMealLabel: string;
   lastMealLabel: string;
   windowLabel: string;
@@ -15,8 +15,8 @@ export interface CircadianAnalysis {
   advice: string;
   adviceId: string;
   colorClass: string;
-  optimalWindowStart: string;     // e.g. "7:00 AM"
-  optimalWindowEnd: string;       // e.g. "7:00 PM"
+  optimalWindowStart: string; // e.g. "7:00 AM"
+  optimalWindowEnd: string; // e.g. "7:00 PM"
 }
 
 function formatTime(ts: number): string {
@@ -37,7 +37,7 @@ export function getMealTimingAnalysis(
   const dayEnd = dayStart + 86400000;
 
   const todayLogs = foodLogs
-    .filter(l => l.timestamp >= dayStart && l.timestamp < dayEnd)
+    .filter((l) => l.timestamp >= dayStart && l.timestamp < dayEnd)
     .sort((a, b) => a.timestamp - b.timestamp);
 
   if (todayLogs.length === 0) {
@@ -55,7 +55,7 @@ export function getMealTimingAnalysis(
       adviceId: 'Catat makanan pertamamu untuk melihat analisis jendela makan sirkadian.',
       colorClass: 'text-slate-600 bg-slate-50 border-slate-200',
       optimalWindowStart: '7:00 AM',
-      optimalWindowEnd: '7:00 PM'
+      optimalWindowEnd: '7:00 PM',
     };
   }
 
@@ -92,16 +92,20 @@ export function getMealTimingAnalysis(
     status = 'extended';
     windowLabel = `Extended Window (${windowHours.toFixed(1)}h)`;
     windowLabelId = `Jendela Terlalu Panjang (${windowHours.toFixed(1)} jam)`;
-    advice = 'Eating window exceeds 14 hours, which limits overnight cellular repair. Consider shifting breakfast 1–2 hours later to compress your window.',
-    adviceId = 'Jendela makan melebihi 14 jam, mengurangi waktu perbaikan sel semalaman. Pertimbangkan menggeser sarapan 1–2 jam lebih siang untuk mempersingkat jendelamu.',
-    colorClass = 'text-amber-700 bg-amber-50 border-amber-200';
+    ((advice =
+      'Eating window exceeds 14 hours, which limits overnight cellular repair. Consider shifting breakfast 1–2 hours later to compress your window.'),
+      (adviceId =
+        'Jendela makan melebihi 14 jam, mengurangi waktu perbaikan sel semalaman. Pertimbangkan menggeser sarapan 1–2 jam lebih siang untuk mempersingkat jendelamu.'),
+      (colorClass = 'text-amber-700 bg-amber-50 border-amber-200'));
   } else if (windowHours <= 12 && hoursUntilBedtime >= 3) {
     status = 'optimal';
     windowLabel = `Optimal Window ✨ (${windowHours.toFixed(1)}h)`;
     windowLabelId = `Jendela Optimal ✨ (${windowHours.toFixed(1)} jam)`;
-    advice = 'Perfect eating window! Your body has ample overnight fasting time for cellular autophagy, hormonal reset, and skin collagen repair.',
-    adviceId = 'Jendela makan sempurna! Tubuhmu punya waktu puasa malam yang cukup untuk autofagi seluler, reset hormonal, dan perbaikan kolagen kulit.',
-    colorClass = 'text-emerald-700 bg-emerald-50 border-emerald-200';
+    ((advice =
+      'Perfect eating window! Your body has ample overnight fasting time for cellular autophagy, hormonal reset, and skin collagen repair.'),
+      (adviceId =
+        'Jendela makan sempurna! Tubuhmu punya waktu puasa malam yang cukup untuk autofagi seluler, reset hormonal, dan perbaikan kolagen kulit.'),
+      (colorClass = 'text-emerald-700 bg-emerald-50 border-emerald-200'));
   } else {
     status = 'compressed';
     windowLabel = `Compact Window (${windowHours.toFixed(1)}h)`;
@@ -125,6 +129,6 @@ export function getMealTimingAnalysis(
     adviceId,
     colorClass,
     optimalWindowStart,
-    optimalWindowEnd
+    optimalWindowEnd,
   };
 }

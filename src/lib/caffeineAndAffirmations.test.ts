@@ -14,9 +14,7 @@ test('CAFFEINE_PRESETS: contains standard beverages with accurate mg amounts', (
 
 test('calculateRemainingCaffeine: computes 5-hour half-life clearance curve', () => {
   const baseTime = 1000000000000;
-  const mockLogs: CaffeineLogEntry[] = [
-    { id: '1', timestamp: baseTime, name: 'Espresso', caffeineMg: 100 }
-  ];
+  const mockLogs: CaffeineLogEntry[] = [{ id: '1', timestamp: baseTime, name: 'Espresso', caffeineMg: 100 }];
 
   // At t = 0 hours
   const activeAt0 = calculateRemainingCaffeine(mockLogs, baseTime);

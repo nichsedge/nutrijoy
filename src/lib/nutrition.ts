@@ -1,4 +1,14 @@
-import { UserProfile, TDEEResult, WeightPlanInput, WeightPlanResult, SkinGlowScore, FoodLogEntry, WaterLogEntry, SleepLogEntry, Language } from './types';
+import {
+  UserProfile,
+  TDEEResult,
+  WeightPlanInput,
+  WeightPlanResult,
+  SkinGlowScore,
+  FoodLogEntry,
+  WaterLogEntry,
+  SleepLogEntry,
+  Language,
+} from './types';
 
 export const ACTIVITY_MULTIPLIERS = {
   sedentary: 1.2,
@@ -22,7 +32,7 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
 
   let recommendedCalories = tdee;
   if (profile.goal === 'lose') {
-    recommendedCalories = tdee - 500; 
+    recommendedCalories = tdee - 500;
   } else if (profile.goal === 'gain') {
     recommendedCalories = tdee + 300;
   } else if (profile.goal === 'recompose') {
@@ -35,9 +45,9 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
     recommendedCalories = minCalories;
   }
 
-  const sugarLimit = (recommendedCalories * 0.1) / 4; 
+  const sugarLimit = (recommendedCalories * 0.1) / 4;
   const sodiumLimit = 2000;
-  
+
   // Protein: ~2.0g/kg for recomposition, ~1.6g/kg otherwise (min 50g)
   let proteinLimit = profile.goal === 'recompose' ? profile.weight * 2.0 : profile.weight * 1.6;
   proteinLimit = Math.max(50, proteinLimit);
@@ -67,14 +77,14 @@ export function calculateTDEE(profile: UserProfile): TDEEResult {
 
 export function calculateWeightPlan(input: WeightPlanInput): WeightPlanResult {
   const { currentWeight, targetChangeKg, durationWeeks, age, height, sex, activityLevel, goal } = input;
-  
+
   const bmr = calculateBMR(currentWeight, height, age, sex);
   const tdee = bmr * ACTIVITY_MULTIPLIERS[activityLevel];
-  
+
   const totalChangeNeeded = targetChangeKg * 7700;
   const days = durationWeeks * 7;
   const dailyChange = totalChangeNeeded / days;
-  
+
   let dailyTarget = tdee;
   let dailyDeficit = 0; // Note: For weight gain, dailyDeficit will represent the daily surplus
 
@@ -121,7 +131,7 @@ export function calculateWeightPlan(input: WeightPlanInput): WeightPlanResult {
     dailyDeficit: Math.round(dailyDeficit),
     status,
     warningMessage: warningMessage || undefined,
-    goal
+    goal,
   };
 }
 
@@ -154,7 +164,7 @@ export function calculateSkinGlowScore(
   const omega3Pct = Math.min(1, totalOmega3 / omega3Target);
   const biotinPct = Math.min(1, totalBiotin / biotinTarget);
 
-  const avgMicroPct = (vitCPct * 0.3 + vitEPct * 0.2 + zincPct * 0.2 + omega3Pct * 0.2 + biotinPct * 0.1);
+  const avgMicroPct = vitCPct * 0.3 + vitEPct * 0.2 + zincPct * 0.2 + omega3Pct * 0.2 + biotinPct * 0.1;
   const antioxidantScore = Math.round(avgMicroPct * 40);
 
   // 2. Hydration (35 pts)
@@ -188,7 +198,7 @@ export function calculateSkinGlowScore(
   // Dynamic Tip based on lowest contributor
   let topTip = '';
   if (hydrationPct < 0.6) {
-    topTip = isId 
+    topTip = isId
       ? 'Tingkatkan asupan air putih untuk menjaga kekenyalan kulit dan mengurangi kantung mata.'
       : 'Boost water intake to 2L+ to plump skin cells and flush out excess morning puffiness.';
   } else if (avgMicroPct < 0.5) {
@@ -212,7 +222,6 @@ export function calculateSkinGlowScore(
     antioxidantScore,
     hydrationScore,
     sleepScore,
-    topTip
+    topTip,
   };
 }
-

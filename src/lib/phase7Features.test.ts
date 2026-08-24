@@ -37,7 +37,7 @@ test('calculatePaoStatus: detects fresh vs expired product', () => {
     category: 'serum',
     activeIngredients: ['vitamin_c'],
     openedDate: now - 10 * 24 * 60 * 60 * 1000,
-    paoMonths: 3
+    paoMonths: 3,
   };
   const freshStatus = calculatePaoStatus(freshProd, now);
   assert.equal(freshStatus.isExpired, false);
@@ -50,7 +50,7 @@ test('calculatePaoStatus: detects fresh vs expired product', () => {
     category: 'serum',
     activeIngredients: ['vitamin_c'],
     openedDate: now - 120 * 24 * 60 * 60 * 1000,
-    paoMonths: 3
+    paoMonths: 3,
   };
   const expiredStatus = calculatePaoStatus(expiredProd, now);
   assert.equal(expiredStatus.isExpired, true);
@@ -59,8 +59,22 @@ test('calculatePaoStatus: detects fresh vs expired product', () => {
 
 test('detectIngredientConflicts: alerts on Retinol + AHA/BHA collision', () => {
   const products: SkincareProduct[] = [
-    { id: '1', name: 'Retinol Serum', category: 'serum', activeIngredients: ['retinol'], openedDate: Date.now(), paoMonths: 6 },
-    { id: '2', name: 'Glycolic Toner', category: 'toner', activeIngredients: ['aha_bha'], openedDate: Date.now(), paoMonths: 12 }
+    {
+      id: '1',
+      name: 'Retinol Serum',
+      category: 'serum',
+      activeIngredients: ['retinol'],
+      openedDate: Date.now(),
+      paoMonths: 6,
+    },
+    {
+      id: '2',
+      name: 'Glycolic Toner',
+      category: 'toner',
+      activeIngredients: ['aha_bha'],
+      openedDate: Date.now(),
+      paoMonths: 12,
+    },
   ];
   const conflicts = detectIngredientConflicts(products);
   assert.equal(conflicts.length, 1);

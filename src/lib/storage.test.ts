@@ -12,7 +12,7 @@ test('AppStateSchema validates correct state', () => {
       weight: 80,
       activityLevel: 'moderate',
       goal: 'maintain',
-      language: 'en'
+      language: 'en',
     },
     foodLogs: [],
     activities: [],
@@ -22,7 +22,7 @@ test('AppStateSchema validates correct state', () => {
     cycleLogs: [],
     selfCareLogs: [],
     activePlan: null,
-    planHistory: []
+    planHistory: [],
   };
 
   assert.doesNotThrow(() => {
@@ -41,7 +41,7 @@ test('AppStateSchema rejects state with invalid types', () => {
     cycleLogs: [],
     selfCareLogs: [],
     activePlan: null,
-    planHistory: []
+    planHistory: [],
   };
 
   assert.throws(() => {
@@ -69,7 +69,7 @@ test('sanitizeState migrates legacy targetLossKg into targetChangeKg', () => {
       targetLossKg: 5,
       durationWeeks: 10,
       startWeight: 80,
-      goal: 'lose'
+      goal: 'lose',
     },
     planHistory: [
       {
@@ -84,9 +84,9 @@ test('sanitizeState migrates legacy targetLossKg into targetChangeKg', () => {
         startWeight: 78,
         goal: 'lose',
         achievedDate: Date.now(),
-        endWeight: 75
-      }
-    ]
+        endWeight: 75,
+      },
+    ],
   });
 
   assert.equal(sanitized.activePlan?.targetChangeKg, 5);
@@ -97,7 +97,7 @@ test('AppStateSchema rejects state missing required fields in nested objects', (
   const invalidState = {
     profile: {
       name: 'Test User',
-      language: 'en'
+      language: 'en',
     },
     foodLogs: [],
     activities: [],
@@ -107,7 +107,7 @@ test('AppStateSchema rejects state missing required fields in nested objects', (
     cycleLogs: [],
     selfCareLogs: [],
     activePlan: null,
-    planHistory: []
+    planHistory: [],
   };
 
   assert.throws(() => {
@@ -127,7 +127,7 @@ class MockFileReader {
   readAsText() {
     if (this.onload) {
       const event = {
-        target: { result: this.content }
+        target: { result: this.content },
       } as unknown as ProgressEvent<FileReader>;
       this.onload(event);
     }
@@ -135,7 +135,8 @@ class MockFileReader {
 }
 
 test('importData rejects invalid JSON structure (malformed value types)', async () => {
-  const invalidJsonString = '{"profile":{"name":"Test","age":"thirty","sex":"male","height":180,"weight":80,"activityLevel":"moderate","goal":"maintain","language":"en"},"foodLogs":[],"activities":[],"measurements":[],"waterLogs":[],"sleepLogs":[],"cycleLogs":[],"selfCareLogs":[],"activePlan":null,"planHistory":[]}';
+  const invalidJsonString =
+    '{"profile":{"name":"Test","age":"thirty","sex":"male","height":180,"weight":80,"activityLevel":"moderate","goal":"maintain","language":"en"},"foodLogs":[],"activities":[],"measurements":[],"waterLogs":[],"sleepLogs":[],"cycleLogs":[],"selfCareLogs":[],"activePlan":null,"planHistory":[]}';
   const mockFile = {} as File;
   const originalFileReader = global.FileReader;
 
@@ -146,10 +147,7 @@ test('importData rejects invalid JSON structure (malformed value types)', async 
   } as unknown as typeof FileReader;
 
   try {
-    await assert.rejects(
-      importData(mockFile),
-      /Expected number, received string/
-    );
+    await assert.rejects(importData(mockFile), /Expected number, received string/);
   } finally {
     global.FileReader = originalFileReader;
   }

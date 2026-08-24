@@ -20,7 +20,7 @@ test('SkinJournalEntry: correctly validates structured photo and note entries', 
       timestamp: Date.now(),
       skinCondition: condition,
       note: `Testing condition ${condition}`,
-      photoUrl: 'data:image/jpeg;base64,mockphoto'
+      photoUrl: 'data:image/jpeg;base64,mockphoto',
     };
 
     assert.ok(entry.id.length > 10, 'Entry id must be a valid UUID');

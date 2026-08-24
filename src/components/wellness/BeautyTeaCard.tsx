@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,9 +22,9 @@ export function BeautyTeaCard() {
   // Determine current phase and skin condition
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = today + 86400000;
-  const cycleLog = (state.cycleLogs || []).find(l => l.timestamp >= today && l.timestamp < tomorrow);
+  const cycleLog = (state.cycleLogs || []).find((l) => l.timestamp >= today && l.timestamp < tomorrow);
   const phaseInfo = getCyclePhase(cycleLog?.cycleDay ?? 1, state.profile?.language || 'en');
-  const lastSkin = (state.cycleLogs || []).reverse().find(l => l.skinCondition)?.skinCondition;
+  const lastSkin = (state.cycleLogs || []).reverse().find((l) => l.skinCondition)?.skinCondition;
 
   const defaultTea = getRecommendedTea(phaseInfo.phase, lastSkin);
   const [selectedTea, setSelectedTea] = useState<BeautyTea>(defaultTea);
@@ -47,7 +47,7 @@ export function BeautyTeaCard() {
     if (!isSteeping) return;
 
     timerRef.current = setInterval(() => {
-      setSteepSecondsLeft(prev => {
+      setSteepSecondsLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timerRef.current!);
           setIsSteeping(false);
@@ -55,7 +55,9 @@ export function BeautyTeaCard() {
           confetti({ particleCount: 60, spread: 60, origin: { y: 0.5 } });
           toast({
             title: `🍵 ${isId ? selectedTea.nameId : selectedTea.name} ${isId ? 'Siap Dinikmati!' : 'Ready!'}`,
-            description: isId ? 'Seduhan teh sempurna. Nikmati selagi hangat untuk manfaat antioksidan maksimal!' : 'Perfect extraction. Sip while warm for maximum antioxidant bioavailability!'
+            description: isId
+              ? 'Seduhan teh sempurna. Nikmati selagi hangat untuk manfaat antioksidan maksimal!'
+              : 'Perfect extraction. Sip while warm for maximum antioxidant bioavailability!',
           });
           return 0;
         }
@@ -73,7 +75,7 @@ export function BeautyTeaCard() {
     addWaterLog({
       id: crypto.randomUUID(),
       timestamp: Date.now(),
-      amountMl: 250
+      amountMl: 250,
     });
     toast({
       title: `🍵 ${isId ? selectedTea.nameId : selectedTea.name} ${isId ? 'Dicatat' : 'Logged'}`,
@@ -82,7 +84,9 @@ export function BeautyTeaCard() {
   };
 
   const formatTimer = (sec: number) => {
-    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const m = Math.floor(sec / 60)
+      .toString()
+      .padStart(2, '0');
     const s = (sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
@@ -113,7 +117,7 @@ export function BeautyTeaCard() {
             className="h-7 px-2 text-[10px] font-bold text-rose-700 hover:bg-rose-100/60 rounded-full"
           >
             {showAllTeas ? <ChevronUp className="w-3.5 h-3.5 mr-1" /> : <ChevronDown className="w-3.5 h-3.5 mr-1" />}
-            {showAllTeas ? (isId ? 'Tutup' : 'Close') : (isId ? 'Pilih Teh' : 'All Blends')}
+            {showAllTeas ? (isId ? 'Tutup' : 'Close') : isId ? 'Pilih Teh' : 'All Blends'}
           </Button>
         </div>
 
@@ -124,7 +128,7 @@ export function BeautyTeaCard() {
               {isId ? 'Koleksi Seduhan Cantik' : 'Beauty Tea Collection'}
             </p>
             <div className="grid grid-cols-1 gap-1.5">
-              {BEAUTY_TEAS.map(tea => (
+              {BEAUTY_TEAS.map((tea) => (
                 <button
                   key={tea.id}
                   type="button"
@@ -146,9 +150,7 @@ export function BeautyTeaCard() {
                       <p className="text-[10px] text-muted-foreground truncate">{isId ? tea.taglineId : tea.tagline}</p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-rose-600 shrink-0 ml-2">
-                    {tea.steepMinutes} min
-                  </span>
+                  <span className="text-[10px] font-bold text-rose-600 shrink-0 ml-2">{tea.steepMinutes} min</span>
                 </button>
               ))}
             </div>
@@ -161,13 +163,9 @@ export function BeautyTeaCard() {
             <div className="space-y-0.5">
               <div className="flex items-center gap-1.5">
                 <span className="text-2xl">{selectedTea.icon}</span>
-                <h4 className="text-sm font-black text-rose-950">
-                  {isId ? selectedTea.nameId : selectedTea.name}
-                </h4>
+                <h4 className="text-sm font-black text-rose-950">{isId ? selectedTea.nameId : selectedTea.name}</h4>
               </div>
-              <p className="text-xs text-rose-700 font-bold">
-                {isId ? selectedTea.taglineId : selectedTea.tagline}
-              </p>
+              <p className="text-xs text-rose-700 font-bold">{isId ? selectedTea.taglineId : selectedTea.tagline}</p>
             </div>
 
             <div className="px-2.5 py-1 rounded-full bg-rose-50 border border-rose-200 text-[10px] font-black text-rose-800 shrink-0">
@@ -182,7 +180,10 @@ export function BeautyTeaCard() {
           {/* Ingredients list */}
           <div className="flex flex-wrap gap-1 pt-1">
             {(isId ? selectedTea.ingredientsId : selectedTea.ingredients).map((ing, i) => (
-              <span key={i} className="px-2 py-0.5 rounded-full bg-rose-50 text-[10px] text-rose-800 font-bold border border-rose-200/50">
+              <span
+                key={i}
+                className="px-2 py-0.5 rounded-full bg-rose-50 text-[10px] text-rose-800 font-bold border border-rose-200/50"
+              >
                 🌿 {ing}
               </span>
             ))}
@@ -197,9 +198,7 @@ export function BeautyTeaCard() {
               <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">
                 {t.steepTimer || 'Steep Timer'}
               </span>
-              <span className="text-xs font-black font-mono text-rose-700">
-                {formatTimer(steepSecondsLeft)}
-              </span>
+              <span className="text-xs font-black font-mono text-rose-700">{formatTimer(steepSecondsLeft)}</span>
             </div>
 
             <div className="h-1.5 bg-rose-100 rounded-full overflow-hidden">
@@ -218,9 +217,20 @@ export function BeautyTeaCard() {
               className="w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs h-7 shadow-xs"
             >
               {isSteeping ? (
-                <><Pause className="w-3 h-3 mr-1" /> {isId ? 'Jeda' : 'Pause'}</>
+                <>
+                  <Pause className="w-3 h-3 mr-1" /> {isId ? 'Jeda' : 'Pause'}
+                </>
               ) : (
-                <><Play className="w-3 h-3 mr-1" /> {steepSecondsLeft === steepSecondsTotal ? (isId ? 'Mulai Seduh' : 'Start Steep') : (isId ? 'Lanjutkan' : 'Resume')}</>
+                <>
+                  <Play className="w-3 h-3 mr-1" />{' '}
+                  {steepSecondsLeft === steepSecondsTotal
+                    ? isId
+                      ? 'Mulai Seduh'
+                      : 'Start Steep'
+                    : isId
+                      ? 'Lanjutkan'
+                      : 'Resume'}
+                </>
               )}
             </Button>
           </div>

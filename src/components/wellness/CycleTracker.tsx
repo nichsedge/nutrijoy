@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { useAppState, useAppActions } from '../AppContext';
@@ -23,7 +23,7 @@ export function CycleTracker() {
 
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = new Date(today).setHours(24, 0, 0, 0);
-  const todaysLog = state.cycleLogs?.find(s => s.timestamp >= today && s.timestamp < tomorrow);
+  const todaysLog = state.cycleLogs?.find((s) => s.timestamp >= today && s.timestamp < tomorrow);
 
   const activeCycleDay = todaysLog?.cycleDay || day;
   const phaseInfo = getCyclePhase(activeCycleDay, state.profile?.language || 'en');
@@ -45,9 +45,7 @@ export function CycleTracker() {
   ];
 
   const toggleSymptom = (id: string) => {
-    setSelectedSymptoms(prev => 
-      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
-    );
+    setSelectedSymptoms((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
   };
 
   const handleLogCycle = () => {
@@ -56,7 +54,7 @@ export function CycleTracker() {
       timestamp: Date.now(),
       cycleDay: day,
       symptoms: selectedSymptoms,
-      skinCondition: selectedSkinCondition
+      skinCondition: selectedSkinCondition,
     });
   };
 
@@ -79,19 +77,25 @@ export function CycleTracker() {
                       {phaseInfo.phaseName}
                     </span>
                   </div>
-                  <p className="text-base font-black">{t.cycleDay} {todaysLog.cycleDay} <span className="text-xs font-normal opacity-60">({phaseInfo.daysRange})</span></p>
+                  <p className="text-base font-black">
+                    {t.cycleDay} {todaysLog.cycleDay}{' '}
+                    <span className="text-xs font-normal opacity-60">({phaseInfo.daysRange})</span>
+                  </p>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-1 justify-end max-w-[130px]">
                 {todaysLog.skinCondition && (
                   <span className="text-[10px] font-black bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full">
-                    {skinConditions.find(s => s.id === todaysLog.skinCondition)?.emoji} {todaysLog.skinCondition}
+                    {skinConditions.find((s) => s.id === todaysLog.skinCondition)?.emoji} {todaysLog.skinCondition}
                   </span>
                 )}
-                {todaysLog.symptoms.slice(0, 2).map(s => (
-                  <span key={s} className="text-[9px] font-bold bg-rose-500/20 text-rose-600 px-1.5 py-0.5 rounded-full">
-                    {symptomList.find(sl => sl.id === s)?.label || s}
+                {todaysLog.symptoms.slice(0, 2).map((s) => (
+                  <span
+                    key={s}
+                    className="text-[9px] font-bold bg-rose-500/20 text-rose-600 px-1.5 py-0.5 rounded-full"
+                  >
+                    {symptomList.find((sl) => sl.id === s)?.label || s}
                   </span>
                 ))}
               </div>
@@ -115,9 +119,9 @@ export function CycleTracker() {
               <div className="flex items-center gap-4">
                 <div className="flex-1 space-y-1">
                   <p className="text-xs font-bold">{t.cycleDay}</p>
-                  <Input 
-                    type="number" 
-                    value={day} 
+                  <Input
+                    type="number"
+                    value={day}
                     min={1}
                     max={45}
                     onChange={(e) => setDay(Math.max(1, parseInt(e.target.value) || 1))}
@@ -133,11 +137,11 @@ export function CycleTracker() {
                   <span>{t.skinCondition || 'Skin State Today'}</span>
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {skinConditions.map(sc => (
+                  {skinConditions.map((sc) => (
                     <button
                       key={sc.id}
                       type="button"
-                      onClick={() => setSelectedSkinCondition(prev => prev === sc.id ? undefined : sc.id)}
+                      onClick={() => setSelectedSkinCondition((prev) => (prev === sc.id ? undefined : sc.id))}
                       className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${selectedSkinCondition === sc.id ? 'bg-rose-500 border-rose-500 text-white shadow-sm' : 'bg-white border-rose-100 text-rose-600 hover:border-rose-300'}`}
                     >
                       {sc.label}
@@ -149,7 +153,7 @@ export function CycleTracker() {
               <div className="space-y-2">
                 <p className="text-xs font-bold">{t.symptoms}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {symptomList.map(s => (
+                  {symptomList.map((s) => (
                     <button
                       key={s.id}
                       type="button"
@@ -162,8 +166,8 @@ export function CycleTracker() {
                 </div>
               </div>
 
-              <Button 
-                onClick={handleLogCycle} 
+              <Button
+                onClick={handleLogCycle}
                 className="w-full bg-rose-500 hover:bg-rose-600 text-white font-black py-5 rounded-2xl shadow-lg shadow-rose-500/20"
               >
                 {t.logCycle}
@@ -184,14 +188,16 @@ export function CycleTracker() {
               </div>
               <CollapsibleTrigger asChild>
                 <button className="p-1 hover:bg-white/60 rounded-full transition-colors">
-                  {showPhaseGuide ? <ChevronUp className="w-4 h-4 text-rose-500" /> : <ChevronDown className="w-4 h-4 text-rose-500" />}
+                  {showPhaseGuide ? (
+                    <ChevronUp className="w-4 h-4 text-rose-500" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-rose-500" />
+                  )}
                 </button>
               </CollapsibleTrigger>
             </div>
 
-            <p className="text-xs font-medium text-foreground/80 leading-relaxed">
-              {phaseInfo.summary}
-            </p>
+            <p className="text-xs font-medium text-foreground/80 leading-relaxed">{phaseInfo.summary}</p>
 
             <CollapsibleContent className="space-y-3 pt-2">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">

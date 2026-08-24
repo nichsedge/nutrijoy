@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { useAppState, useAppActions } from '../AppContext';
@@ -13,32 +13,38 @@ export function SleepTracker() {
   const state = useAppState();
   const { addSleepLog } = useAppActions();
   const t = getTranslation(state.profile?.language || 'en');
-  
+
   const [hours, setHours] = useState(8);
   const [restedness, setRestedness] = useState(3);
   const [isBreathworkModalOpen, setIsBreathworkModalOpen] = useState(false);
 
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = new Date(today).setHours(24, 0, 0, 0);
-  const todaysSleep = state.sleepLogs?.find(s => s.timestamp >= today && s.timestamp < tomorrow);
+  const todaysSleep = state.sleepLogs?.find((s) => s.timestamp >= today && s.timestamp < tomorrow);
 
   const handleLogSleep = () => {
     addSleepLog({
       id: crypto.randomUUID(),
       timestamp: Date.now(),
       durationHours: hours,
-      restednessScore: restedness
+      restednessScore: restedness,
     });
   };
 
   const getRestednessLabel = (score: number) => {
-    switch(score) {
-      case 1: return t.veryTired;
-      case 2: return t.somewhatTired;
-      case 3: return t.neutral;
-      case 4: return t.rested;
-      case 5: return t.wellRested;
-      default: return '';
+    switch (score) {
+      case 1:
+        return t.veryTired;
+      case 2:
+        return t.somewhatTired;
+      case 3:
+        return t.neutral;
+      case 4:
+        return t.rested;
+      case 5:
+        return t.wellRested;
+      default:
+        return '';
     }
   };
 
@@ -52,12 +58,17 @@ export function SleepTracker() {
             </div>
             <div>
               <p className="text-[10px] font-bold text-purple-500 uppercase tracking-tighter">{t.sleep}</p>
-              <p className="text-sm font-bold">{todaysSleep.durationHours} hrs • {getRestednessLabel(todaysSleep.restednessScore)}</p>
+              <p className="text-sm font-bold">
+                {todaysSleep.durationHours} hrs • {getRestednessLabel(todaysSleep.restednessScore)}
+              </p>
             </div>
           </div>
           <div className="flex gap-0.5">
-            {[1, 2, 3, 4, 5].map(star => (
-              <Star key={star} className={`w-2.5 h-2.5 ${star <= todaysSleep.restednessScore ? 'fill-purple-500 text-purple-500' : 'text-purple-200'}`} />
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`w-2.5 h-2.5 ${star <= todaysSleep.restednessScore ? 'fill-purple-500 text-purple-500' : 'text-purple-200'}`}
+              />
             ))}
           </div>
         </CardContent>
@@ -72,20 +83,14 @@ export function SleepTracker() {
           <Moon className="w-5 h-5" />
           <span className="text-sm uppercase tracking-tighter">{t.sleep}</span>
         </div>
-        
+
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-bold">
               <span>{t.sleepDuration}</span>
               <span className="text-purple-500">{hours}h</span>
             </div>
-            <Slider 
-              value={[hours]} 
-              min={0} 
-              max={12} 
-              step={0.5} 
-              onValueChange={(val) => setHours(val[0])}
-            />
+            <Slider value={[hours]} min={0} max={12} step={0.5} onValueChange={(val) => setHours(val[0])} />
           </div>
 
           <div className="space-y-2">
@@ -94,20 +99,20 @@ export function SleepTracker() {
               <span className="text-purple-500">{getRestednessLabel(restedness)}</span>
             </div>
             <div className="flex justify-between">
-               {[1,2,3,4,5].map(score => (
-                 <button 
+              {[1, 2, 3, 4, 5].map((score) => (
+                <button
                   key={score}
                   onClick={() => setRestedness(score)}
                   className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${restedness === score ? 'bg-purple-500 text-white shadow-lg scale-110' : 'bg-white text-purple-200 hover:bg-purple-50'}`}
-                 >
-                   <Star className={`w-5 h-5 ${restedness === score ? 'fill-white' : ''}`} />
-                 </button>
-               ))}
+                >
+                  <Star className={`w-5 h-5 ${restedness === score ? 'fill-white' : ''}`} />
+                </button>
+              ))}
             </div>
           </div>
 
-          <Button 
-            onClick={handleLogSleep} 
+          <Button
+            onClick={handleLogSleep}
             className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-6 rounded-2xl shadow-lg shadow-purple-500/20"
           >
             {t.logSleep}
@@ -128,7 +133,7 @@ export function SleepTracker() {
           </button>
         </div>
 
-        <GuidedRitualsModal 
+        <GuidedRitualsModal
           isOpen={isBreathworkModalOpen}
           onClose={() => setIsBreathworkModalOpen(false)}
           type="breathwork"

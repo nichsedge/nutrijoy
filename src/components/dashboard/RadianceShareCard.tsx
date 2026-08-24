@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,10 +26,10 @@ export function RadianceShareCard() {
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = new Date(today).setHours(24, 0, 0, 0);
 
-  const todaysFood = state.foodLogs.filter(log => log.timestamp >= today && log.timestamp < tomorrow);
-  const todaysWater = state.waterLogs?.filter(log => log.timestamp >= today && log.timestamp < tomorrow) || [];
-  const todaysSleep = state.sleepLogs?.filter(log => log.timestamp >= today && log.timestamp < tomorrow) || [];
-  const todaysCycle = state.cycleLogs?.find(log => log.timestamp >= today && log.timestamp < tomorrow);
+  const todaysFood = state.foodLogs.filter((log) => log.timestamp >= today && log.timestamp < tomorrow);
+  const todaysWater = state.waterLogs?.filter((log) => log.timestamp >= today && log.timestamp < tomorrow) || [];
+  const todaysSleep = state.sleepLogs?.filter((log) => log.timestamp >= today && log.timestamp < tomorrow) || [];
+  const todaysCycle = state.cycleLogs?.find((log) => log.timestamp >= today && log.timestamp < tomorrow);
 
   const waterConsumed = todaysWater.reduce((acc, curr) => acc + curr.amountMl, 0);
   const glowScore = calculateSkinGlowScore(todaysFood, todaysWater, todaysSleep, state.profile, state.profile.language);
@@ -42,7 +42,7 @@ export function RadianceShareCard() {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
   });
 
   const getShareText = () => {
@@ -63,8 +63,8 @@ Tracked with NutriJoy 🥗`;
       setCopied(true);
       playSuccessChord();
       toast({
-        title: "✨ Copied!",
-        description: t.summaryCopied || "Radiance summary copied to clipboard!",
+        title: '✨ Copied!',
+        description: t.summaryCopied || 'Radiance summary copied to clipboard!',
       });
       setTimeout(() => setCopied(false), 2500);
     } catch {
@@ -77,7 +77,7 @@ Tracked with NutriJoy 🥗`;
     confetti({
       particleCount: 80,
       spread: 60,
-      origin: { y: 0.6 }
+      origin: { y: 0.6 },
     });
 
     if (navigator.share) {
@@ -85,7 +85,7 @@ Tracked with NutriJoy 🥗`;
         await navigator.share({
           title: `${state.profile?.name}'s Radiance Summary`,
           text: getShareText(),
-          url: window.location.origin
+          url: window.location.origin,
         });
       } catch {
         // user dismissed share dialog
@@ -98,7 +98,7 @@ Tracked with NutriJoy 🥗`;
   return (
     <Card className="border-none shadow-lg bg-gradient-to-br from-pink-500/15 via-rose-500/10 to-amber-500/15 rounded-[2.5rem] border border-pink-500/20 overflow-hidden relative group">
       <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-pink-500/10 filter blur-xl pointer-events-none" />
-      
+
       <CardContent className="p-6 space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-rose-600 font-black">
@@ -106,7 +106,9 @@ Tracked with NutriJoy 🥗`;
               <Sparkles className="w-4 h-4 text-rose-500" />
             </div>
             <div>
-              <span className="text-xs uppercase tracking-widest">{t.radianceCardTitle || 'Weekly Radiance Summary'}</span>
+              <span className="text-xs uppercase tracking-widest">
+                {t.radianceCardTitle || 'Weekly Radiance Summary'}
+              </span>
               <p className="text-[10px] text-muted-foreground font-bold">{formattedDate}</p>
             </div>
           </div>
@@ -166,7 +168,7 @@ Tracked with NutriJoy 🥗`;
             className="flex-1 rounded-2xl h-11 text-xs font-bold border-rose-200 bg-white hover:bg-rose-50 text-rose-700 shadow-xs"
           >
             {copied ? <Check className="w-4 h-4 mr-1.5 text-emerald-600" /> : <Copy className="w-4 h-4 mr-1.5" />}
-            {copied ? (isId ? 'Tersalin!' : 'Copied!') : (isId ? 'Salin Teks' : 'Copy Summary')}
+            {copied ? (isId ? 'Tersalin!' : 'Copied!') : isId ? 'Salin Teks' : 'Copy Summary'}
           </Button>
 
           <Button

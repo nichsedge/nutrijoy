@@ -11,7 +11,13 @@ export interface CaffeinePreset {
 export const CAFFEINE_PRESETS: CaffeinePreset[] = [
   { id: 'espresso', name: 'Single Espresso', nameId: 'Single Espresso', caffeineMg: 64, icon: '☕' },
   { id: 'americano', name: 'Brewed Coffee / Americano', nameId: 'Kopi Hitam / Americano', caffeineMg: 95, icon: '☕' },
-  { id: 'double_brew', name: 'Double Shot / Cold Brew', nameId: 'Double Shot / Cold Brew', caffeineMg: 160, icon: '⚡' },
+  {
+    id: 'double_brew',
+    name: 'Double Shot / Cold Brew',
+    nameId: 'Double Shot / Cold Brew',
+    caffeineMg: 160,
+    icon: '⚡',
+  },
   { id: 'matcha', name: 'Ceremonial Matcha', nameId: 'Matcha Berkualitas', caffeineMg: 35, icon: '🍵' },
   { id: 'tea', name: 'Black / Green Tea', nameId: 'Teh Hijau / Hitam', caffeineMg: 45, icon: '🫖' },
   { id: 'boba_energy', name: 'Energy Drink / Milk Tea', nameId: 'Minuman Energi / Boba', caffeineMg: 80, icon: '🧋' },
@@ -34,7 +40,7 @@ export function calculateRemainingCaffeine(logs: CaffeineLogEntry[], targetTime:
     if (log.timestamp > targetTime) continue; // future log
     const hoursElapsed = (targetTime - log.timestamp) / (1000 * 60 * 60);
     if (hoursElapsed < 0) continue;
-    
+
     // Half life decay formula: C = C0 * 0.5^(hours / halfLife)
     const decayFactor = Math.pow(0.5, hoursElapsed / CAFFEINE_HALF_LIFE_HOURS);
     totalActiveMg += log.caffeineMg * decayFactor;
@@ -56,7 +62,7 @@ export function getCaffeineCutoffHour(bedtimeHour: number = 23): { cutoffHour: n
 
   return {
     cutoffHour: cutoff,
-    cutoffTimeStr: `${displayHour}:00 ${period}`
+    cutoffTimeStr: `${displayHour}:00 ${period}`,
   };
 }
 
@@ -71,7 +77,7 @@ export function getSleepImpact(remainingAtBedtimeMg: number) {
       labelId: 'Siap Tidur Nyenyak ✨',
       color: 'text-emerald-600 bg-emerald-50 border-emerald-200',
       advice: 'Caffeine is almost completely cleared. Expect uninterrupted delta-wave sleep and clear morning eyes!',
-      adviceId: 'Kafein sudah bersih sepenuhnya. Tidurmu akan nyenyak dan mata segar bebas sembap!'
+      adviceId: 'Kafein sudah bersih sepenuhnya. Tidurmu akan nyenyak dan mata segar bebas sembap!',
     };
   } else if (remainingAtBedtimeMg <= 50) {
     return {
@@ -80,7 +86,7 @@ export function getSleepImpact(remainingAtBedtimeMg: number) {
       labelId: 'Aktivitas Kafein Ringan 🌙',
       color: 'text-amber-600 bg-amber-50 border-amber-200',
       advice: 'Slight caffeine presence. Sip chamomile or magnesium tea to unwind your nervous system.',
-      adviceId: 'Masih ada sisa kafein ringan. Minum teh chamomile atau magnesium untuk merilekskan saraf.'
+      adviceId: 'Masih ada sisa kafein ringan. Minum teh chamomile atau magnesium untuk merilekskan saraf.',
     };
   } else {
     return {
@@ -89,7 +95,7 @@ export function getSleepImpact(remainingAtBedtimeMg: number) {
       labelId: 'Tinggi Jelang Tidur ⚠️',
       color: 'text-rose-600 bg-rose-50 border-rose-200',
       advice: 'High caffeine may suppress REM & deep beauty sleep. Practice 4-7-8 breathwork before sleeping.',
-      adviceId: 'Kafein masih tinggi, berisiko mengganggu tidur nyenyak. Lakukan pernapasan 4-7-8 sebelum tidur.'
+      adviceId: 'Kafein masih tinggi, berisiko mengganggu tidur nyenyak. Lakukan pernapasan 4-7-8 sebelum tidur.',
     };
   }
 }

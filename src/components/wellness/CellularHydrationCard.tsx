@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,7 +23,7 @@ export function CellularHydrationCard() {
   // Compute today's plain water total
   const today = new Date().setHours(0, 0, 0, 0);
   const tomorrow = today + 86400000;
-  const todayWaterLogs = (state.waterLogs || []).filter(l => l.timestamp >= today && l.timestamp < tomorrow);
+  const todayWaterLogs = (state.waterLogs || []).filter((l) => l.timestamp >= today && l.timestamp < tomorrow);
   const totalPlainWaterMl = todayWaterLogs.reduce((sum, l) => sum + l.amountMl, 0);
 
   const hydrationMultiplier = calculateHydrationMultiplier(totalPlainWaterMl, electrolyteCount);
@@ -33,10 +33,10 @@ export function CellularHydrationCard() {
     addWaterLog({
       id: crypto.randomUUID(),
       timestamp: Date.now(),
-      amountMl: item.waterMl
+      amountMl: item.waterMl,
     });
 
-    setElectrolyteCount(prev => {
+    setElectrolyteCount((prev) => {
       const next = prev + 1;
       if (next === 2) {
         playSuccessChord();
@@ -47,7 +47,7 @@ export function CellularHydrationCard() {
 
     toast({
       title: `${item.icon} ${isId ? item.nameId : item.nameEn}`,
-      description: `+${item.waterMl}ml · ${isId ? item.benefitId : item.benefitEn}`
+      description: `+${item.waterMl}ml · ${isId ? item.benefitId : item.benefitEn}`,
     });
   };
 
@@ -61,7 +61,9 @@ export function CellularHydrationCard() {
               <Zap className="w-4 h-4 text-amber-600" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-wider">{t.cellularHydration || 'Cellular Hydration & Minerals'}</p>
+              <p className="text-xs uppercase tracking-wider">
+                {t.cellularHydration || 'Cellular Hydration & Minerals'}
+              </p>
               <p className="text-[10px] text-muted-foreground font-bold">
                 {isId ? 'Elektrolit untuk kekenyalan sel kulit' : 'Aquaporin intracellular plumping'}
               </p>
@@ -103,7 +105,7 @@ export function CellularHydrationCard() {
             {isId ? 'Pilihan Minuman Kaya Mineral:' : '1-Tap Mineral Boost Options:'}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {CELLULAR_HYDRATION_PRESETS.map(item => (
+            {CELLULAR_HYDRATION_PRESETS.map((item) => (
               <button
                 key={item.id}
                 type="button"

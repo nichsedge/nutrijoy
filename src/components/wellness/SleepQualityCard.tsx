@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,7 +22,7 @@ export function SleepQualityCard({ skinJournalEntries = [] }: SleepQualityCardPr
   const todaySleep = useMemo(() => {
     const today = new Date().setHours(0, 0, 0, 0);
     const tomorrow = today + 86400000;
-    return (state.sleepLogs || []).find(l => l.timestamp >= today && l.timestamp < tomorrow);
+    return (state.sleepLogs || []).find((l) => l.timestamp >= today && l.timestamp < tomorrow);
   }, [state.sleepLogs]);
 
   const score = useMemo(() => {
@@ -34,19 +34,21 @@ export function SleepQualityCard({ skinJournalEntries = [] }: SleepQualityCardPr
     return getSleepSkinCorrelation(state.sleepLogs || [], skinJournalEntries, state.profile?.language || 'en');
   }, [state.sleepLogs, skinJournalEntries, state.profile?.language]);
 
-  const tips = isId ? [
-    '🌙 Sarung bantal sutra mengurangi gesekan wajah dan mencegah kerutan tidur',
-    '🍵 Teh chamomile atau magnesium glisin 30 menit sebelum tidur memperdalam siklus tidur',
-    '📵 Hindari layar biru setelah pukul 21:00 — cahaya biru menekan produksi melatonin',
-    '🌡️ Kamar tidur sejuk (18–20°C) membantu masuk ke fase tidur nyenyak lebih cepat',
-    '☕ Batasi kafein setelah pukul 13:00 — setengah umur kafein adalah 5 jam',
-  ] : [
-    '🌙 Silk pillowcases reduce facial friction and prevent sleep creases from deepening',
-    '🍵 Chamomile tea or magnesium glycinate 30min before bed deepens sleep cycles',
-    '📵 No blue light screens after 9pm — blue light suppresses melatonin production',
-    '🌡️ Cool bedroom (64–68°F / 18–20°C) triggers sleep onset and deepens delta waves',
-    '☕ Cut off caffeine after 1pm — caffeine has a 5-hour metabolic half-life',
-  ];
+  const tips = isId
+    ? [
+        '🌙 Sarung bantal sutra mengurangi gesekan wajah dan mencegah kerutan tidur',
+        '🍵 Teh chamomile atau magnesium glisin 30 menit sebelum tidur memperdalam siklus tidur',
+        '📵 Hindari layar biru setelah pukul 21:00 — cahaya biru menekan produksi melatonin',
+        '🌡️ Kamar tidur sejuk (18–20°C) membantu masuk ke fase tidur nyenyak lebih cepat',
+        '☕ Batasi kafein setelah pukul 13:00 — setengah umur kafein adalah 5 jam',
+      ]
+    : [
+        '🌙 Silk pillowcases reduce facial friction and prevent sleep creases from deepening',
+        '🍵 Chamomile tea or magnesium glycinate 30min before bed deepens sleep cycles',
+        '📵 No blue light screens after 9pm — blue light suppresses melatonin production',
+        '🌡️ Cool bedroom (64–68°F / 18–20°C) triggers sleep onset and deepens delta waves',
+        '☕ Cut off caffeine after 1pm — caffeine has a 5-hour metabolic half-life',
+      ];
 
   const circumference = 2 * Math.PI * 48;
   const strokeDash = score ? (score.total / 100) * circumference : 0;
@@ -73,7 +75,9 @@ export function SleepQualityCard({ skinJournalEntries = [] }: SleepQualityCardPr
           <div className="text-center py-6 space-y-2">
             <Moon className="w-10 h-10 mx-auto text-indigo-300" />
             <p className="text-xs text-muted-foreground font-bold">
-              {isId ? 'Catat tidurmu di Jurnal untuk melihat skor kualitas tidurmu.' : 'Log your sleep in Check-In to see your beauty sleep quality score.'}
+              {isId
+                ? 'Catat tidurmu di Jurnal untuk melihat skor kualitas tidurmu.'
+                : 'Log your sleep in Check-In to see your beauty sleep quality score.'}
             </p>
           </div>
         ) : score ? (
@@ -84,8 +88,19 @@ export function SleepQualityCard({ skinJournalEntries = [] }: SleepQualityCardPr
                 <svg viewBox="0 0 110 110" className="w-full h-full -rotate-90">
                   <circle cx="55" cy="55" r="48" fill="none" stroke="rgba(99,102,241,0.12)" strokeWidth="10" />
                   <circle
-                    cx="55" cy="55" r="48" fill="none"
-                    stroke={score.total >= 80 ? '#6366f1' : score.total >= 60 ? '#8b5cf6' : score.total >= 40 ? '#f59e0b' : '#f43f5e'}
+                    cx="55"
+                    cy="55"
+                    r="48"
+                    fill="none"
+                    stroke={
+                      score.total >= 80
+                        ? '#6366f1'
+                        : score.total >= 60
+                          ? '#8b5cf6'
+                          : score.total >= 40
+                            ? '#f59e0b'
+                            : '#f43f5e'
+                    }
                     strokeWidth="10"
                     strokeLinecap="round"
                     strokeDasharray={`${strokeDash} ${circumference}`}
@@ -109,10 +124,13 @@ export function SleepQualityCard({ skinJournalEntries = [] }: SleepQualityCardPr
                   {[
                     { label: isId ? 'Durasi' : 'Duration', val: score.durationScore, max: 50 },
                     { label: isId ? 'Kenyamanan' : 'Restedness', val: score.restednessScore, max: 35 },
-                  ].map(s => (
+                  ].map((s) => (
                     <div key={s.label} className="bg-white/70 px-2 py-1 rounded-lg text-center">
                       <p className="text-[9px] text-muted-foreground font-bold uppercase">{s.label}</p>
-                      <p className="text-xs font-black text-foreground">{s.val}<span className="text-[9px] text-muted-foreground">/{s.max}</span></p>
+                      <p className="text-xs font-black text-foreground">
+                        {s.val}
+                        <span className="text-[9px] text-muted-foreground">/{s.max}</span>
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -132,17 +150,23 @@ export function SleepQualityCard({ skinJournalEntries = [] }: SleepQualityCardPr
         {/* Tips Toggle */}
         <button
           type="button"
-          onClick={() => setShowTips(v => !v)}
+          onClick={() => setShowTips((v) => !v)}
           className="w-full flex items-center justify-between text-indigo-700 text-xs font-black py-1 hover:opacity-80 transition-opacity"
         >
-          <span className="flex items-center gap-1.5"><Info className="w-3.5 h-3.5" />{t.beautySleepTips || 'Beauty Sleep Tips'}</span>
+          <span className="flex items-center gap-1.5">
+            <Info className="w-3.5 h-3.5" />
+            {t.beautySleepTips || 'Beauty Sleep Tips'}
+          </span>
           {showTips ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
 
         {showTips && (
           <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2">
             {tips.map((tip, i) => (
-              <div key={i} className="bg-white/70 px-3 py-2 rounded-xl text-[11px] text-foreground/80 font-bold leading-snug">
+              <div
+                key={i}
+                className="bg-white/70 px-3 py-2 rounded-xl text-[11px] text-foreground/80 font-bold leading-snug"
+              >
                 {tip}
               </div>
             ))}

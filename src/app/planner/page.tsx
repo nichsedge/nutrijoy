@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { useAppState, useAppActions } from '@/components/AppContext';
@@ -113,8 +113,13 @@ export default function PlannerPage() {
                     <p className="text-[10px] font-bold text-muted-foreground">kcal/day</p>
                   </div>
                   <div className="text-center p-3 bg-white rounded-2xl shadow-sm">
-                    <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Target {activePlan.goal === 'gain' ? 'Gain' : 'Loss'}</p>
-                    <p className="text-2xl font-bold text-secondary">{activePlan.goal === 'gain' ? '+' : '-'}{getPlanTargetChange(activePlan)} kg</p>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">
+                      Target {activePlan.goal === 'gain' ? 'Gain' : 'Loss'}
+                    </p>
+                    <p className="text-2xl font-bold text-secondary">
+                      {activePlan.goal === 'gain' ? '+' : '-'}
+                      {getPlanTargetChange(activePlan)} kg
+                    </p>
                     <p className="text-[10px] font-bold text-muted-foreground">in {activePlan.durationWeeks} weeks</p>
                   </div>
                 </div>
@@ -123,7 +128,9 @@ export default function PlannerPage() {
                   <div className="flex justify-between items-end">
                     <div>
                       <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.currentWeek}</p>
-                      <h4 className="text-lg font-bold">{t.week} {progress.currentWeek} of {activePlan.durationWeeks}</h4>
+                      <h4 className="text-lg font-bold">
+                        {t.week} {progress.currentWeek} of {activePlan.durationWeeks}
+                      </h4>
                     </div>
                     <div className="text-right">
                       <p className="text-[10px] uppercase font-bold text-muted-foreground">{t.weeklyGoal}</p>
@@ -151,7 +158,9 @@ export default function PlannerPage() {
                   <div className="pt-2 border-t flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
-                        <TrendingDown className={cn('w-4 h-4 text-secondary', activePlan.goal === 'gain' && 'rotate-180')} />
+                        <TrendingDown
+                          className={cn('w-4 h-4 text-secondary', activePlan.goal === 'gain' && 'rotate-180')}
+                        />
                       </div>
                       <div>
                         <p className="text-[10px] text-muted-foreground">Latest Weight</p>
@@ -167,7 +176,10 @@ export default function PlannerPage() {
                   </div>
                 </div>
 
-                <Button onClick={() => setIsCompleteDialogOpen(true)} className="w-full h-12 rounded-xl font-bold text-lg">
+                <Button
+                  onClick={() => setIsCompleteDialogOpen(true)}
+                  className="w-full h-12 rounded-xl font-bold text-lg"
+                >
                   <Award className="w-5 h-5 mr-2" /> {t.completePlan}
                 </Button>
               </CardContent>
@@ -187,21 +199,31 @@ export default function PlannerPage() {
                       key={week.week}
                       className={cn(
                         'p-4 rounded-2xl flex items-center justify-between border-2 transition-all',
-                        isCurrent ? 'bg-white border-primary shadow-sm scale-[1.02]' : 'bg-white/50 border-transparent text-muted-foreground'
+                        isCurrent
+                          ? 'bg-white border-primary shadow-sm scale-[1.02]'
+                          : 'bg-white/50 border-transparent text-muted-foreground'
                       )}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={cn(
-                          'w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs',
-                          isPast ? 'bg-green-100 text-green-600' :
-                          isCurrent ? 'bg-primary text-primary-foreground' :
-                          'bg-muted text-muted-foreground'
-                        )}>
+                        <div
+                          className={cn(
+                            'w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs',
+                            isPast
+                              ? 'bg-green-100 text-green-600'
+                              : isCurrent
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-muted text-muted-foreground'
+                          )}
+                        >
                           {isPast ? <CheckCircle2 className="w-4 h-4" /> : week.week}
                         </div>
                         <div>
-                          <p className="text-xs font-bold">{t.week} {week.week}</p>
-                          <p className="text-[10px] opacity-70">{new Date(week.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
+                          <p className="text-xs font-bold">
+                            {t.week} {week.week}
+                          </p>
+                          <p className="text-[10px] opacity-70">
+                            {new Date(week.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                          </p>
                         </div>
                       </div>
                       <div className="text-right">
@@ -222,7 +244,8 @@ export default function PlannerPage() {
               <CheckCircle2 className="w-12 h-12 text-primary mx-auto" />
               <h3 className="text-xl font-bold">You are Maintaining!</h3>
               <p className="text-sm text-muted-foreground">
-                Your current goal is to maintain your weight. You don't need to set a weight change target. Your daily calories are already optimized for maintenance.
+                Your current goal is to maintain your weight. You don't need to set a weight change target. Your daily
+                calories are already optimized for maintenance.
               </p>
             </CardContent>
           </Card>
@@ -278,9 +301,7 @@ export default function PlannerPage() {
                 <AlertTitle className="font-bold">
                   {calcResult.status === 'too_aggressive' ? t.tooAggressive : t.unsafe}
                 </AlertTitle>
-                <AlertDescription>
-                  {calcResult.warningMessage}
-                </AlertDescription>
+                <AlertDescription>{calcResult.warningMessage}</AlertDescription>
               </Alert>
             )}
 
@@ -288,9 +309,7 @@ export default function PlannerPage() {
               <Alert className="rounded-2xl border-2 border-green-200 bg-green-50 text-green-800">
                 <CheckCircle2 className="h-5 w-5 text-green-600" />
                 <AlertTitle className="font-bold">{t.safe}</AlertTitle>
-                <AlertDescription>
-                  This plan is sustainable and meets safety guidelines.
-                </AlertDescription>
+                <AlertDescription>This plan is sustainable and meets safety guidelines.</AlertDescription>
               </Alert>
             )}
 
@@ -305,37 +324,42 @@ export default function PlannerPage() {
 
               <Card className="border-none bg-secondary/5 rounded-3xl">
                 <CardContent className="p-6 text-center">
-                  <p className="text-[10px] uppercase font-bold text-secondary opacity-70 mb-1">{isGain ? t.dailySurplus : t.dailyDeficit}</p>
+                  <p className="text-[10px] uppercase font-bold text-secondary opacity-70 mb-1">
+                    {isGain ? t.dailySurplus : t.dailyDeficit}
+                  </p>
                   <p className="text-3xl font-bold text-secondary">{calcResult.dailyDeficit}</p>
                   <p className="text-xs font-bold text-muted-foreground mt-1">kcal/day</p>
                 </CardContent>
               </Card>
             </div>
 
-            <Button onClick={handleStartPlan} className="w-full h-14 rounded-2xl font-bold text-xl shadow-lg bg-primary hover:bg-primary/90">
-               {t.startPlan}
+            <Button
+              onClick={handleStartPlan}
+              className="w-full h-14 rounded-2xl font-bold text-xl shadow-lg bg-primary hover:bg-primary/90"
+            >
+              {t.startPlan}
             </Button>
 
             <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
-               <CardHeader className="pb-2 bg-accent/10">
-                 <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <TrendingDown className="w-4 h-4" /> Metabolism Overview
-                 </CardTitle>
-               </CardHeader>
-               <CardContent className="p-6 space-y-3">
-                 <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Basal Metabolic Rate (BMR)</span>
-                    <span className="font-bold">{calcResult.bmr} kcal</span>
-                 </div>
-                 <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Total Daily Expenditure (TDEE)</span>
-                    <span className="font-bold">{calcResult.tdee} kcal</span>
-                 </div>
-                 <div className="pt-3 border-t text-xs text-muted-foreground italic flex items-start gap-2">
-                    <Info className="w-4 h-4 shrink-0" />
-                    <p>Calculation assumes 1 kg of fat equals approx. 7,700 kcal as per health standards.</p>
-                 </div>
-               </CardContent>
+              <CardHeader className="pb-2 bg-accent/10">
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <TrendingDown className="w-4 h-4" /> Metabolism Overview
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-3">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Basal Metabolic Rate (BMR)</span>
+                  <span className="font-bold">{calcResult.bmr} kcal</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Total Daily Expenditure (TDEE)</span>
+                  <span className="font-bold">{calcResult.tdee} kcal</span>
+                </div>
+                <div className="pt-3 border-t text-xs text-muted-foreground italic flex items-start gap-2">
+                  <Info className="w-4 h-4 shrink-0" />
+                  <p>Calculation assumes 1 kg of fat equals approx. 7,700 kcal as per health standards.</p>
+                </div>
+              </CardContent>
             </Card>
           </div>
         )}
@@ -350,7 +374,10 @@ export default function PlannerPage() {
                 <Card key={i} className="border-none shadow-sm rounded-2xl overflow-hidden">
                   <CardContent className="p-4 flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-bold">{h.goal === 'gain' ? '+' : '-'}{getPlanTargetChange(h)} kg Goal</p>
+                      <p className="text-sm font-bold">
+                        {h.goal === 'gain' ? '+' : '-'}
+                        {getPlanTargetChange(h)} kg Goal
+                      </p>
                       <p className="text-[10px] text-muted-foreground">
                         {t.achievedOn} {new Date(h.achievedDate).toLocaleDateString()}
                       </p>
@@ -374,9 +401,7 @@ export default function PlannerPage() {
               <DialogTitle>{t.confirmComplete}</DialogTitle>
             </DialogHeader>
             <div className="py-4 space-y-4">
-              <p className="text-sm text-muted-foreground">
-                {t.enterEndWeight}
-              </p>
+              <p className="text-sm text-muted-foreground">{t.enterEndWeight}</p>
               <Input
                 type="text"
                 inputMode="decimal"

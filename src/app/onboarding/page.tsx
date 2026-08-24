@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { useAppState, useAppActions } from '@/components/AppContext';
@@ -27,7 +27,7 @@ export default function OnboardingPage() {
     weight: '70',
     activityLevel: 'moderate' as UserProfile['activityLevel'],
     goal: 'maintain' as UserProfile['goal'],
-    language: lang
+    language: lang,
   });
 
   const parseVal = (val: string) => {
@@ -48,7 +48,7 @@ export default function OnboardingPage() {
         weight: parseVal(formData.weight),
         activityLevel: formData.activityLevel,
         goal: formData.goal,
-        language: lang
+        language: lang,
       };
       setProfile(profile);
       router.push('/');
@@ -63,10 +63,10 @@ export default function OnboardingPage() {
       </div>
 
       <div className="mb-6">
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="w-full rounded-2xl border-2 border-primary/20 text-primary hover:border-primary"
-          onClick={() => setLang(l => l === 'en' ? 'id' : 'en')}
+          onClick={() => setLang((l) => (l === 'en' ? 'id' : 'en'))}
         >
           {t.switchLang}
         </Button>
@@ -75,12 +75,12 @@ export default function OnboardingPage() {
       <form onSubmit={handleSubmit} className="space-y-6 flex-1">
         <div className="space-y-2">
           <Label htmlFor="name">{t.name}</Label>
-          <Input 
-            id="name" 
-            placeholder="Your name" 
+          <Input
+            id="name"
+            placeholder="Your name"
             required
             value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
             className="rounded-xl border-2 border-primary/10 h-12"
           />
         </div>
@@ -88,33 +88,37 @@ export default function OnboardingPage() {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="age">{t.age}</Label>
-            <Input 
-              id="age" 
-              type="text" 
+            <Input
+              id="age"
+              type="text"
               inputMode="numeric"
               required
               value={formData.age}
               onChange={(e) => {
                 if (e.target.value && !/^[0-9]*$/.test(e.target.value)) return;
-                setFormData(prev => ({ ...prev, age: e.target.value }));
+                setFormData((prev) => ({ ...prev, age: e.target.value }));
               }}
               className="rounded-xl border-2 border-primary/10 h-12"
             />
           </div>
           <div className="space-y-2">
             <Label>{t.sex}</Label>
-            <RadioGroup 
-              defaultValue="male" 
-              onValueChange={(val) => setFormData(prev => ({ ...prev, sex: val as 'male' | 'female' }))}
+            <RadioGroup
+              defaultValue="male"
+              onValueChange={(val) => setFormData((prev) => ({ ...prev, sex: val as 'male' | 'female' }))}
               className="flex gap-4 h-12 items-center"
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="male" id="male" />
-                <Label htmlFor="male" className="cursor-pointer">{t.male}</Label>
+                <Label htmlFor="male" className="cursor-pointer">
+                  {t.male}
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="female" id="female" />
-                <Label htmlFor="female" className="cursor-pointer">{t.female}</Label>
+                <Label htmlFor="female" className="cursor-pointer">
+                  {t.female}
+                </Label>
               </div>
             </RadioGroup>
           </div>
@@ -123,30 +127,30 @@ export default function OnboardingPage() {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="height">{t.height}</Label>
-            <Input 
-              id="height" 
-              type="text" 
+            <Input
+              id="height"
+              type="text"
               inputMode="decimal"
               required
               value={formData.height}
               onChange={(e) => {
                 if (e.target.value && !/^[0-9.,]*$/.test(e.target.value)) return;
-                setFormData(prev => ({ ...prev, height: e.target.value }));
+                setFormData((prev) => ({ ...prev, height: e.target.value }));
               }}
               className="rounded-xl border-2 border-primary/10 h-12"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="weight">{t.weight}</Label>
-            <Input 
-              id="weight" 
-              type="text" 
+            <Input
+              id="weight"
+              type="text"
               inputMode="decimal"
               required
               value={formData.weight}
               onChange={(e) => {
                 if (e.target.value && !/^[0-9.,]*$/.test(e.target.value)) return;
-                setFormData(prev => ({ ...prev, weight: e.target.value }));
+                setFormData((prev) => ({ ...prev, weight: e.target.value }));
               }}
               className="rounded-xl border-2 border-primary/10 h-12"
             />
@@ -155,7 +159,12 @@ export default function OnboardingPage() {
 
         <div className="space-y-2">
           <Label htmlFor="activity">{t.activityLevel}</Label>
-          <Select onValueChange={(val) => setFormData(prev => ({ ...prev, activityLevel: val as UserProfile['activityLevel'] }))} defaultValue="moderate">
+          <Select
+            onValueChange={(val) =>
+              setFormData((prev) => ({ ...prev, activityLevel: val as UserProfile['activityLevel'] }))
+            }
+            defaultValue="moderate"
+          >
             <SelectTrigger className="rounded-xl border-2 border-primary/10 h-12">
               <SelectValue placeholder="Select activity level" />
             </SelectTrigger>
@@ -171,7 +180,10 @@ export default function OnboardingPage() {
 
         <div className="space-y-2">
           <Label htmlFor="goal">{t.goal}</Label>
-          <Select onValueChange={(val) => setFormData(prev => ({ ...prev, goal: val as UserProfile['goal'] }))} defaultValue="maintain">
+          <Select
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, goal: val as UserProfile['goal'] }))}
+            defaultValue="maintain"
+          >
             <SelectTrigger className="rounded-xl border-2 border-primary/10 h-12">
               <SelectValue placeholder="Select goal" />
             </SelectTrigger>
@@ -184,7 +196,9 @@ export default function OnboardingPage() {
           </Select>
         </div>
 
-        {formData.weight && formData.height && formData.goal === 'lose' && (
+        {formData.weight &&
+          formData.height &&
+          formData.goal === 'lose' &&
           (() => {
             const w = parseVal(formData.weight);
             const h = parseVal(formData.height);
@@ -192,15 +206,19 @@ export default function OnboardingPage() {
             if (bmi >= 18.5 && bmi <= 24.9) {
               return (
                 <div className="p-4 bg-accent/20 rounded-2xl border border-accent text-sm text-primary">
-                  <strong>Tip:</strong> Your BMI is in the healthy range! If your goal is to look more toned and fit, we recommend switching your goal to <strong>{t.recompose || 'Tone & Shape'}</strong> to focus on building muscle while losing fat.
+                  <strong>Tip:</strong> Your BMI is in the healthy range! If your goal is to look more toned and fit, we
+                  recommend switching your goal to <strong>{t.recompose || 'Tone & Shape'}</strong> to focus on building
+                  muscle while losing fat.
                 </div>
               );
             }
             return null;
-          })()
-        )}
+          })()}
 
-        <Button type="submit" className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 mt-8">
+        <Button
+          type="submit"
+          className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 mt-8"
+        >
           {t.saveProfile}
         </Button>
       </form>
