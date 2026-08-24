@@ -9,12 +9,12 @@ for (let i = 0; i < 10000; i++) {
 function runBaseline() {
   const start = performance.now();
   const groupedLogs = {};
-  logs.forEach(log => {
+  logs.forEach((log) => {
     const date = new Date(log.timestamp).toLocaleDateString(undefined, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
     if (!groupedLogs[date]) {
       groupedLogs[date] = [];
@@ -32,9 +32,9 @@ function runOptimized() {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   });
-  logs.forEach(log => {
+  logs.forEach((log) => {
     const date = dateFormatter.format(new Date(log.timestamp));
     if (!groupedLogs[date]) {
       groupedLogs[date] = [];

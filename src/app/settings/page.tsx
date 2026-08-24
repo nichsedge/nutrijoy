@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
 import { useAppState, useAppActions } from '@/components/AppContext';
@@ -15,7 +15,7 @@ import { Languages, Download, Upload, User, Trash2, ChevronRight, Info, Save } f
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { UserProfile } from '@/lib/types';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function SettingsPage() {
   const state = useAppState();
@@ -23,7 +23,7 @@ export default function SettingsPage() {
   const t = getTranslation(state.profile?.language || 'en');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
-  
+
   const [formData, setFormData] = useState<UserProfile | null>(null);
 
   useEffect(() => {
@@ -45,24 +45,27 @@ export default function SettingsPage() {
 
   const handleExport = () => {
     exportData(state);
-    toast({ title: t.done, description: "Data exported successfully!" });
+    toast({ title: t.done, description: 'Data exported successfully!' });
   };
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // Reset the input so re-selecting the same file re-triggers onChange.
+    e.target.value = '';
     if (file) {
       try {
         const newState = await importData(file);
+        if (!confirm('Restoring a backup will replace all current data. Continue?')) return;
         resetState(newState);
-        toast({ title: t.done, description: "Data restored successfully!" });
+        toast({ title: t.done, description: 'Data restored successfully!' });
       } catch (err) {
-        toast({ title: "Error", description: "Invalid backup file.", variant: "destructive" });
+        toast({ title: 'Error', description: 'Invalid backup file.', variant: 'destructive' });
       }
     }
   };
 
   const handleReset = () => {
-    if (confirm("Are you sure? This will delete all local data.")) {
+    if (confirm('Are you sure? This will delete all local data.')) {
       clearState();
       window.location.href = '/onboarding';
     }
@@ -86,10 +89,10 @@ export default function SettingsPage() {
               <form onSubmit={handleUpdateProfile} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">{t.name}</Label>
-                  <Input 
-                    id="name" 
+                  <Input
+                    id="name"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="rounded-xl border-2 border-primary/10 h-11"
                   />
                 </div>
@@ -97,28 +100,32 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="age">{t.age}</Label>
-                    <Input 
-                      id="age" 
-                      type="number" 
+                    <Input
+                      id="age"
+                      type="number"
                       value={formData.age}
-                      onChange={(e) => setFormData({...formData, age: parseInt(e.target.value)})}
+                      onChange={(e) => setFormData({ ...formData, age: parseInt(e.target.value) })}
                       className="rounded-xl border-2 border-primary/10 h-11"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>{t.sex}</Label>
-                    <RadioGroup 
-                      value={formData.sex} 
-                      onValueChange={(val) => setFormData({...formData, sex: val as 'male' | 'female'})}
+                    <RadioGroup
+                      value={formData.sex}
+                      onValueChange={(val) => setFormData({ ...formData, sex: val as 'male' | 'female' })}
                       className="flex gap-4 h-11 items-center"
                     >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="male" id="male-s" />
-                        <Label htmlFor="male-s" className="text-xs">{t.male}</Label>
+                        <Label htmlFor="male-s" className="text-xs">
+                          {t.male}
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="female" id="female-s" />
-                        <Label htmlFor="female-s" className="text-xs">{t.female}</Label>
+                        <Label htmlFor="female-s" className="text-xs">
+                          {t.female}
+                        </Label>
                       </div>
                     </RadioGroup>
                   </div>
@@ -127,21 +134,21 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="height">{t.height}</Label>
-                    <Input 
-                      id="height" 
-                      type="number" 
+                    <Input
+                      id="height"
+                      type="number"
                       value={formData.height}
-                      onChange={(e) => setFormData({...formData, height: parseInt(e.target.value)})}
+                      onChange={(e) => setFormData({ ...formData, height: parseInt(e.target.value) })}
                       className="rounded-xl border-2 border-primary/10 h-11"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="weight">{t.weight}</Label>
-                    <Input 
-                      id="weight" 
-                      type="number" 
+                    <Input
+                      id="weight"
+                      type="number"
                       value={formData.weight}
-                      onChange={(e) => setFormData({...formData, weight: parseInt(e.target.value)})}
+                      onChange={(e) => setFormData({ ...formData, weight: parseInt(e.target.value) })}
                       className="rounded-xl border-2 border-primary/10 h-11"
                     />
                   </div>
@@ -149,9 +156,11 @@ export default function SettingsPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="activity">{t.activityLevel}</Label>
-                  <Select 
+                  <Select
                     value={formData.activityLevel}
-                    onValueChange={(val) => setFormData({...formData, activityLevel: val as UserProfile['activityLevel']})}
+                    onValueChange={(val) =>
+                      setFormData({ ...formData, activityLevel: val as UserProfile['activityLevel'] })
+                    }
                   >
                     <SelectTrigger className="rounded-xl border-2 border-primary/10 h-11">
                       <SelectValue placeholder="Select activity level" />
@@ -168,9 +177,9 @@ export default function SettingsPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="goal">{t.goal}</Label>
-                  <Select 
+                  <Select
                     value={formData.goal}
-                    onValueChange={(val) => setFormData({...formData, goal: val as UserProfile['goal']})}
+                    onValueChange={(val) => setFormData({ ...formData, goal: val as UserProfile['goal'] })}
                   >
                     <SelectTrigger className="rounded-xl border-2 border-primary/10 h-11">
                       <SelectValue placeholder="Select goal" />
@@ -198,14 +207,14 @@ export default function SettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex gap-2">
-              <Button 
+              <Button
                 variant={state.profile?.language === 'en' ? 'default' : 'outline'}
                 className="flex-1 rounded-xl h-11 font-bold"
                 onClick={() => setLanguage('en')}
               >
                 English
               </Button>
-              <Button 
+              <Button
                 variant={state.profile?.language === 'id' ? 'default' : 'outline'}
                 className="flex-1 rounded-xl h-11 font-bold"
                 onClick={() => setLanguage('id')}
@@ -224,19 +233,25 @@ export default function SettingsPage() {
             <CardContent>
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="energy" className="border-b-0">
-                  <AccordionTrigger className="text-sm font-bold hover:no-underline">{t.energyNeedsTitle}</AccordionTrigger>
+                  <AccordionTrigger className="text-sm font-bold hover:no-underline">
+                    {t.energyNeedsTitle}
+                  </AccordionTrigger>
                   <AccordionContent className="text-xs text-muted-foreground leading-relaxed">
                     {t.energyNeedsDesc}
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="sugar" className="border-b-0">
-                  <AccordionTrigger className="text-sm font-bold hover:no-underline">{t.sugarLimitTitle}</AccordionTrigger>
+                  <AccordionTrigger className="text-sm font-bold hover:no-underline">
+                    {t.sugarLimitTitle}
+                  </AccordionTrigger>
                   <AccordionContent className="text-xs text-muted-foreground leading-relaxed">
                     {t.sugarLimitDesc}
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="sodium" className="border-b-0">
-                  <AccordionTrigger className="text-sm font-bold hover:no-underline">{t.sodiumLimitTitle}</AccordionTrigger>
+                  <AccordionTrigger className="text-sm font-bold hover:no-underline">
+                    {t.sodiumLimitTitle}
+                  </AccordionTrigger>
                   <AccordionContent className="text-xs text-muted-foreground leading-relaxed">
                     {t.sodiumLimitDesc}
                   </AccordionContent>
@@ -252,8 +267,8 @@ export default function SettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full justify-between h-14 rounded-2xl border-2 border-primary/5 hover:bg-primary/5 px-6"
                 onClick={handleExport}
               >
@@ -264,15 +279,9 @@ export default function SettingsPage() {
                 <ChevronRight className="w-4 h-4" />
               </Button>
 
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleImport} 
-                className="hidden" 
-                accept=".json"
-              />
-              <Button 
-                variant="outline" 
+              <input type="file" ref={fileInputRef} onChange={handleImport} className="hidden" accept=".json" />
+              <Button
+                variant="outline"
                 className="w-full justify-between h-14 rounded-2xl border-2 border-primary/5 hover:bg-primary/5 px-6"
                 onClick={() => fileInputRef.current?.click()}
               >
@@ -286,22 +295,24 @@ export default function SettingsPage() {
           </Card>
 
           <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
-             <CardContent className="p-0">
-                <Button 
-                  variant="ghost" 
-                  className="w-full h-16 justify-between px-6 hover:bg-red-50 text-red-500 font-bold"
-                  onClick={handleReset}
-                >
-                  <div className="flex items-center gap-3">
-                    <Trash2 className="w-5 h-5" />
-                    <span>Clear App Data</span>
-                  </div>
-                </Button>
-             </CardContent>
+            <CardContent className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full h-16 justify-between px-6 hover:bg-red-50 text-red-500 font-bold"
+                onClick={handleReset}
+              >
+                <div className="flex items-center gap-3">
+                  <Trash2 className="w-5 h-5" />
+                  <span>Clear App Data</span>
+                </div>
+              </Button>
+            </CardContent>
           </Card>
 
           <div className="text-center py-6">
-            <p className="text-xs text-muted-foreground opacity-50 uppercase tracking-widest font-bold">NutriJoy v1.0.0</p>
+            <p className="text-xs text-muted-foreground opacity-50 uppercase tracking-widest font-bold">
+              NutriJoy v1.0.0
+            </p>
           </div>
         </section>
       </div>

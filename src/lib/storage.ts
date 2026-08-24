@@ -5,8 +5,16 @@ import { z } from 'zod';
 const STORAGE_KEY = 'nutrijoy_app_state';
 
 export const STATE_SLICE_KEYS = [
-  'profile', 'foodLogs', 'activities', 'measurements', 'waterLogs',
-  'sleepLogs', 'cycleLogs', 'selfCareLogs', 'activePlan', 'planHistory',
+  'profile',
+  'foodLogs',
+  'activities',
+  'measurements',
+  'waterLogs',
+  'sleepLogs',
+  'cycleLogs',
+  'selfCareLogs',
+  'activePlan',
+  'planHistory',
 ] as const;
 
 export type StateSliceKey = (typeof STATE_SLICE_KEYS)[number];
@@ -20,7 +28,7 @@ const UserProfileSchema = z.object({
   activityLevel: z.enum(['sedentary', 'light', 'moderate', 'active', 'very_active']),
   goal: z.enum(['lose', 'maintain', 'gain', 'recompose']),
   targetWeightLossPerWeek: z.number().optional(),
-  language: z.enum(['en', 'id'])
+  language: z.enum(['en', 'id']),
 });
 
 const FoodLogEntrySchema = z.object({
@@ -37,7 +45,7 @@ const FoodLogEntrySchema = z.object({
   omega3: z.number().optional(),
   vitaminE: z.number().optional(),
   sugar: z.number(),
-  sodium: z.number()
+  sodium: z.number(),
 });
 
 const ActivityEntrySchema = z.object({
@@ -45,7 +53,7 @@ const ActivityEntrySchema = z.object({
   timestamp: z.number(),
   name: z.string(),
   duration: z.number(),
-  caloriesBurned: z.number()
+  caloriesBurned: z.number(),
 });
 
 const MeasurementEntrySchema = z.object({
@@ -55,33 +63,33 @@ const MeasurementEntrySchema = z.object({
   waist: z.number(),
   hips: z.number(),
   neck: z.number(),
-  bodyFatPercentage: z.number().optional()
+  bodyFatPercentage: z.number().optional(),
 });
 
 const WaterLogEntrySchema = z.object({
   id: z.string(),
   timestamp: z.number(),
-  amountMl: z.number()
+  amountMl: z.number(),
 });
 
 const SleepLogEntrySchema = z.object({
   id: z.string(),
   timestamp: z.number(),
   durationHours: z.number(),
-  restednessScore: z.number()
+  restednessScore: z.number(),
 });
 
 const CycleLogEntrySchema = z.object({
   id: z.string(),
   timestamp: z.number(),
   cycleDay: z.number(),
-  symptoms: z.array(z.string())
+  symptoms: z.array(z.string()),
 });
 
 const SelfCareLogEntrySchema = z.object({
   id: z.string(),
   timestamp: z.number(),
-  checkedItems: z.array(z.string())
+  checkedItems: z.array(z.string()),
 });
 
 const WeightPlanResultSchema = z.object({
@@ -96,12 +104,12 @@ const WeightPlanResultSchema = z.object({
   targetChangeKg: z.number().optional(),
   durationWeeks: z.number().optional(),
   startWeight: z.number().optional(),
-  goal: z.enum(['lose', 'maintain', 'gain', 'recompose']).optional()
+  goal: z.enum(['lose', 'maintain', 'gain', 'recompose']).optional(),
 });
 
 const AchievedPlanSchema = WeightPlanResultSchema.extend({
   achievedDate: z.number(),
-  endWeight: z.number()
+  endWeight: z.number(),
 });
 
 export const AppStateSchema = z.object({
@@ -114,7 +122,7 @@ export const AppStateSchema = z.object({
   cycleLogs: z.array(CycleLogEntrySchema),
   selfCareLogs: z.array(SelfCareLogEntrySchema),
   activePlan: WeightPlanResultSchema.nullable(),
-  planHistory: z.array(AchievedPlanSchema)
+  planHistory: z.array(AchievedPlanSchema),
 });
 
 const defaultState: AppState = {
@@ -195,7 +203,9 @@ export async function loadState(): Promise<AppState> {
 
   try {
     // Per-slice read (current format)
-    const entries = await Promise.all(STATE_SLICE_KEYS.map(async (k) => [k, await get(`${STORAGE_KEY}:${k}`)] as const));
+    const entries = await Promise.all(
+      STATE_SLICE_KEYS.map(async (k) => [k, await get(`${STORAGE_KEY}:${k}`)] as const)
+    );
     if (entries.some(([, v]) => v !== undefined)) {
       const assembled = { ...defaultState } as Record<string, unknown>;
       for (const [k, v] of entries) {
@@ -213,7 +223,7 @@ export async function loadState(): Promise<AppState> {
           stored = JSON.parse(legacyStored);
           await set(STORAGE_KEY, stored);
         } catch (e) {
-          console.error("Failed to parse legacy storage", e);
+          console.error('Failed to parse legacy storage', e);
         }
       }
     }
@@ -221,14 +231,11 @@ export async function loadState(): Promise<AppState> {
 
     const validated = await validate(stored);
     // Migrate to per-slice keys and drop the monolithic one
-    await Promise.all([
-      ...STATE_SLICE_KEYS.map((k) => set(`${STORAGE_KEY}:${k}`, validated[k])),
-      del(STORAGE_KEY),
-    ]);
+    await Promise.all([...STATE_SLICE_KEYS.map((k) => set(`${STORAGE_KEY}:${k}`, validated[k])), del(STORAGE_KEY)]);
     localStorage.removeItem(STORAGE_KEY);
     return validated;
   } catch (e) {
-    console.error("Error loading state from IndexedDB", e);
+    console.error('Error loading state from IndexedDB', e);
     return defaultState;
   }
 }
@@ -251,7 +258,7 @@ export async function saveState(state: AppState) {
   try {
     await set(STORAGE_KEY, state);
   } catch (e) {
-    console.error("Error saving state to IndexedDB", e);
+    console.error('Error saving state to IndexedDB', e);
   }
 }
 
@@ -261,24 +268,25 @@ export async function saveState(state: AppState) {
 export async function clearState() {
   if (typeof window === 'undefined') return;
   try {
-    await Promise.all([
-      del(STORAGE_KEY),
-      ...STATE_SLICE_KEYS.map((k) => del(`${STORAGE_KEY}:${k}`)),
-    ]);
+    await Promise.all([del(STORAGE_KEY), ...STATE_SLICE_KEYS.map((k) => del(`${STORAGE_KEY}:${k}`))]);
   } catch (e) {
-    console.error("Error clearing IndexedDB", e);
+    console.error('Error clearing IndexedDB', e);
   }
 }
 
 export function exportData(state: AppState) {
-  const dataStr = JSON.stringify(state);
-  const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+  // Blob URLs are more reliable than data URIs for larger backups.
+  const blob = new Blob([JSON.stringify(state)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
   const exportFileDefaultName = `nutrijoy_backup_${new Date().toISOString().split('T')[0]}.json`;
 
   const linkElement = document.createElement('a');
-  linkElement.setAttribute('href', dataUri);
+  linkElement.setAttribute('href', url);
   linkElement.setAttribute('download', exportFileDefaultName);
   linkElement.click();
+
+  // Revoke after a tick so the download has time to start.
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 export function importData(file: File): Promise<AppState> {

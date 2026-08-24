@@ -1,7 +1,20 @@
-"use client";
+'use client';
 
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { AppState, UserProfile, FoodLogEntry, ActivityEntry, MeasurementEntry, WaterLogEntry, Language, WeightPlanResult, AchievedPlan, SleepLogEntry, CycleLogEntry, SelfCareLogEntry } from '@/lib/types';
+import {
+  AppState,
+  UserProfile,
+  FoodLogEntry,
+  ActivityEntry,
+  MeasurementEntry,
+  WaterLogEntry,
+  Language,
+  WeightPlanResult,
+  AchievedPlan,
+  SleepLogEntry,
+  CycleLogEntry,
+  SelfCareLogEntry,
+} from '@/lib/types';
 import { loadState, saveState, saveStateSlice, STATE_SLICE_KEYS } from '@/lib/storage';
 
 interface AppActionsType {
@@ -54,20 +67,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AppState>(EMPTY_STATE);
   const [hydrated, setHydrated] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const stateRef = useRef(state); // latest state for flush-on-hide
+  const stateRef = useRef<AppState>(state); // latest state for flush-on-hide
   const prevStateRef = useRef<AppState | null>(null); // for per-slice diffing
-  stateRef.current = state;
+
+  // Keep ref in sync outside of render (react-hooks/refs compliant).
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   // Hydrate from IndexedDB without blocking first paint.
   useEffect(() => {
     let cancelled = false;
-    loadState().then(data => {
+    loadState().then((data) => {
       if (!cancelled) {
         setState(data);
         setHydrated(true);
       }
     });
-    return () => { cancelled = true; };
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const persist = useCallback(() => {
@@ -111,67 +131,67 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [hydrated, persist]);
 
   const setProfile = useCallback((profile: UserProfile) => {
-    setState(prev => ({ ...prev, profile }));
+    setState((prev) => ({ ...prev, profile }));
   }, []);
 
   const addFoodLog = useCallback((entry: FoodLogEntry) => {
-    setState(prev => ({ ...prev, foodLogs: [entry, ...(prev.foodLogs || [])] }));
+    setState((prev) => ({ ...prev, foodLogs: [entry, ...(prev.foodLogs || [])] }));
   }, []);
 
   const addActivity = useCallback((entry: ActivityEntry) => {
-    setState(prev => ({ ...prev, activities: [entry, ...(prev.activities || [])] }));
+    setState((prev) => ({ ...prev, activities: [entry, ...(prev.activities || [])] }));
   }, []);
 
   const removeFoodLog = useCallback((id: string) => {
-    setState(prev => ({ ...prev, foodLogs: (prev.foodLogs || []).filter(log => log.id !== id) }));
+    setState((prev) => ({ ...prev, foodLogs: (prev.foodLogs || []).filter((log) => log.id !== id) }));
   }, []);
 
   const removeActivity = useCallback((id: string) => {
-    setState(prev => ({ ...prev, activities: (prev.activities || []).filter(act => act.id !== id) }));
+    setState((prev) => ({ ...prev, activities: (prev.activities || []).filter((act) => act.id !== id) }));
   }, []);
 
   const addMeasurement = useCallback((entry: MeasurementEntry) => {
-    setState(prev => ({ ...prev, measurements: [entry, ...(prev.measurements || [])] }));
+    setState((prev) => ({ ...prev, measurements: [entry, ...(prev.measurements || [])] }));
   }, []);
 
   const removeMeasurement = useCallback((id: string) => {
-    setState(prev => ({ ...prev, measurements: (prev.measurements || []).filter(m => m.id !== id) }));
+    setState((prev) => ({ ...prev, measurements: (prev.measurements || []).filter((m) => m.id !== id) }));
   }, []);
 
   const addWaterLog = useCallback((entry: WaterLogEntry) => {
-    setState(prev => ({ ...prev, waterLogs: [entry, ...(prev.waterLogs || [])] }));
+    setState((prev) => ({ ...prev, waterLogs: [entry, ...(prev.waterLogs || [])] }));
   }, []);
 
   const removeWaterLog = useCallback((id: string) => {
-    setState(prev => ({ ...prev, waterLogs: (prev.waterLogs || []).filter(w => w.id !== id) }));
+    setState((prev) => ({ ...prev, waterLogs: (prev.waterLogs || []).filter((w) => w.id !== id) }));
   }, []);
 
   const addSleepLog = useCallback((entry: SleepLogEntry) => {
-    setState(prev => ({ ...prev, sleepLogs: [entry, ...(prev.sleepLogs || [])] }));
+    setState((prev) => ({ ...prev, sleepLogs: [entry, ...(prev.sleepLogs || [])] }));
   }, []);
 
   const removeSleepLog = useCallback((id: string) => {
-    setState(prev => ({ ...prev, sleepLogs: (prev.sleepLogs || []).filter(s => s.id !== id) }));
+    setState((prev) => ({ ...prev, sleepLogs: (prev.sleepLogs || []).filter((s) => s.id !== id) }));
   }, []);
 
   const addCycleLog = useCallback((entry: CycleLogEntry) => {
-    setState(prev => ({ ...prev, cycleLogs: [entry, ...(prev.cycleLogs || [])] }));
+    setState((prev) => ({ ...prev, cycleLogs: [entry, ...(prev.cycleLogs || [])] }));
   }, []);
 
   const removeCycleLog = useCallback((id: string) => {
-    setState(prev => ({ ...prev, cycleLogs: (prev.cycleLogs || []).filter(c => c.id !== id) }));
+    setState((prev) => ({ ...prev, cycleLogs: (prev.cycleLogs || []).filter((c) => c.id !== id) }));
   }, []);
 
   const addSelfCareLog = useCallback((entry: SelfCareLogEntry) => {
-    setState(prev => ({ ...prev, selfCareLogs: [entry, ...(prev.selfCareLogs || [])] }));
+    setState((prev) => ({ ...prev, selfCareLogs: [entry, ...(prev.selfCareLogs || [])] }));
   }, []);
 
   const removeSelfCareLog = useCallback((id: string) => {
-    setState(prev => ({ ...prev, selfCareLogs: (prev.selfCareLogs || []).filter(s => s.id !== id) }));
+    setState((prev) => ({ ...prev, selfCareLogs: (prev.selfCareLogs || []).filter((s) => s.id !== id) }));
   }, []);
 
   const setActivePlan = useCallback((plan: WeightPlanResult | null) => {
-    setState(prev => ({ ...prev, activePlan: plan }));
+    setState((prev) => ({ ...prev, activePlan: plan }));
   }, []);
 
   const resetState = useCallback((newState: AppState) => {
@@ -179,11 +199,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setLanguage = useCallback((lang: Language) => {
-    setState(prev => prev.profile ? { ...prev, profile: { ...prev.profile, language: lang } } : prev);
+    setState((prev) => (prev.profile ? { ...prev, profile: { ...prev.profile, language: lang } } : prev));
   }, []);
 
   const completePlan = useCallback((endWeight: number) => {
-    setState(prev => {
+    setState((prev) => {
       if (!prev.activePlan || !prev.profile) return prev;
       const achieved: AchievedPlan = {
         ...prev.activePlan,
@@ -200,33 +220,54 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Actions are created once — this object never changes identity.
-  const actions = useMemo<AppActionsType>(() => ({
-    setProfile,
-    addFoodLog,
-    addActivity,
-    setLanguage,
-    resetState,
-    setActivePlan,
-    completePlan,
-    removeFoodLog,
-    removeActivity,
-    addMeasurement,
-    removeMeasurement,
-    addWaterLog,
-    removeWaterLog,
-    addSleepLog,
-    removeSleepLog,
-    addCycleLog,
-    removeCycleLog,
-    addSelfCareLog,
-    removeSelfCareLog,
-  }), [setProfile, addFoodLog, addActivity, setLanguage, resetState, setActivePlan, completePlan, removeFoodLog, removeActivity, addMeasurement, removeMeasurement, addWaterLog, removeWaterLog, addSleepLog, removeSleepLog, addCycleLog, removeCycleLog, addSelfCareLog, removeSelfCareLog]);
+  const actions = useMemo<AppActionsType>(
+    () => ({
+      setProfile,
+      addFoodLog,
+      addActivity,
+      setLanguage,
+      resetState,
+      setActivePlan,
+      completePlan,
+      removeFoodLog,
+      removeActivity,
+      addMeasurement,
+      removeMeasurement,
+      addWaterLog,
+      removeWaterLog,
+      addSleepLog,
+      removeSleepLog,
+      addCycleLog,
+      removeCycleLog,
+      addSelfCareLog,
+      removeSelfCareLog,
+    }),
+    [
+      setProfile,
+      addFoodLog,
+      addActivity,
+      setLanguage,
+      resetState,
+      setActivePlan,
+      completePlan,
+      removeFoodLog,
+      removeActivity,
+      addMeasurement,
+      removeMeasurement,
+      addWaterLog,
+      removeWaterLog,
+      addSleepLog,
+      removeSleepLog,
+      addCycleLog,
+      removeCycleLog,
+      addSelfCareLog,
+      removeSelfCareLog,
+    ]
+  );
 
   return (
     <AppActionsContext.Provider value={actions}>
-      <AppStateContext.Provider value={state}>
-        {children}
-      </AppStateContext.Provider>
+      <AppStateContext.Provider value={state}>{children}</AppStateContext.Provider>
     </AppActionsContext.Provider>
   );
 }
