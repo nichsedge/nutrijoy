@@ -60,6 +60,7 @@ const EMPTY_STATE: AppState = {
 // and the actions object identity stays stable across renders.
 const AppStateContext = createContext<AppState | undefined>(undefined);
 const AppActionsContext = createContext<AppActionsType | undefined>(undefined);
+const AppHydrationContext = createContext<boolean>(false);
 
 const SAVE_DEBOUNCE_MS = 500;
 
@@ -266,9 +267,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <AppActionsContext.Provider value={actions}>
-      <AppStateContext.Provider value={state}>{children}</AppStateContext.Provider>
-    </AppActionsContext.Provider>
+    <AppHydrationContext.Provider value={hydrated}>
+      <AppActionsContext.Provider value={actions}>
+        <AppStateContext.Provider value={state}>{children}</AppStateContext.Provider>
+      </AppActionsContext.Provider>
+    </AppHydrationContext.Provider>
   );
 }
 
@@ -277,6 +280,11 @@ export function useAppState(): AppState {
   const context = useContext(AppStateContext);
   if (context === undefined) throw new Error('useAppState must be used within AppProvider');
   return context;
+}
+
+/** Hydration state subscription — true once initial storage load completes. */
+export function useHydration(): boolean {
+  return useContext(AppHydrationContext);
 }
 
 /** Stable action handlers — never triggers re-renders. */

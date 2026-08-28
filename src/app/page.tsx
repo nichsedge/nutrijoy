@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppState, useAppActions } from '@/components/AppContext';
+import { useAppState, useAppActions, useHydration } from '@/components/AppContext';
 import { Shell } from '@/components/layout/Shell';
 import { DailyProgress } from '@/components/dashboard/DailyProgress';
 import { AIInsightCard } from '@/components/dashboard/AIInsightCard';
@@ -25,6 +25,7 @@ import Link from 'next/link';
 
 export default function Home() {
   const state = useAppState();
+  const isHydrated = useHydration();
   const { addWaterLog } = useAppActions();
   const { toast } = useToast();
   const t = getTranslation(state.profile?.language || 'en');
@@ -34,12 +35,12 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('biorhythm');
 
   useEffect(() => {
-    if (!state.profile) {
+    if (isHydrated && !state.profile) {
       router.push('/onboarding');
     }
-  }, [state.profile, router]);
+  }, [isHydrated, state.profile, router]);
 
-  if (!state.profile) return null;
+  if (!isHydrated || !state.profile) return null;
 
   // Calculate stats
   const baseGoals = calculateTDEE(state.profile);

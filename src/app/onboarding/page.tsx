@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useAppState, useAppActions } from '@/components/AppContext';
+import React, { useState, useEffect } from 'react';
+import { useAppState, useAppActions, useHydration } from '@/components/AppContext';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
@@ -14,10 +14,17 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export default function OnboardingPage() {
   const state = useAppState();
+  const isHydrated = useHydration();
   const { setProfile } = useAppActions();
   const router = useRouter();
   const [lang, setLang] = useState<UserProfile['language']>('en');
   const t = getTranslation(lang);
+
+  useEffect(() => {
+    if (isHydrated && state.profile) {
+      router.push('/');
+    }
+  }, [isHydrated, state.profile, router]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -54,6 +61,10 @@ export default function OnboardingPage() {
       router.push('/');
     }
   };
+
+  if (!isHydrated || state.profile) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background max-w-md mx-auto p-8 flex flex-col animate-in fade-in duration-500">
